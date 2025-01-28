@@ -1,0 +1,38 @@
+1. Создать классы с полями
+Account {
+    private Long id;
+    private String name;
+    private AccountType type;
+    private AccountStatus status;
+    private BigDecimal balance;
+    private CurrencyCode currencyCode;
+}
+
+enum AccountType {
+  CHECKING,
+  SAVINGS,
+  LOAN,
+  DEBIT_CARD,
+  CREDIT_CARD,
+  OTHER
+}
+
+enum AccountStatus {
+  ACTIVE,
+  INACTIVE,
+  BLOCKED
+}
+
+enum CurrencyCode {
+  EUR,
+  USD,
+  GBR
+}
+
+2. Создать AccountController, создать в нем список тестовых счетов.
+
+3. Реализовать в AccountController
+- REST запрос на вывод списка всех счетов
+- REST запрос на вывод одного счета по id
+- REST запрос на вывод всех счетов определенной валюты
+- REST запрос на вывод всех счетов, баланс которых находится в пределах от minValue до maxValue
