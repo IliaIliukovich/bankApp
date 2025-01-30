@@ -1,11 +1,14 @@
 package de.telran.bankapp;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping(("/client"))
@@ -43,11 +46,48 @@ public class ClientController {
         return clients.stream().filter(client -> client.getFirstName().equals(name)).toList();
     }
 
-    @PostMapping("/add")
-    public Client addClient(@RequestBody Client client) {
+    @PostMapping
+    public ResponseEntity<Client> addClient(@RequestBody Client client) {
         client.setId(UUID.randomUUID().toString());
         clients.add(client);
-        return client;
+        return new ResponseEntity<>(client, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Client> updateClient(@RequestBody Client client) {
+        String id = client.getId();
+        Optional<Client> optional = clients.stream().filter(c -> c.getId().equals(id)).findAny();
+        if (optional.isPresent()) {
+            Client found = optional.get();
+            found.setEmail(client.getEmail());
+            found.setPhone(client.getPhone());
+            found.setAddress(client.getAddress());
+            found.setStatus(client.getStatus());
+            found.setFirstName(client.getFirstName());
+            found.setLastName(client.getLastName());
+            found.setTaxCode(client.getTaxCode());
+            return new ResponseEntity<>(found, HttpStatus.ACCEPTED);
+        }
+//        throw new RuntimeException("Client with id " + client.getId() + " not found");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Client> changeStatus(@RequestParam String id, @RequestParam(required = false) String status){
+        Optional<Client> optional = clients.stream().filter(c -> c.getId().equals(id)).findAny();
+        if (optional.isPresent()) {
+            Client client = optional.get();
+            ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : ClientStatus.valueOf(status);
+            client.setStatus(clientStatus);
+            return new ResponseEntity<>(client, HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClient(@PathVariable String id) {
+        clients.removeIf(client -> client.getId().equals(id));
+        return ResponseEntity.accepted().build();
     }
 
 
