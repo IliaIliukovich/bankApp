@@ -43,7 +43,12 @@ public class ClientController {
         return clients.stream().filter(client -> client.getFirstName().equals(name)).toList();
     }
 
-
+    @PostMapping("/add")
+    public Client addClient(@RequestBody Client client) {
+        client.setId(UUID.randomUUID().toString());
+        clients.add(client);
+        return client;
+    }
 
 
 }
