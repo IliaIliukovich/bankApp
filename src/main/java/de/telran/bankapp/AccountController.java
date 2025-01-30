@@ -18,7 +18,7 @@ public class AccountController {
     public AccountController() {
 
         testAccount.add(new Account(1L, "John Doe", AccountType.SAVINGS, AccountStatus.ACTIVE,
-                new BigDecimal("1500.50"), CurrencyCode.USD));
+                new BigDecimal("1600.50"), CurrencyCode.USD));
 
             testAccount.add(new Account(2L, "Jane Smith", AccountType.CHECKING, AccountStatus.INACTIVE,
                     new BigDecimal("250.75"), CurrencyCode.EUR));
