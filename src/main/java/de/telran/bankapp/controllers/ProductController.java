@@ -1,14 +1,17 @@
 package de.telran.bankapp.controllers;
 
+import de.telran.bankapp.entities.Client;
 import de.telran.bankapp.entities.Product;
 import de.telran.bankapp.entities.enums.CurrencyCode;
 import de.telran.bankapp.entities.enums.ProductStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,7 +58,35 @@ public class ProductController {
     public List<Product> searchProduct(@RequestParam CurrencyCode currencyCode, @RequestParam ProductStatus status) {
         return products.stream().filter(product -> product.getStatus().equals(status)).filter(code -> currencyCode.equals(currencyCode)).collect(Collectors.toList());
     }
-}
+
+    //- REST запрос на обновление информации о продукте
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+        Long id = product.getId();
+        Optional<Product> optional = products.stream().filter(p -> p.getId().equals(id)).findAny();
+        if (optional.isPresent()) {
+            Product found = optional.get();
+            found.setName(found.getName());
+            found.setStatus(found.getStatus());
+            found.setCurrencyCode(found.getCurrencyCode());
+            found.setInterestRate(found.getInterestRate());
+            found.setLimitAmount(found.getLimitAmount());
+            return new ResponseEntity<>(found, HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
     //- REST запрос на удаление всех неактивных продуктов
+    @DeleteMapping("/del")
+    public List<Product> deleteInactiveProducts(){
+            for (Product p : products){
+                if((p.getStatus()).equals("INACTIVE")){
+                    products.remove(p);
+                }
+            }
+          return products;
+    }
 
+
+}
