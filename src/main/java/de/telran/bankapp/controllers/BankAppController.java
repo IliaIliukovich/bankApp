@@ -1,4 +1,4 @@
-package de.telran.bankapp;
+package de.telran.bankapp.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

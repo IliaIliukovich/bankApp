@@ -1,5 +1,8 @@
-package de.telran.bankapp;
+package de.telran.bankapp.entities;
 
+import de.telran.bankapp.entities.enums.AccountStatus;
+import de.telran.bankapp.entities.enums.AccountType;
+import de.telran.bankapp.entities.enums.CurrencyCode;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

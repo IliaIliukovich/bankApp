@@ -1,5 +1,6 @@
-package de.telran.bankapp;
+package de.telran.bankapp.entities;
 
+import de.telran.bankapp.entities.enums.ClientStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

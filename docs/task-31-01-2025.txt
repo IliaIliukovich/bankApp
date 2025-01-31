@@ -1,0 +1,70 @@
+Group 1:
+
+1. Создать класс
+Product {
+    private Long id;
+    private String name;
+    private CurrencyCode currencyCode;
+    private Double interestRate;
+    private BigDecimal limitAmount;
+    private ProductStatus status;
+}
+
+public enum ProductStatus {
+  ACTIVE,
+  INACTIVE
+}
+
+Пример данных:
+(1L, 'Current Account', 'ACTIVE', 'EUR', 2.0, 1000.0)
+(2L, 'Credit', 'ACTIVE', 'USD', 18.0, 5000.0)
+(3L, 'Business Credit', 'INACTIVE', 'USD', 18.0, 20000.0)
+
+2. Создать класс ProductController. Реализовать:
+- REST запрос на вывод списка всех продуктов
+- REST запрос на вывод одного продукта по id
+- REST запрос на добавление продукта
+- REST запрос на обновление информации о продукте
+- REST запрос на удаление продукта
+- REST запрос на поиск продукта по валюте и статусу
+- REST запрос на удвление всех неактивных продуктов
+
+_____
+Group2:
+
+1. Создать класс
+Transaction {
+    private String id;
+    private TransactionType type;
+    private BigDecimal amount;
+    private String description;
+    private TransactionStatus status;
+    private Long debitAccountId;// получатель
+    private Long creditAccountId;// отправитель
+}
+
+public enum TransactionType {
+  PAYMENT,
+  REFUND,
+  TRANSFER,
+  CASH,
+  DEPOSIT
+}
+
+public enum TransactionStatus {
+  NEW,
+  PENDING,
+  APPROVED
+}
+
+Пример данных:
+(4ea37144-df60-4681-b796-760345166d39, 'PAYMENT', 12.0, 'description', 'APPROVED', 1L, 2L)
+(a75c7e4b-b82d-4cb6-b217-381481609065, 'PAYMENT', 23.0, 'description', 'PENDING', 1L, 3L)
+(8bdf4491-9b25-4194-a67d-d9929f210d37, 'PAYMENT', 200.0, 'description', 'NEW', 2L, 3L)
+2. Создать класс TransactionController. Реализовать:
+- REST запрос на вывод списка всех переводов
+- REST запрос на вывод одного перевода по id
+- REST запрос на добавление переводов
+- REST запрос на обновление статуса перевода
+- REST запрос на поиск перевода по типу и минимальной сумме
+- REST запрос на удаление всех новых ('NEW') переводов

@@ -1,5 +1,9 @@
-package de.telran.bankapp;
+package de.telran.bankapp.controllers;
 
+import de.telran.bankapp.entities.Account;
+import de.telran.bankapp.entities.enums.AccountStatus;
+import de.telran.bankapp.entities.enums.AccountType;
+import de.telran.bankapp.entities.enums.CurrencyCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -35,7 +39,7 @@ public class AccountController {
 
     @GetMapping("{id}")
     public Optional<Account> getAccountById(@PathVariable Long id) {
-        return accounts.stream().filter(account -> account.getId() == id).findAny();
+        return accounts.stream().filter(account -> account.getId().equals(id)).findAny();
     }
 
 
