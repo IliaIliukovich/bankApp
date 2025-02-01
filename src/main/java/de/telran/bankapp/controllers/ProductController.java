@@ -79,13 +79,16 @@ public class ProductController {
 
     //- REST запрос на удаление всех неактивных продуктов
     @DeleteMapping("/del")
-    public List<Product> deleteInactiveProducts(){
-            for (Product p : products){
-                if((p.getStatus()).equals("INACTIVE")){
-                    products.remove(p);
-                }
-            }
-          return products;
+//    public List<Product> deleteInactiveProducts(){
+//            for (Product p : products){
+//                if((p.getStatus()).equals("INACTIVE")){
+//                    products.remove(p);
+//                }
+//          return products;
+//    }
+    public ResponseEntity<Void> deleteInactiveProducts(){
+        products.removeIf(product ->product.getStatus().equals("INACTIVE"));
+        return ResponseEntity.accepted().build();
     }
 
 
