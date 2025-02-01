@@ -65,5 +65,19 @@ public class TransactionController {
     }
 
 //- REST запрос на поиск перевода по типу и минимальной сумме
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Transaction>> findTransactionsByTypeAndAmount(@RequestParam TransactionType type, @RequestParam BigDecimal minAmount) {
+        List<Transaction> filteredTransactions = transactions.stream()
+                .filter(t -> t.getType().equals(type) && t.getAmount().compareTo(minAmount) >= 0)
+                .toList();
+        return new ResponseEntity<>(filteredTransactions, HttpStatus.OK);
+    }
 //- REST запрос на удаление всех новых ('NEW') переводов
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteNewTransactions() {
+        transactions.removeIf(t -> t.getStatus().equals(TransactionStatus.NEW));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
