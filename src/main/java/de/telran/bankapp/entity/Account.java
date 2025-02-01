@@ -1,19 +1,19 @@
-package de.telran.bankapp.entities;
+package de.telran.bankapp.entity;
 
-import de.telran.bankapp.entities.enums.AccountStatus;
-import de.telran.bankapp.entities.enums.AccountType;
-import de.telran.bankapp.entities.enums.CurrencyCode;
+import de.telran.bankapp.entity.enums.AccountStatus;
+import de.telran.bankapp.entity.enums.AccountType;
+import de.telran.bankapp.entity.enums.CurrencyCode;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-
 public class Account {
 
     private Long id;
@@ -22,4 +22,5 @@ public class Account {
     private AccountStatus status;
     private BigDecimal balance;
     private CurrencyCode currencyCode;
+
 }

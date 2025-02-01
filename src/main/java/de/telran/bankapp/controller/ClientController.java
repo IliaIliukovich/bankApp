@@ -1,7 +1,7 @@
-package de.telran.bankapp.controllers;
+package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entities.Client;
-import de.telran.bankapp.entities.enums.ClientStatus;
+import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.entity.enums.ClientStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

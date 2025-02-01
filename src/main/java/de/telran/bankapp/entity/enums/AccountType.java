@@ -1,4 +1,4 @@
-package de.telran.bankapp.entities.enums;
+package de.telran.bankapp.entity.enums;
 
 public enum AccountType {
     CHECKING,

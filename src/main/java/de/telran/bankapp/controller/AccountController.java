@@ -1,9 +1,9 @@
-package de.telran.bankapp.controllers;
+package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entities.Account;
-import de.telran.bankapp.entities.enums.AccountStatus;
-import de.telran.bankapp.entities.enums.AccountType;
-import de.telran.bankapp.entities.enums.CurrencyCode;
+import de.telran.bankapp.entity.Account;
+import de.telran.bankapp.entity.enums.AccountStatus;
+import de.telran.bankapp.entity.enums.AccountType;
+import de.telran.bankapp.entity.enums.CurrencyCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
