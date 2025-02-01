@@ -87,7 +87,7 @@ public class ProductController {
 //          return products;
 //    }
     public ResponseEntity<Void> deleteInactiveProducts(){
-        products.removeIf(product ->product.getStatus().equals("INACTIVE"));
+        products.removeIf(product ->product.getStatus().equals(ProductStatus.INACTIVE));
         return ResponseEntity.accepted().build();
     }
 
