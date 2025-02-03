@@ -1,8 +1,8 @@
-package de.telran.bankapp.controllers;
+package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entities.Transaction;
-import de.telran.bankapp.entities.enums.TransactionStatus;
-import de.telran.bankapp.entities.enums.TransactionType;
+import de.telran.bankapp.entity.Transaction;
+import de.telran.bankapp.entity.enums.TransactionStatus;
+import de.telran.bankapp.entity.enums.TransactionType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
