@@ -1,0 +1,9 @@
+1. Создать недостающие Rest контроллеры со всеми видами Rest запросов - GET, POST, PATCH, PUT, DELETE
+2. Разнести всю функциональность по слоям Repository - Service - Controller
+
+Yevhen --- Product
+Oksana --- Transaction
+Deyan --- Manager
+Vladimir --- Account
+Dmitri --- Card
+Artur --- AppUser
