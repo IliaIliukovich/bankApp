@@ -36,9 +36,17 @@ public class ClientRepository {
         return clients.stream().filter(client -> client.getId().equals(id)).findAny();
     }
 
+    public List<Client> findByName(String name) {
+        return clients.stream().filter(client -> client.getFirstName().equals(name)).toList();
+    }
+
     public Client addClient(Client client) {
         client.setId(UUID.randomUUID().toString());
         clients.add(client);
         return client;
+    }
+
+    public void deleteClient(String id) {
+        clients.removeIf(client -> client.getId().equals(id));
     }
 }
