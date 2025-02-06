@@ -38,16 +38,52 @@ public class AccountRepository {
         return accounts;
     }
 
-    public Optional<Object> findById(long id) {
-        return Optional.empty();
+    public Optional<Account> findById(long id) {
+        return accounts.stream().filter(account -> account.getId().equals(id)).findAny();
     }
 
-    public Account save(Account account) {
+    public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
+        CurrencyCode currencyCode1 = CurrencyCode.valueOf(currencyCode.toUpperCase());
+        return accounts.stream().filter(account -> account.getCurrencyCode() == currencyCode1).toList();
+    }
+
+    public List<Account> getAllAccountsByCurrencyCodeBalance(BigDecimal minValue, BigDecimal maxValue) {
+        return accounts.stream()
+                .filter(account -> account.getBalance().compareTo(minValue) >= 0 && account.getBalance().compareTo(maxValue) <= 0)
+                .toList();
+    }
+    public Account update(Account updatedAccount) {
+
+        Account account = findById(updatedAccount.getId()).orElse(new Account());
+       if (updatedAccount.getName() != null && !updatedAccount.getName().isEmpty()){
+           account.setName(updatedAccount.getName());
+       };
+       if(updatedAccount.getBalance() != null) {
+           account.setBalance(updatedAccount.getBalance());
+       }
+       if(updatedAccount.getCurrencyCode() != null) {
+           account.setCurrencyCode(updatedAccount.getCurrencyCode());
+       }
+       if( updatedAccount.getStatus() != null) {
+           account.setStatus(updatedAccount.getStatus());
+       }
+       if (updatedAccount.getType() != null) {
+           account.setType(updatedAccount.getType());
+       }
+
+        return account;
+    }
+
+    public Account create(Account account) {
         accounts.add(account);
         return account;
     }
 
     public void delete(Long id) {
-        accounts.remove(id);
+        Account account = findById(id).orElse(new Account());
+
+        if(account.getName() != null) {
+        accounts.remove(account);
+        }
     }
 }

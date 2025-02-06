@@ -1,11 +1,15 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Account;
+import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,51 +23,36 @@ public class AccountService {
         this.repository = repository;
     }
 
+    public Optional<Account> getAccountById(Long id) {
+        return repository.findById(id);
+    }
+
     public List<Account> getAll() {
         return repository.findAll();
     }
 
-    public ResponseEntity<Account> create(Account account) {
-        return ResponseEntity.ok(repository.save(account));
-
-    }
-    public Optional<Account> update(Long id, Account updatedAccount) {
-        return repository.findById(id).map(existingAccount -> {
-            existingAccount.setBalance(updatedAccount.getBalance());
-            existingAccount.setCurrencyCode(updatedAccount.getCurrencyCode());
-            existingAccount.setStatus(updatedAccount.getStatus());
-            existingAccount.setType(updatedAccount.getType());
-
-            return repository.save((Account) existingAccount);
-        });
+    public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
+        return repository.getAllAccountsByCurrencyCode(currencyCode);
     }
 
-    public Optional<Account> partialUpdate(Long id, Account updatedAccount) {
-        return repository.findById(id).map(existingAccount -> {
-            if (updatedAccount.getBalance() != null) {
-                existingAccount = updatedAccount.getBalance();
-            }
-            if (updatedAccount.getCurrencyCode() != null) {
-                existingAccount = updatedAccount.getCurrencyCode();
-            }
-            if (updatedAccount.getStatus() != null) {
-                existingAccount = updatedAccount.getStatus();
-            }
-            if (updatedAccount.getType() != null) {
-                existingAccount = updatedAccount.getType();
-            }
-            assert existingAccount instanceof Account;
-            return repository.save((Account) existingAccount);
-        });
+    public List<Account> getAllAccountsByCurrencyCodeBalance(BigDecimal minValue, BigDecimal maxValue) {
+        return repository.getAllAccountsByCurrencyCodeBalance(minValue, maxValue);
     }
 
-    public boolean delete(Long id) {
-        if (repository.findById(id).isPresent()) {
-            repository.delete(id);
-            return true;
-        }
-        return false;
+    public Account create(Account account) {
+        return repository.create(account);
+
     }
+
+    public Account update(Account updatedAccount) {
+        return repository.update(updatedAccount);
+
+    }
+
+    public void deleteAccount(Long id) {
+       repository.delete(id);
+    }
+}
 
 
 

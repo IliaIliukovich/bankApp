@@ -25,52 +25,38 @@ public class AccountController {
 
     @GetMapping("/all")
     public List<Account> getAll() {
-
         return service.getAll();
     }
 
     @GetMapping("{id}")
     public Optional<Account> getAccountById(@PathVariable Long id) {
-        return accounts.stream().filter(account -> account.getId().equals(id)).findAny();
+        return service.getAccountById(id);
     }
-
 
     @GetMapping("/currencyCode/{currencyCode}")
     public List<Account> getAllAccountsByCurrencyCode(@PathVariable String currencyCode) {
-        CurrencyCode currencyCode1 = CurrencyCode.valueOf(currencyCode.toUpperCase());
-        return accounts.stream().filter(account -> account.getCurrencyCode() == currencyCode1).toList();
+        return service.getAllAccountsByCurrencyCode(currencyCode);
     }
 
     @GetMapping("/search")
     public List<Account> getAllAccountsByCurrencyCodeBalance(@RequestParam BigDecimal minValue, @RequestParam BigDecimal maxValue) {
-        return accounts.stream()
-                .filter(account -> account.getBalance().compareTo(minValue) >= 0 && account.getBalance().compareTo(maxValue) <= 0)
-                .toList();
+        return service.getAllAccountsByCurrencyCodeBalance(minValue, maxValue);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
+    public Account createAccount(@RequestBody Account account) {
         return service.create(account);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Account> updateAccount (@PathVariable long id, @RequestBody Account account) {
-        return service.update(id, account).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @PutMapping("/update/{id}")
+    public Account updateAccount (@RequestBody Account account) {
+        return service.update(account);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Account> partiallyUpdateAccount(@PathVariable Long id, @RequestBody Account account) {
-        return service.partialUpdate(id, account)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
-        if (service.delete(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    @DeleteMapping("/delete/{id}")
+    public String deleteAccount(@PathVariable Long id) {
+        service.deleteAccount(id);
+        return "success";
     }
 
 }
