@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable String id) {
+    public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
@@ -61,7 +61,7 @@ public class ProductController {
         return deleted ? ResponseEntity.accepted().build() : ResponseEntity.noContent().build();
     }
 
-    @PatchMapping
+    @PatchMapping("/products/{id}/status")
     public ResponseEntity<Product> changeStatus(@PathVariable Long id, @RequestParam(required = false) String status) {
         return productService.changeStatus(id, status)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.ACCEPTED))
