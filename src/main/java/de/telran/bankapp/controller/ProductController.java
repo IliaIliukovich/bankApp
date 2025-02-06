@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<Product> deleteProduct(@RequestParam String id) {
+    public ResponseEntity<Product> deleteProduct(@RequestParam Long id) {
         return productService.deleteProduct(id);
     }
 
@@ -57,11 +57,14 @@ public class ProductController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteInactiveProducts() {
-        return productService.deleteInactiveProducts();
+        boolean deleted = productService.deleteInactiveProducts();
+        return deleted ? ResponseEntity.accepted().build() : ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<Product> changeStatus(@RequestParam String id, @RequestParam(required = false) String status) {
-        return productService.changeStatus(id, status);
+    public ResponseEntity<Product> changeStatus(@PathVariable Long id, @RequestParam(required = false) String status) {
+        return productService.changeStatus(id, status)
+                .map(product -> new ResponseEntity<>(product, HttpStatus.ACCEPTED))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

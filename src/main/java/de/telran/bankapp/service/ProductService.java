@@ -24,7 +24,7 @@ public class ProductService {
         return repo.findAll();
     }
 
-    public Product getProductById(String id) {
+    public Product getProductById(Long id) {
         return repo.getProductById(id);
     }
 
@@ -33,7 +33,7 @@ public class ProductService {
     }
 
     public Optional<Product> updatedProduct(Product product) {
-        String id = product.getId();
+        Long id = product.getId();
         Optional<Product> optional = repo.findById(id);
         if (optional.isPresent()) {
             Product found = optional.get();
@@ -48,7 +48,7 @@ public class ProductService {
             return Optional.empty();
     }
 
-    public ResponseEntity<Product> deleteProduct(String id) {
+    public ResponseEntity<Product> deleteProduct(Long id) {
         boolean deleted = repo.deleteProduct(id);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
@@ -57,14 +57,12 @@ public class ProductService {
         return repo.searchProductByCurrencyAndStatus(currencyCode, status);
     }
 
-    public ResponseEntity<Void> deleteInactiveProducts() {
+    public boolean deleteInactiveProducts() {
         return repo.deleteInactiveProducts();
     }
 
-    public ResponseEntity<Product> changeStatus(String id, String status) {
-        Optional<Product> optional = repo.findById(id);
-        if (optional.isPresent()) {
-            return repo.changeStatus(id, status);
-        } else return ResponseEntity.notFound().build();
+    public Optional<Product> changeStatus(Long id, String status) {
+        ProductStatus productStatus = (status == null) ? ProductStatus.ACTIVE : ProductStatus.valueOf(status);
+        return repo.changeStatus(id, productStatus);
     }
 }
