@@ -7,3 +7,10 @@ Deyan --- Manager
 Vladimir --- Account
 Dmitri --- Card
 Artur --- AppUser
+
+
+/*
+spring.application.name=bankApp
+
+server.port=8080
+*/
