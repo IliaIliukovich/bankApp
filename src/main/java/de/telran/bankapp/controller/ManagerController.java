@@ -63,13 +63,6 @@ public class ManagerController {
 
     @DeleteMapping({"id"})
     public ResponseEntity<Void> deleteManager(@PathVariable Long id) {
-//        if (service.deleteManager(id)) {
-//            System.out.println("Manager with id = " + id + " is sucsesfully delete");
-//        } else {
-//            System.out.println("Error! No manager was delete!");
-//        }
-//            return ResponseEntity.accepted().build();
-//        }
         service.deleteManager(id);
         return ResponseEntity.accepted().build();
     }
