@@ -1,0 +1,9 @@
+1. Переделать всю функциональность слоев Repository - Service - Controller для работы с данными из БД
+2. Добавить тестовые данные для БД в файл src/main/resources/data.sql
+
+Yevhen --- Product
+Oksana --- Transaction
+Deyan --- Manager
+Vladimir --- Account
+Dmitri --- Card
+Artur --- AppUser

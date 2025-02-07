@@ -1,1 +1,1 @@
-insert into	 bankapp.client (id, last_name, first_name, status) values ("4ea37144-df60-4681-b796-760345166d39", "Schmidt", "Hans", 1);
+insert into	 client (id, last_name, first_name, status) values ("4ea37144-df60-4681-b796-760345166d39", "Schmidt", "Hans", 1);
