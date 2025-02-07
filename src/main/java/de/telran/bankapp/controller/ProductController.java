@@ -1,95 +1,71 @@
 package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.entity.enums.ProductStatus;
+import de.telran.bankapp.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/product")
 public class ProductController {
-    List<Product> products = new ArrayList<>();
 
-    public ProductController() {
-        products.add(new Product(1L, "Current Account", CurrencyCode.EUR, 2.0, new BigDecimal("1500.75"), ProductStatus.ACTIVE));
-        products.add(new Product(2L, "Credit Account", CurrencyCode.USD, 18.0, new BigDecimal("5000.0"), ProductStatus.ACTIVE));
-        products.add(new Product(3L, "Business Credit", CurrencyCode.USD, 18.0, new BigDecimal("20000.0"), ProductStatus.INACTIVE));
+    private final ProductService productService;
+
+    @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
-    //    - REST запрос на вывод списка всех продуктов
-    @GetMapping("/")
-    public List<Product> getProducts() {
-        return products;
+    @GetMapping("/all")
+    public List<Product> getAll() {
+        return productService.getAll();
     }
 
-    //- REST запрос на вывод одного продукта по id -------------------------------------
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable Long id) {
-        return products.stream().filter(product -> product.getId().equals(id)).findFirst().orElse(null);
+    public Product getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
     }
 
-    //- REST запрос на добавление продукта
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        products.add(product);
-        return ResponseEntity.ok(product);
+        Product addedProduct = productService.addProduct(product);
+        return ResponseEntity.ok(addedProduct);
     }
 
-    //- REST запрос на обновление информации о продукте -------------------------
-
-    //- REST запрос на удаление продукта
     @DeleteMapping()
     public ResponseEntity<Product> deleteProduct(@RequestParam Long id) {
-        products.removeIf(product -> product.getId().equals(id));
-        return ResponseEntity.accepted().build();
+        boolean exists = productService.deleteProduct(id);
+        return exists ? ResponseEntity.ok(productService.getProductById(id)) : ResponseEntity.notFound().build();
     }
 
-    //- REST запрос на поиск продукта по валюте и статусу
-    @GetMapping("/search")
-    public List<Product> searchProduct(@RequestParam CurrencyCode currencyCode, @RequestParam ProductStatus status) {
-        return products.stream().filter(product -> product.getStatus().equals(status)).filter(code -> currencyCode.equals(currencyCode)).collect(Collectors.toList());
-    }
-
-    //- REST запрос на обновление информации о продукте
     @PutMapping
     public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
-        Long id = product.getId();
-        Optional<Product> optional = products.stream().filter(p -> p.getId().equals(id)).findAny();
-        if (optional.isPresent()) {
-            Product found = optional.get();
-            found.setName(found.getName());
-            found.setStatus(found.getStatus());
-            found.setCurrencyCode(found.getCurrencyCode());
-            found.setInterestRate(found.getInterestRate());
-            found.setLimitAmount(found.getLimitAmount());
-            return new ResponseEntity<>(found, HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<Product> updated = productService.updatedProduct(product);
+        return updated.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
-    //- REST запрос на удаление всех неактивных продуктов
-    @DeleteMapping("/del")
-//    public List<Product> deleteInactiveProducts(){
-//            for (Product p : products){
-//                if((p.getStatus()).equals("INACTIVE")){
-//                    products.remove(p);
-//                }
-//          return products;
-//    }
-    public ResponseEntity<Void> deleteInactiveProducts(){
-        products.removeIf(product ->product.getStatus().equals(ProductStatus.INACTIVE));
-        return ResponseEntity.accepted().build();
+    @GetMapping("/search")
+    public List<Product> searchProductByCurrencyAndStatus(@RequestParam CurrencyCode currencyCode, @RequestParam ProductStatus status) {
+        return productService.searchProductByCurrencyAndStatus(currencyCode, status);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteInactiveProducts() {
+        boolean deleted = productService.deleteInactiveProducts();
+        return deleted ? ResponseEntity.accepted().build() : ResponseEntity.noContent().build();
+    }
 
+    @PatchMapping("/products/{id}/status")
+    public ResponseEntity<Product> changeStatus(@PathVariable Long id, @RequestParam(required = false) String status) {
+        return productService.changeStatus(id, status)
+                .map(product -> new ResponseEntity<>(product, HttpStatus.ACCEPTED))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
