@@ -41,7 +41,8 @@ public class ProductController {
 
     @DeleteMapping()
     public ResponseEntity<Product> deleteProduct(@RequestParam Long id) {
-        return productService.deleteProduct(id);
+        boolean exists = productService.deleteProduct(id);
+        return exists ? ResponseEntity.ok(productService.getProductById(id)) : ResponseEntity.notFound().build();
     }
 
     @PutMapping

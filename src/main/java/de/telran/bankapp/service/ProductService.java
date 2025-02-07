@@ -5,7 +5,6 @@ import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.entity.enums.ProductStatus;
 import de.telran.bankapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,9 +47,8 @@ public class ProductService {
             return Optional.empty();
     }
 
-    public ResponseEntity<Product> deleteProduct(Long id) {
-        boolean deleted = repo.deleteProduct(id);
-        return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    public boolean deleteProduct(Long id) {
+        return repo.deleteProduct(id);
     }
 
     public List<Product> searchProductByCurrencyAndStatus(CurrencyCode currencyCode, ProductStatus status) {
