@@ -34,36 +34,30 @@ public class ClientService {
     public Client addClient(Client client) {
        return repository.save(client);
     }
-//
-//    public Optional<Client> updateClient(Client client) {
-//        String id = client.getId();
-//        Optional<Client> optional = repository.findById(id);
-//        if (optional.isPresent()) {
-//            Client found = optional.get();
-//            found.setEmail(client.getEmail());
-//            found.setPhone(client.getPhone());
-//            found.setAddress(client.getAddress());
-//            found.setStatus(client.getStatus());
-//            found.setFirstName(client.getFirstName());
-//            found.setLastName(client.getLastName());
-//            found.setTaxCode(client.getTaxCode());
-//            return Optional.of(found);
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
-//
-//    public Optional<Client> changeStatus(String id, String status) {
-//        Optional<Client> optional = repository.findById(id);
-//        if (optional.isPresent()) {
-//            Client client = optional.get();
-//            ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : ClientStatus.valueOf(status);
-//            client.setStatus(clientStatus);
-//            return Optional.of(client);
-//        }
-//        return Optional.empty();
-//    }
-//
+
+    public Optional<Client> updateClient(Client client) {
+        String id = client.getId();
+        Optional<Client> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            Client saved = repository.save(client);
+            return Optional.of(saved);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Client> changeStatus(String id, String status) {
+        Optional<Client> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            Client client = optional.get();
+            ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : ClientStatus.valueOf(status);
+            client.setStatus(clientStatus);
+            Client saved = repository.save(client);
+            return Optional.of(saved);
+        }
+        return Optional.empty();
+    }
+
     public void deleteClient(String id) {
         repository.deleteById(id);
     }

@@ -42,25 +42,25 @@ public class ClientController {
         Client created = service.addClient(client);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
-//
-//    @PutMapping
-//    public ResponseEntity<Client> updateClient(@RequestBody Client client) {
-//        Optional<Client> updated = service.updateClient(client);
-//        if (updated.isPresent()) {
-//            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-//
-//    @PatchMapping
-//    public ResponseEntity<Client> changeStatus(@RequestParam String id, @RequestParam(required = false) String status){
-//        Optional<Client> updated = service.changeStatus(id, status);
-//        if (updated.isPresent()) {
-//            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-//
+
+    @PutMapping
+    public ResponseEntity<Client> updateClient(@RequestBody Client client) {
+        Optional<Client> updated = service.updateClient(client);
+        if (updated.isPresent()) {
+            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Client> changeStatus(@RequestParam String id, @RequestParam(required = false) String status){
+        Optional<Client> updated = service.changeStatus(id, status);
+        if (updated.isPresent()) {
+            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable String id) {
         service.deleteClient(id);
