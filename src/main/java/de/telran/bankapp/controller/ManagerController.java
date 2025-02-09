@@ -24,7 +24,7 @@ public class ManagerController {
 
     @GetMapping("/all")
     public List<Manager> getAllManagers() {
-        return service.getAllManagers();
+        return service.getAll();
     }
 
     @PostMapping
@@ -51,6 +51,11 @@ public class ManagerController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/search")
+    public List<Manager> findByFirstName(@RequestParam String firstName){
+        return service.findByName(firstName);
+    }
+
     @PatchMapping
     public ResponseEntity<Manager> changeManagerStatus(@RequestParam Long id, @RequestParam(required = false) String status) {
         Optional<Manager> found = service.changeManagerStatus(id, status);
@@ -61,7 +66,7 @@ public class ManagerController {
         }
     }
 
-    @DeleteMapping({"id"})
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteManager(@PathVariable Long id) {
         service.deleteManager(id);
         return ResponseEntity.accepted().build();
