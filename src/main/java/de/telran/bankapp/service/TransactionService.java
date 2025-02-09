@@ -22,7 +22,7 @@ public class TransactionService {
     }
 
     public List<Transaction> getAllTransactions() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     public Optional<Transaction> getTransactionById(String id) {
@@ -30,42 +30,37 @@ public class TransactionService {
     }
 
     public Transaction addTransaction(Transaction transaction) {
-        return repository.addTransaction(transaction);
+        return repository.save(transaction);
     }
 
-    public Optional<Transaction> changeStatusById(String transactionId, TransactionStatus transactionStatus) {
-        Optional<Transaction> optional = repository.findById(transactionId);
+    public Optional<Transaction> changeStatusById(String id, TransactionStatus status) {
+        Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
             Transaction transaction = optional.get();
-            transaction.setStatus(transactionStatus);
-            return Optional.of(transaction);
+            transaction.setStatus(status);
+            return Optional.of(repository.save(transaction));
         } else {
             return Optional.empty();
         }
     }
 
     public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
-        return repository.getAll().stream()
+        return repository.findAll().stream()
                 .filter(t -> t.getType().equals(type) && t.getAmount().compareTo(minAmount) >= 0)
                 .toList();
     }
 
     public void deleteNewTransactions() {
-        repository.getAll().removeIf(t -> t.getStatus().equals(TransactionStatus.NEW));
+        repository.deleteAll(repository.findAll().stream()
+                .filter(t -> t.getStatus().equals(TransactionStatus.NEW))
+                .toList());
     }
 
     public Optional<Transaction> updateTransaction(Transaction transaction) {
         String id = transaction.getId();
         Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Transaction found = optional.get();
-             found.setType(transaction.getType());
-             found.setAmount(transaction.getAmount());
-             found.setDescription(transaction.getDescription());
-             found.setStatus(transaction.getStatus());
-             found.setDebitAccountId(transaction.getDebitAccountId());
-             found.setCreditAccountId(transaction.getCreditAccountId());
-             return Optional.of(found);
+            return Optional.of(repository.save(transaction));
         }
         return Optional.empty();
     }
