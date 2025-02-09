@@ -1,11 +1,8 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.Product;
-import de.telran.bankapp.entity.enums.CurrencyCode;
-import de.telran.bankapp.entity.enums.ProductStatus;
 import de.telran.bankapp.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +26,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
+    public Optional<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
+    }
+
+    @GetMapping("/search")
+    public List<Product> getProductByName(@RequestParam String name) {
+        return productService.getProductByName(name);
     }
 
     @PostMapping
@@ -41,31 +43,31 @@ public class ProductController {
 
     @DeleteMapping()
     public ResponseEntity<Product> deleteProduct(@RequestParam Long id) {
-        boolean exists = productService.deleteProduct(id);
-        return exists ? ResponseEntity.ok(productService.getProductById(id)) : ResponseEntity.notFound().build();
+        productService.deleteProduct(id);
+        return ResponseEntity.accepted().build();
     }
-
-    @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
-        Optional<Product> updated = productService.updatedProduct(product);
-        return updated.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/search")
-    public List<Product> searchProductByCurrencyAndStatus(@RequestParam CurrencyCode currencyCode, @RequestParam ProductStatus status) {
-        return productService.searchProductByCurrencyAndStatus(currencyCode, status);
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteInactiveProducts() {
-        boolean deleted = productService.deleteInactiveProducts();
-        return deleted ? ResponseEntity.accepted().build() : ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/products/{id}/status")
-    public ResponseEntity<Product> changeStatus(@PathVariable Long id, @RequestParam(required = false) String status) {
-        return productService.changeStatus(id, status)
-                .map(product -> new ResponseEntity<>(product, HttpStatus.ACCEPTED))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+//
+//    @PutMapping
+//    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+//        Optional<Product> updated = productService.updatedProduct(product);
+//        return updated.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//    }
+//
+//    @GetMapping("/search")
+//    public List<Product> searchProductByCurrencyAndStatus(@RequestParam CurrencyCode currencyCode, @RequestParam ProductStatus status) {
+//        return productService.searchProductByCurrencyAndStatus(currencyCode, status);
+//    }
+//
+//    @DeleteMapping("/delete")
+//    public ResponseEntity<Void> deleteInactiveProducts() {
+//        boolean deleted = productService.deleteInactiveProducts();
+//        return deleted ? ResponseEntity.accepted().build() : ResponseEntity.noContent().build();
+//    }
+//
+//    @PatchMapping("/products/{id}/status")
+//    public ResponseEntity<Product> changeStatus(@PathVariable Long id, @RequestParam(required = false) String status) {
+//        return productService.changeStatus(id, status)
+//                .map(product -> new ResponseEntity<>(product, HttpStatus.ACCEPTED))
+//                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
 }
