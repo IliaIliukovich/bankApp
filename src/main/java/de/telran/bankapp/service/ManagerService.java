@@ -15,7 +15,6 @@ public class ManagerService {
 
     @Autowired
     public ManagerService(ManagerRepository repository) {
-
         this.repository = repository;
     }
 
