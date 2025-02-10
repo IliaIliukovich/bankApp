@@ -39,9 +39,12 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public List<Account> getAllAccountsByCurrencyCodeBalance(@RequestParam BigDecimal minValue, @RequestParam BigDecimal maxValue) {
+    public List<Account> getAllAccountsByCurrencyCodeBalance(
+            @RequestParam(name = "minValue", required = false, defaultValue = "0") BigDecimal minValue,
+            @RequestParam(name = "maxValue", required = false, defaultValue = "1000000") BigDecimal maxValue) {
         return service.getAllAccountsByCurrencyCodeBalance(minValue, maxValue);
     }
+
 
     @PostMapping("/create")
     public Account createAccount(@RequestBody Account account) {

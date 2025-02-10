@@ -32,26 +32,31 @@ public class AccountService {
     }
 
     public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
-        return repository.getAllAccountsByCurrencyCode(currencyCode);
+        return repository.getAllAccountsByCurrencyCode(CurrencyCode.valueOf(currencyCode));
     }
 
     public List<Account> getAllAccountsByCurrencyCodeBalance(BigDecimal minValue, BigDecimal maxValue) {
         return repository.getAllAccountsByCurrencyCodeBalance(minValue, maxValue);
     }
 
+
+
     public Account create(Account account) {
-        return repository.create(account);
+        return repository.save(account);
 
     }
 
     public Account update(Account updatedAccount) {
-        return repository.update(updatedAccount);
+        return repository.save(updatedAccount);
 
     }
 
     public void deleteAccount(Long id) {
-       repository.delete(id);
+       repository.deleteById(id);
     }
+
+
+
 }
 
 
