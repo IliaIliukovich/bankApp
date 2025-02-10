@@ -15,10 +15,13 @@ public class ManagerService {
 
     @Autowired
     public ManagerService(ManagerRepository repository) {
+
         this.repository = repository;
     }
 
-    public List<Manager> getAll(){return repository.findAll();}
+    public List<Manager> getAll(){
+        return repository.findAll();
+    }
 
     public List<Manager> findByName(String firstName){
         return repository.findByFirstName(firstName);

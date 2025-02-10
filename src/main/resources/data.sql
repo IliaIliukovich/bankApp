@@ -10,14 +10,14 @@ values  ("b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0","Schmidt", "Hans", "DE123456789"
         ("d07ec73f-702a-479c-a930-f51596d9b899", "Becker", "Anna", "DE789012345", "p.becker@example.com", "Leipzig, Germany", "+49 341 7654321", 1),
         ("f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c", "Hoffmann", "Clara", "DE012345678", "c.hoffmann@example.com", "Bremen, Germany", "+49 421 1234567", 0);
 
-insert into bankapp.manager(id,first_name,last_name,status) value
-    (1, "Schmidt", "Hans", 0),
-    (2, "Müller", "Anna", 1),
-    (3, "Weber", "Peter", 1),
-    (4, "Fischer", "Claudia", 0),
-    (5, "Meyer", "Thomas", 1),
-    (6, "Wagner", "Sophia", 0),
-    (7, "Becker", "Stefan", 1),
-    (8, "Schulz", "Julia", 0),
-    (9, "Hoffmann", "Markus", 1),
-    (10, "Lehmann", "Laura", 0);
+insert into manager(id,first_name,last_name,status)
+values  (1, "Schmidt", "Hans", 0),
+        (2, "Müller", "Anna", 1),
+        (3, "Weber", "Peter", 1),
+        (4, "Fischer", "Claudia", 0),
+        (5, "Meyer", "Thomas", 1),
+        (6, "Wagner", "Sophia", 0),
+        (7, "Becker", "Stefan", 1),
+        (8, "Schulz", "Julia", 0),
+        (9, "Hoffmann", "Markus", 1),
+        (10, "Lehmann", "Laura", 0);
