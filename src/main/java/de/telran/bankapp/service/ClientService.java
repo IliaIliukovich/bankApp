@@ -50,16 +50,9 @@ public class ClientService {
         }
     }
 
-    public Optional<Client> changeStatus(String id, String status) {
-        Optional<Client> optional = repository.findById(id);
-        if (optional.isPresent()) {
-            Client client = optional.get();
-            ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : ClientStatus.valueOf(status);
-            client.setStatus(clientStatus);
-            Client saved = repository.save(client);
-            return Optional.of(saved);
-        }
-        return Optional.empty();
+    public Integer changeStatus(String id, ClientStatus status) {
+        ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : status;
+        return repository.updateStatus(id, clientStatus);
     }
 
     public void deleteClient(String id) {
