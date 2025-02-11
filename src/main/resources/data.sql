@@ -10,6 +10,7 @@ values  ("b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0","Schmidt", "Hans", "DE123456789"
         ("d07ec73f-702a-479c-a930-f51596d9b899", "Becker", "Anna", "DE789012345", "p.becker@example.com", "Leipzig, Germany", "+49 341 7654321", 1),
         ("f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c", "Hoffmann", "Clara", "DE012345678", "c.hoffmann@example.com", "Bremen, Germany", "+49 421 1234567", 0);
 
-insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id) values ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2);
-insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id) values ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3);
-insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id) values ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
+insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
+values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2),
+        ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
+        ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
