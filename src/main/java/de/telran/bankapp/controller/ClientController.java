@@ -37,6 +37,11 @@ public class ClientController {
         return service.findByName(name);
     }
 
+    @GetMapping("/searchBySurnameAndAddress")
+    public List<Client> findByName(@RequestParam String surname, @RequestParam String address) {
+        return service.searchBySurnameAndAddress(surname, address);
+    }
+
     @PostMapping
     public ResponseEntity<Client> addClient(@RequestBody Client client) {
         Client created = service.addClient(client);

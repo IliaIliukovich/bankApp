@@ -31,6 +31,10 @@ public class ClientService {
         return repository.findByFirstName(name);
     }
 
+    public List<Client> searchBySurnameAndAddress(String surname, String address) {
+        return repository.nativeQuery(surname, address);
+    }
+
     public Client addClient(Client client) {
        return repository.save(client);
     }
