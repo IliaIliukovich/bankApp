@@ -46,10 +46,6 @@ public class AccountService {
 
     }
 
-    public Account update(Account updatedAccount) {
-        return repository.save(updatedAccount);
-
-    }
 
     public void deleteAccount(Long id) {
        repository.deleteById(id);
