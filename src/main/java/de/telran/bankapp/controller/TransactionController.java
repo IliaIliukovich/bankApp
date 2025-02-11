@@ -42,7 +42,7 @@ public class TransactionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @PostMapping
     public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
         Transaction added = service.addTransaction(transaction);
@@ -51,8 +51,8 @@ public class TransactionController {
 
 
     @PatchMapping
-    public ResponseEntity<Transaction> changeStatus(@RequestParam String transactionId, @RequestParam TransactionStatus transactionStatus) {
-        Optional<Transaction> changedStatus = service.changeStatusById(transactionId, transactionStatus);
+    public ResponseEntity<Transaction> changeStatus(@RequestParam String id, @RequestParam TransactionStatus status) {
+        Optional<Transaction> changedStatus = service.changeStatusById(id, status);
         if (changedStatus.isPresent()) {
             return new ResponseEntity<>(changedStatus.get(), HttpStatus.ACCEPTED);
         }
@@ -68,7 +68,7 @@ public class TransactionController {
     @DeleteMapping
     public ResponseEntity<Void> deleteNewTransactions() {
         service.deleteNewTransactions();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  //??? if status 'New' not exists -> 204 NO CONTENT
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping
