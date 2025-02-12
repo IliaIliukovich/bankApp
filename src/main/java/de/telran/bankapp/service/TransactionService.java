@@ -29,31 +29,27 @@ public class TransactionService {
         return repository.findById(id);
     }
 
+    public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
+        return repository.findAllByTypeAndAmountIsGreaterThanEqual(type, minAmount);
+    }
+
+    public List<Transaction> findTransactionsByType(TransactionType type) {
+        return repository.findAllByType(type);
+    }
+
+    public List<Transaction> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount) {
+        BigDecimal min = minAmount == null ? new BigDecimal("0.00") : minAmount;
+        BigDecimal max = maxAmount == null ? new BigDecimal("50000.00") : maxAmount;
+        return repository.findTransactionByStatusNotAndAmountBetween(status, min, max);
+    }
+
+    public List<Transaction> findTransactionsByTypeAndByStatus(TransactionType type, TransactionStatus status) {
+        return repository.nativeQuery(type, status);
+    }
+
+
     public Transaction addTransaction(Transaction transaction) {
         return repository.save(transaction);
-    }
-
-    public Optional<Transaction> changeStatusById(String id, TransactionStatus status) {
-        Optional<Transaction> optional = repository.findById(id);
-        if (optional.isPresent()) {
-            Transaction transaction = optional.get();
-            transaction.setStatus(status);
-            return Optional.of(repository.save(transaction));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
-        return repository.findAll().stream()
-                .filter(t -> t.getType().equals(type) && t.getAmount().compareTo(minAmount) >= 0)
-                .toList();
-    }
-
-    public void deleteNewTransactions() {
-        repository.deleteAll(repository.findAll().stream()
-                .filter(t -> t.getStatus().equals(TransactionStatus.NEW))
-                .toList());
     }
 
     public Optional<Transaction> updateTransaction(Transaction transaction) {
@@ -63,6 +59,14 @@ public class TransactionService {
             return Optional.of(repository.save(transaction));
         }
         return Optional.empty();
+    }
+
+    public Integer changeStatusById(String id, TransactionStatus status) {
+        return repository.updateStatus(id, status);
+    }
+
+    public void deleteNewTransactions() {
+        repository.deleteAllByStatus(TransactionStatus.NEW);
     }
 }
 
