@@ -1,6 +1,7 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Product;
+import de.telran.bankapp.entity.enums.ProductStatus;
 import de.telran.bankapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,21 +38,20 @@ public class ProductService {
         repo.deleteById(id);
     }
 
-//    public Optional<Product> updatedProduct(Product product) {
-//        Long id = product.getId();
-//        Optional<Product> optional = repo.findById(id);
-//        if (optional.isPresent()) {
-//            Product found = optional.get();
-//            found.setName(product.getName());
-//            found.setStatus(product.getStatus());
-//            found.setCurrencyCode(product.getCurrencyCode());
-//            found.setInterestRate(product.getInterestRate());
-//            found.setLimitAmount(product.getLimitAmount());
-//
-//            return Optional.of(found);
-//        } else
-//            return Optional.empty();
-//    }
+    public Optional<Product> updatedProduct(Product product) {
+        Long id = product.getId();
+        Optional<Product> optional = repo.findById(id);
+        if (optional.isPresent()) {
+            Product savedProduct = repo.save(product);
+            return Optional.of(savedProduct);
+        } else
+            return Optional.empty();
+    }
+
+    public Integer changeStatus(Long id, String status) {
+        ProductStatus productStatus = (status == null) ? ProductStatus.ACTIVE : ProductStatus.valueOf(status);
+        return repo.updateStatus(id, productStatus);
+    }
 
 //    public List<Product> searchProductByCurrencyAndStatus(CurrencyCode currencyCode, ProductStatus status) {
 //        return repo.searchProductByCurrencyAndStatus(currencyCode, status);
@@ -61,8 +61,4 @@ public class ProductService {
 //        return repo.deleteInactiveProducts();
 //    }
 //
-//    public Optional<Product> changeStatus(Long id, String status) {
-//        ProductStatus productStatus = (status == null) ? ProductStatus.ACTIVE : ProductStatus.valueOf(status);
-//        return repo.changeStatus(id, productStatus);
-//    }
 }
