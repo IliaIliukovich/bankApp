@@ -1,7 +1,5 @@
 package de.telran.bankapp.entity;
 
-// Создать недостающие Rest контроллеры со всеми видами Rest запросов - GET, POST, PATCH, PUT, DELETE
-//Разнести всю функциональность по слоям Repository - Service - Controller
 
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;

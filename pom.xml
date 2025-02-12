@@ -47,6 +47,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!--                       XML REST data format-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.dataformat</groupId>-->
+<!--            <artifactId>jackson-dataformat-xml</artifactId>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>

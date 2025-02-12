@@ -4,10 +4,7 @@ import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,20 +20,20 @@ public class AccountService {
         this.repository = repository;
     }
 
-    public Optional<Account> getAccountById(Long id) {
-        return repository.findById(id);
+    public Account getAccountById(Long id) {
+        return repository.getAccountById(id);
     }
 
     public List<Account> getAll() {
-        return repository.findAll();
+        return repository.getAllAccounts();
     }
 
     public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
         return repository.getAllAccountsByCurrencyCode(CurrencyCode.valueOf(currencyCode));
     }
 
-    public List<Account> getAllAccountsByCurrencyCodeBalance(BigDecimal minValue, BigDecimal maxValue) {
-        return repository.getAllAccountsByCurrencyCodeBalance(minValue, maxValue);
+    public List<Account> getAllAccountsByBalance(BigDecimal minValue, BigDecimal maxValue) {
+        return repository.getAllAccountsByBalance(minValue, maxValue);
     }
 
 
@@ -46,9 +43,8 @@ public class AccountService {
 
     }
 
-
     public void deleteAccount(Long id) {
-       repository.deleteById(id);
+       repository.deleteAccountById(id);
     }
 
 
