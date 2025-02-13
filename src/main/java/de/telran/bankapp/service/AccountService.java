@@ -21,11 +21,11 @@ public class AccountService {
     }
 
     public Account getAccountById(Long id) {
-        return repository.getAccountById(id);
+        return repository.findById(id).get();
     }
 
     public List<Account> getAll() {
-        return repository.getAllAccounts();
+        return repository.findAll();
     }
 
     public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
