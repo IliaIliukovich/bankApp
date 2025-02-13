@@ -1,11 +1,11 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Manager;
+import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,27 +19,39 @@ public class ManagerService {
         this.repository = repository;
     }
 
+    public List<Manager> getAll(){
+        return repository.findAll();
+    }
 
-    public List<Manager> getAllManagers(){return repository.findAllManagers();}
+    public List<Manager> findByName(String firstName){
+        return repository.findByFirstName(firstName);
+    }
 
-    public Manager addManager(Manager manager){return repository.addManager(manager);}
+    public  List<Manager> findByFirstNameAndLastName(String firstName,String lastName){
+        return repository.findByFirstNameAndLastName(firstName,lastName);
+    }
+
+    public List<Manager> findFirstLetterFromFirstNameAndFirstLetterFromLastName(String firstName,String lastName){
+        return repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
+    }
+
+    public Manager addManager(Manager manager){
+        return repository.save(manager);
+    }
 
     public Optional<Manager> updateManager(Manager manager) {
         Long id = manager.getId();
-        Optional<Manager> optional = repository.findManagerById(id);
+        Optional<Manager> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Manager found = optional.get();
-            found.setLastName(manager.getLastName());
-            found.setFirstName(manager.getFirstName());
-            found.setStatus(manager.getStatus());
-            return Optional.of(found);
+            Manager updatedManager = repository.save(manager);
+            return Optional.of(updatedManager);
         } else {
             return Optional.empty();
         }
     }
 
     public Optional<Manager> getManagerById(Long id) {
-        Optional<Manager> optional = repository.findManagerById(id);
+        Optional<Manager> optional = repository.findById(id);
         if (optional.isPresent()) {
             Manager found = optional.get();
             return Optional.of(found);
@@ -48,23 +60,16 @@ public class ManagerService {
         }
     }
 
-    public Optional<Manager> changeManagerStatus(@RequestParam Long id, @RequestParam(required = false) String status){
-        Optional<Manager> optional = repository.findManagerById(id);
-        if (optional.isPresent()) {
-            Manager found = optional.get();
-            ManagerStatus managerStatus = status == null ? ManagerStatus.ACTIVE : ManagerStatus.valueOf(status);
-            found.setStatus(managerStatus);
-            return Optional.of(found);
-        } else {
-            return Optional.empty();
-        }
+    public Integer changeManagerStatus(Long id,ManagerStatus status){
+        ManagerStatus managerstatus = status == null ? ManagerStatus.ACTIVE : status;
+        return repository.updateStatus(id,managerstatus);
     }
 
     public Boolean deleteManager(Long id){
         Boolean flag = false;
         Optional<Manager> managerForDelete = getManagerById(id);
         if(managerForDelete.isPresent()) {
-            repository.removeManager(id);
+            repository.deleteById(id);
             flag = true;
         }
         return flag;

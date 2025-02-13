@@ -3,38 +3,35 @@ package de.telran.bankapp.repository;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.NativeQuery;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public class TransactionRepository {
+public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
-    List<Transaction> transactions = new ArrayList<>();
+    List<Transaction> findAllByTypeAndAmountIsGreaterThanEqual(TransactionType type, BigDecimal amount);
 
-    public TransactionRepository() {
-        transactions.add(new Transaction(UUID.randomUUID().toString(), TransactionType.PAYMENT, new BigDecimal("12.0"), "description", TransactionStatus.APPROVED, 1L, 2L));
-        transactions.add(new Transaction(UUID.randomUUID().toString(), TransactionType.PAYMENT, new BigDecimal("23.0"), "description", TransactionStatus.PENDING, 1L, 3L));
-        transactions.add(new Transaction(UUID.randomUUID().toString(), TransactionType.PAYMENT, new BigDecimal("200.0"), "description", TransactionStatus.NEW, 2L, 3L));
-    }
+    List<Transaction> findAllByType(TransactionType type);
 
+    List<Transaction> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount);
 
-    public List<Transaction> getAll() {
-        return transactions;
-    }
+    @NativeQuery("select * from transaction t where t.type = :type% and t.status = :status%")
+    List<Transaction> nativeQuery(TransactionType type, TransactionStatus status);
 
-    public Optional<Transaction> findById(String id) {
-        return transactions.stream().filter(t -> t.getId().equals(id)).findAny();
-    }
+    @Query("update Transaction t set t.status = :status where t.id = :id")
+    @Modifying
+    @Transactional
+    int updateStatus(String id, TransactionStatus status);
 
-    public Transaction addTransaction(Transaction transaction) {
-        transaction.setId(UUID.randomUUID().toString());
-        transactions.add(transaction);
-        return transaction;
-    }
+    @Modifying
+    @Transactional
+    void deleteAllByStatus(TransactionStatus status);
 
 }

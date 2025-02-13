@@ -22,52 +22,51 @@ public class TransactionService {
     }
 
     public List<Transaction> getAllTransactions() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     public Optional<Transaction> getTransactionById(String id) {
         return repository.findById(id);
     }
 
-    public Transaction addTransaction(Transaction transaction) {
-        return repository.addTransaction(transaction);
-    }
-
-    public Optional<Transaction> changeStatusById(String transactionId, TransactionStatus transactionStatus) {
-        Optional<Transaction> optional = repository.findById(transactionId);
-        if (optional.isPresent()) {
-            Transaction transaction = optional.get();
-            transaction.setStatus(transactionStatus);
-            return Optional.of(transaction);
-        } else {
-            return Optional.empty();
-        }
-    }
-
     public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
-        return repository.getAll().stream()
-                .filter(t -> t.getType().equals(type) && t.getAmount().compareTo(minAmount) >= 0)
-                .toList();
+        return repository.findAllByTypeAndAmountIsGreaterThanEqual(type, minAmount);
     }
 
-    public void deleteNewTransactions() {
-        repository.getAll().removeIf(t -> t.getStatus().equals(TransactionStatus.NEW));
+    public List<Transaction> findTransactionsByType(TransactionType type) {
+        return repository.findAllByType(type);
+    }
+
+    public List<Transaction> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount) {
+        BigDecimal min = minAmount == null ? new BigDecimal("0.00") : minAmount;
+        BigDecimal max = maxAmount == null ? new BigDecimal("50000.00") : maxAmount;
+        return repository.findTransactionByStatusNotAndAmountBetween(status, min, max);
+    }
+
+    public List<Transaction> findTransactionsByTypeAndByStatus(TransactionType type, TransactionStatus status) {
+        return repository.nativeQuery(type, status);
+    }
+
+
+    public Transaction addTransaction(Transaction transaction) {
+        return repository.save(transaction);
     }
 
     public Optional<Transaction> updateTransaction(Transaction transaction) {
         String id = transaction.getId();
         Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Transaction found = optional.get();
-             found.setType(transaction.getType());
-             found.setAmount(transaction.getAmount());
-             found.setDescription(transaction.getDescription());
-             found.setStatus(transaction.getStatus());
-             found.setDebitAccountId(transaction.getDebitAccountId());
-             found.setCreditAccountId(transaction.getCreditAccountId());
-             return Optional.of(found);
+            return Optional.of(repository.save(transaction));
         }
         return Optional.empty();
+    }
+
+    public Integer changeStatusById(String id, TransactionStatus status) {
+        return repository.updateStatus(id, status);
+    }
+
+    public void deleteNewTransactions() {
+        repository.deleteAllByStatus(TransactionStatus.NEW);
     }
 }
 

@@ -1,6 +1,7 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,11 @@ public class ClientController {
         return service.findByName(name);
     }
 
+    @GetMapping("/searchBySurnameAndAddress")
+    public List<Client> findByName(@RequestParam String surname, @RequestParam String address) {
+        return service.searchBySurnameAndAddress(surname, address);
+    }
+
     @PostMapping
     public ResponseEntity<Client> addClient(@RequestBody Client client) {
         Client created = service.addClient(client);
@@ -53,10 +59,10 @@ public class ClientController {
     }
 
     @PatchMapping
-    public ResponseEntity<Client> changeStatus(@RequestParam String id, @RequestParam(required = false) String status){
-        Optional<Client> updated = service.changeStatus(id, status);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+    public ResponseEntity<Void> changeStatus(@RequestParam String id, @RequestParam(required = false) ClientStatus status){
+        Integer integer = service.changeStatus(id, status);
+        if (!integer.equals(0)) {
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
