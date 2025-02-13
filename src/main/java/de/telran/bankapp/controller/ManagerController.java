@@ -5,9 +5,11 @@ import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.service.ManagerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +17,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/manager")
+@Validated
 public class ManagerController {
+
     private ManagerService service;
 
     @Autowired
@@ -26,21 +30,6 @@ public class ManagerController {
     @GetMapping("/all")
     public List<Manager> getAllManagers() {
         return service.getAll();
-    }
-
-    @PostMapping
-    public ResponseEntity<Manager> addManager(@RequestBody Manager manager) {
-        Manager created = service.addManager(manager);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    @PutMapping
-    public ResponseEntity<Manager> updateManager(@RequestBody Manager manager) {
-        Optional<Manager> updated = service.updateManager(manager);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("{id}")
@@ -55,6 +44,21 @@ public class ManagerController {
     @GetMapping("/search")
     public List<Manager> findByFirstName(@RequestParam String firstName){
         return service.findByName(firstName);
+    }
+
+    @PostMapping
+    public ResponseEntity<Manager> addManager(@RequestBody @Valid Manager manager) {
+        Manager created = service.addManager(manager);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Manager> updateManager(@RequestBody @Valid Manager manager) {
+        Optional<Manager> updated = service.updateManager(manager);
+        if (updated.isPresent()) {
+            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/searshByFirstAndLastName")
