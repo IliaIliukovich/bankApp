@@ -3,19 +3,14 @@ package de.telran.bankapp.entity;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.entity.enums.ProductStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
-
-import de.telran.bankapp.entity.enums.ClientStatus;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 
