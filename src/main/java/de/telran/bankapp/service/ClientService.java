@@ -50,6 +50,18 @@ public class ClientService {
         }
     }
 
+    public Optional<Client> updateAddress(String id, String address) {
+        Optional<Client> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            Client client = optional.get();
+            client.setAddress(address);
+            Client saved = repository.save(client);
+            return Optional.of(saved);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public Integer changeStatus(String id, ClientStatus status) {
         ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : status;
         return repository.updateStatus(id, clientStatus);

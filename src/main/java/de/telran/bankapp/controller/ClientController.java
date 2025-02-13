@@ -3,9 +3,12 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.service.ClientService;
+import jakarta.validation.Valid;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(("/client"))
+@Validated
 public class ClientController {
 
     private ClientService service;
@@ -44,13 +48,13 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> addClient(@RequestBody Client client) {
+    public ResponseEntity<Client> addClient(@RequestBody @Valid Client client) {
         Client created = service.addClient(client);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Client> updateClient(@RequestBody Client client) {
+    public ResponseEntity<Client> updateClient(@RequestBody @Valid Client client) {
         Optional<Client> updated = service.updateClient(client);
         if (updated.isPresent()) {
             return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
@@ -63,6 +67,17 @@ public class ClientController {
         Integer integer = service.changeStatus(id, status);
         if (!integer.equals(0)) {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping("/changeAddress")
+    public ResponseEntity<Client> changeAddress(@RequestParam String id,
+                                                @RequestParam @Length(max = 150, message ="{validation.client.address}")
+                                                String address){
+        Optional<Client> client = service.updateAddress(id, address);
+        if (client.isPresent()) {
+            return new ResponseEntity<>(client.get(), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
