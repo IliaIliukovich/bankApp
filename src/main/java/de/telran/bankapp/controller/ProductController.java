@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Product> deleteProduct(@RequestParam Long id) {
+    public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.accepted().build();
     }
