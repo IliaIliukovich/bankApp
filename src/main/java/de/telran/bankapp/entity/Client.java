@@ -1,10 +1,7 @@
 package de.telran.bankapp.entity;
 
 import de.telran.bankapp.entity.enums.ClientStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +23,8 @@ public class Client {
     private String email;
     private String address;
     private String phone;
+
+    @Enumerated(EnumType.STRING)
     private ClientStatus status;
 
 }
