@@ -3,6 +3,7 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Manager;
+import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,11 +57,21 @@ public class ManagerController {
         return service.findByName(firstName);
     }
 
+    @GetMapping("/searshByFirstAndLastName")
+    public List<Manager> findByFirstNameAndLastName(@RequestParam String firstName, @RequestParam String lastName){
+        return service.findByFirstNameAndLastName(firstName,lastName);
+    }
+
+    @GetMapping("/searchByFirstLetterFromFirstNameAndFirstLetterFromLastName")
+    public List<Manager> findFirstLetterFromFirstNameAndFirstLetterFromLastName(@RequestParam String firstName, @RequestParam String lastName){
+        return service.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
+    }
+
     @PatchMapping
-    public ResponseEntity<Manager> changeManagerStatus(@RequestParam Long id, @RequestParam(required = false) String status) {
-        Optional<Manager> found = service.changeManagerStatus(id, status);
-        if (found.isPresent()) {
-            return new ResponseEntity<>(found.get(), HttpStatus.ACCEPTED);
+    public ResponseEntity<Void> changeManagerStatus(@RequestParam Long id, @RequestParam(required = false) ManagerStatus status) {
+        Integer integer = service.changeManagerStatus(id,status);
+        if(!integer.equals(0)){
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

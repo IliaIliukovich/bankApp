@@ -1,6 +1,7 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Manager;
+import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,14 @@ public class ManagerService {
 
     public List<Manager> findByName(String firstName){
         return repository.findByFirstName(firstName);
+    }
+
+    public  List<Manager> findByFirstNameAndLastName(String firstName,String lastName){
+        return repository.findByFirstNameAndLastName(firstName,lastName);
+    }
+
+    public List<Manager> findFirstLetterFromFirstNameAndFirstLetterFromLastName(String firstName,String lastName){
+        return repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
     }
 
     public Manager addManager(Manager manager){
@@ -51,17 +60,9 @@ public class ManagerService {
         }
     }
 
-    public Optional<Manager> changeManagerStatus( Long id,  String status){
-        Optional<Manager> optional = repository.findById(id);
-        if (optional.isPresent()) {
-            Manager changedStatusManager = optional.get();
-            ManagerStatus changedStatusManagerStatus = status == null ? ManagerStatus.ACTIVE : ManagerStatus.valueOf(status);
-            changedStatusManager.setStatus(changedStatusManagerStatus);
-            Manager saved = repository.save(changedStatusManager);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
-        }
+    public Integer changeManagerStatus(Long id,ManagerStatus status){
+        ManagerStatus managerstatus = status == null ? ManagerStatus.ACTIVE : status;
+        return repository.updateStatus(id,managerstatus);
     }
 
     public Boolean deleteManager(Long id){

@@ -43,32 +43,34 @@ public class TransactionController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
-        Transaction added = service.addTransaction(transaction);
-        return new ResponseEntity<>(added, HttpStatus.CREATED);
-    }
-
-
-    @PatchMapping
-    public ResponseEntity<Transaction> changeStatus(@RequestParam String id, @RequestParam TransactionStatus status) {
-        Optional<Transaction> changedStatus = service.changeStatusById(id, status);
-        if (changedStatus.isPresent()) {
-            return new ResponseEntity<>(changedStatus.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
     @GetMapping("/search")
     public ResponseEntity<List<Transaction>> findTransactionsByTypeAndAmount(@RequestParam TransactionType type, @RequestParam BigDecimal minAmount) {
         List<Transaction> transactions = service.findTransactionsByTypeAndAmount(type, minAmount);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteNewTransactions() {
-        service.deleteNewTransactions();
-        return ResponseEntity.accepted().build();
+    @GetMapping("/searchTransactionsByType/{type}")
+    public ResponseEntity<List<Transaction>> searchTransactionsByType(@PathVariable TransactionType type) {
+        List<Transaction> transactions = service.findTransactionsByType(type);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+    @GetMapping("/searchTransactionsByStatusNotAndAmountBetween")
+    public ResponseEntity<List<Transaction>> searchTransactionsByStatusNotAndAmountBetween(@RequestParam TransactionStatus status, @RequestParam(required = false) BigDecimal minAmount, @RequestParam(required = false) BigDecimal maxAmount) {
+        List<Transaction> transactions = service.findTransactionByStatusNotAndAmountBetween(status, minAmount, maxAmount);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+    @GetMapping("/searchTransactionsByTypeAndByStatus")
+    public ResponseEntity<List<Transaction>> searchTransactionsByTypeAndByStatus(@RequestParam TransactionType type, @RequestParam TransactionStatus status) {
+        List<Transaction> transactions = service.findTransactionsByTypeAndByStatus(type, status);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
+        Transaction added = service.addTransaction(transaction);
+        return new ResponseEntity<>(added, HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -78,5 +80,22 @@ public class TransactionController {
             return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+    @PatchMapping
+    public ResponseEntity<Void> changeStatus(@RequestParam String id, @RequestParam TransactionStatus status) {
+        Integer integer = service.changeStatusById(id, status);
+        if (!integer.equals(0)) {
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteNewTransactions() {
+        service.deleteNewTransactions();
+        return ResponseEntity.accepted().build();
     }
 }
