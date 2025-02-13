@@ -2,9 +2,11 @@ package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
+@Validated
 public class ProductController {
 
     private final ProductService productService;
@@ -37,13 +40,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
         Product addedProduct = productService.addProduct(product);
         return ResponseEntity.ok(addedProduct);
     }
 
     @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@RequestBody @Valid Product product) {
         Optional<Product> updated = productService.updatedProduct(product);
         if (updated.isPresent()) {
             return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
