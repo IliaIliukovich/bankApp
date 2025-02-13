@@ -2,6 +2,7 @@ package de.telran.bankapp.repository;
 
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.enums.CurrencyCode;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,15 +22,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.currencyCode= :currencyCode")
     List<Account> getAllAccountsByCurrencyCode(CurrencyCode currencyCode);
 
-    @Query("SELECT a FROM Account a WHERE a.id= :id")
-    Account getAccountById(Long id);
-
-    @Query("SELECT a FROM Account a")
-    List<Account> getAllAccounts();
+   
 
     @Query ("DELETE FROM Account a WHERE a.id = :id")
     @Modifying
-    @Transient
+    @Transactional
     void deleteAccountById(Long id);
 
     }

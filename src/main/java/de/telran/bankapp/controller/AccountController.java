@@ -27,7 +27,7 @@ public class AccountController {
     }
 
     @GetMapping("{id}")
-    public Optional<Account> getAccountById(@PathVariable Long id) {
+    Account getAccountById(@PathVariable Long id) {
         return service.getAccountById(id);
     }
 
