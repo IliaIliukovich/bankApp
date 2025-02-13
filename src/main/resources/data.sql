@@ -1,7 +1,7 @@
-insert into	 bankapp.client (id, last_name, first_name, status) values ("4ea37144-df60-4681-b796-760345166d39", "Schmidt", "Hans", 1);
+insert into	 client (id, last_name, first_name, status) values ("4ea37144-df60-4681-b796-760345166d39", "Schmidt", "Hans", 1);
 
 -- ADD PRODUCTS
-INSERT INTO bankapp.product (id, name, currency_code, interest_rate, limit_amount, status)
+INSERT INTO product (id, name, currency_code, interest_rate, limit_amount, status)
 VALUES
     (1, 'Current Account', 1, 2.0, 1500.75, 1),
     (2, 'Credit Account', 0, 18.0, 5000.00, 1),
