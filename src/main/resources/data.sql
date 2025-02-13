@@ -27,9 +27,8 @@ values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2
         ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
         ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
 
--- ADD PRODUCTS
-INSERT INTO product (id, name, currency_code, interest_rate, limit_amount, status)
-VALUES
+insert into product (id, name, currency_code, interest_rate, limit_amount, status)
+values
     (1, 'Current Account', 1, 2.0, 1500.75, 1),
     (2, 'Credit Account', 0, 18.0, 5000.00, 1),
     (3, 'Business Credit', 2, 18.0, 20000.00, 0),
@@ -45,3 +44,16 @@ VALUES
     (13, 'Personal Loan', 1, 8.0, 10000.00, 1),
     (14, 'Corporate Investment', 2, 10.0, 150000.00, 0),
     (15, 'Fixed Deposit', 0, 4.0, 50000.00, 1);
+
+insert into	 account (id, name, type, status, balance, currency_code)
+values
+    (1, "John Doe", 0, 0, 1500.75, 1),
+    (2, "Alice Smith", 1, 0, 10200.00, 0),
+    (3, "Bob Johnson", 2, 2, -5000.50, 1),
+    (4, "Emma Brown", 3, 1, 200.00, 2),
+    (5, "David Wilson", 4, 0, -1200.00, 0),
+    (6, "Sophia Martinez", 0, 2, 500.25, 1),
+    (7, "James Anderson", 1, 1, 2500.00, 2),
+    (8, "Olivia Taylor", 5, 0, 75.90, 0),
+    (9, "Michael White", 3, 2, 0.00, 1),
+    (10, "Emily Harris", 4, 0, -300.40, 2);

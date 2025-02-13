@@ -1,10 +1,8 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.Account;
-import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -29,7 +27,7 @@ public class AccountController {
     }
 
     @GetMapping("{id}")
-    public Optional<Account> getAccountById(@PathVariable Long id) {
+    Account getAccountById(@PathVariable Long id) {
         return service.getAccountById(id);
     }
 
@@ -39,9 +37,12 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public List<Account> getAllAccountsByCurrencyCodeBalance(@RequestParam BigDecimal minValue, @RequestParam BigDecimal maxValue) {
-        return service.getAllAccountsByCurrencyCodeBalance(minValue, maxValue);
+    public List<Account> getAllAccountsByBalance(
+            @RequestParam(name = "minValue", required = false, defaultValue = "0") BigDecimal minValue,
+            @RequestParam(name = "maxValue", required = false, defaultValue = "1000000") BigDecimal maxValue) {
+        return service.getAllAccountsByBalance(minValue, maxValue);
     }
+
 
     @PostMapping("/create")
     public Account createAccount(@RequestBody Account account) {
@@ -50,7 +51,7 @@ public class AccountController {
 
     @PutMapping("/update/{id}")
     public Account updateAccount (@RequestBody Account account) {
-        return service.update(account);
+        return service.create(account);
     }
 
     @DeleteMapping("/delete/{id}")
