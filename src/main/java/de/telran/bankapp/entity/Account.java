@@ -4,10 +4,7 @@ package de.telran.bankapp.entity;
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;
 import de.telran.bankapp.entity.enums.CurrencyCode;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +23,16 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private AccountType type;
-    private AccountStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType Type;
+
+    @Enumerated(EnumType.STRING)
+    private AccountStatus Status;
+
     private BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
 
 }

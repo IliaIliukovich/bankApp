@@ -47,13 +47,13 @@ values
 
 insert into	 account (id, name, type, status, balance, currency_code)
 values
-    (1, "John Doe", 0, 0, 1500.75, 1),
-    (2, "Alice Smith", 1, 0, 10200.00, 0),
-    (3, "Bob Johnson", 2, 2, -5000.50, 1),
-    (4, "Emma Brown", 3, 1, 200.00, 2),
-    (5, "David Wilson", 4, 0, -1200.00, 0),
-    (6, "Sophia Martinez", 0, 2, 500.25, 1),
-    (7, "James Anderson", 1, 1, 2500.00, 2),
-    (8, "Olivia Taylor", 5, 0, 75.90, 0),
-    (9, "Michael White", 3, 2, 0.00, 1),
-    (10, "Emily Harris", 4, 0, -300.40, 2);
+    (1, 'John Doe',  'CHECKING', 'ACTIVE', 1500.75, 'USD'),
+    (2, 'Alice Smith', 'SAVINGS', 'ACTIVE', 10200.00, 'EUR'),
+    (3, 'Bob Johnson', 'LOAN', 'BLOCKED', -5000.50, 'USD'),
+    (4, 'Emma Brown', 'DEBIT_CARD', 'INACTIVE', 200.00, 'GBP'),
+    (5, 'David Wilson', 'CREDIT_CARD', 'ACTIVE', -1200.00, 'EUR'),
+    (6, 'Sophia Martinez', 'CHECKING', 'BLOCKED', 500.25, 'USD'),
+    (7, 'James Anderson', 'SAVINGS', 'INACTIVE', 2500.00, 'GBP'),
+    (8, 'Olivia Taylor', 'OTHER', 'ACTIVE', 75.90, 'EUR'),
+    (9, 'Michael White', 'DEBIT_CARD', 'BLOCKED', 0.00, 'USD'),
+    (10, 'Emily Harris', 'CREDIT_CARD', 'ACTIVE', -300.40, 'GBP');
