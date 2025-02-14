@@ -16,10 +16,12 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Entity
+@Table(name = "client")
 public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", columnDefinition = "varchar(36)")
     private String id;
 
     @NotNull(message = "{validation.client.lastName}")
