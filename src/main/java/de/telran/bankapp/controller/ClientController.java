@@ -55,31 +55,22 @@ public class ClientController {
 
     @PutMapping
     public ResponseEntity<Client> updateClient(@RequestBody @Valid Client client) {
-        Optional<Client> updated = service.updateClient(client);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Client updated = service.updateClient(client);
+        return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     }
 
     @PatchMapping
     public ResponseEntity<Void> changeStatus(@RequestParam String id, @RequestParam(required = false) ClientStatus status){
-        Integer integer = service.changeStatus(id, status);
-        if (!integer.equals(0)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        service.changeStatus(id, status);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/changeAddress")
     public ResponseEntity<Client> changeAddress(@RequestParam String id,
                                                 @RequestParam @Length(max = 150, message ="{validation.client.address}")
                                                 String address){
-        Optional<Client> client = service.updateAddress(id, address);
-        if (client.isPresent()) {
-            return new ResponseEntity<>(client.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Client client = service.updateAddress(id, address);
+        return new ResponseEntity<>(client, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
@@ -87,6 +78,5 @@ public class ClientController {
         service.deleteClient(id);
         return ResponseEntity.accepted().build();
     }
-
 
 }

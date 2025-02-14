@@ -2,7 +2,10 @@ package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
+import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.ClientRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+//@Slf4j
 public class ClientService {
+
+    private static Logger logger = LogManager.getLogger(ClientService.class);
 
     private ClientRepository repository;
 
@@ -20,7 +26,15 @@ public class ClientService {
     }
 
     public List<Client> getAll() {
-        return repository.findAll();
+        List<Client> clients = repository.findAll();
+//        if (log.isDebugEnabled()) {
+//            log.debug("Clients retrieved from db");
+////        log.debug("Client ids: " + clients.stream().map(Client::getId).toList());
+//            log.debug("Client ids: {}", clients.stream().map(Client::getId).toList());
+//        }
+        logger.debug("Clients retrieved from db");
+        logger.debug("Client ids: {}", () -> clients.stream().map(Client::getId).toList());
+        return clients;
     }
 
     public Optional<Client> getClientById(String uuid) {
@@ -39,32 +53,30 @@ public class ClientService {
        return repository.save(client);
     }
 
-    public Optional<Client> updateClient(Client client) {
+    public Client updateClient(Client client) {
         String id = client.getId();
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Client saved = repository.save(client);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
+            return repository.save(client);
         }
+        throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
-    public Optional<Client> updateAddress(String id, String address) {
+    public Client updateAddress(String id, String address) {
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
             Client client = optional.get();
             client.setAddress(address);
             Client saved = repository.save(client);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
+            return saved;
         }
+        throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
-    public Integer changeStatus(String id, ClientStatus status) {
+    public void changeStatus(String id, ClientStatus status) {
         ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : status;
-        return repository.updateStatus(id, clientStatus);
+        int updated = repository.updateStatus(id, clientStatus);
+        if (updated == 0) throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
     public void deleteClient(String id) {
