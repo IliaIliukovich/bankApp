@@ -2,6 +2,7 @@ package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
+import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,32 +40,30 @@ public class ClientService {
        return repository.save(client);
     }
 
-    public Optional<Client> updateClient(Client client) {
+    public Client updateClient(Client client) {
         String id = client.getId();
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Client saved = repository.save(client);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
+            return repository.save(client);
         }
+        throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
-    public Optional<Client> updateAddress(String id, String address) {
+    public Client updateAddress(String id, String address) {
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
             Client client = optional.get();
             client.setAddress(address);
             Client saved = repository.save(client);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
+            return saved;
         }
+        throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
-    public Integer changeStatus(String id, ClientStatus status) {
+    public void changeStatus(String id, ClientStatus status) {
         ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : status;
-        return repository.updateStatus(id, clientStatus);
+        int updated = repository.updateStatus(id, clientStatus);
+        if (updated == 0) throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
     public void deleteClient(String id) {
