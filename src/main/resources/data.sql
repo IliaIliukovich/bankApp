@@ -22,11 +22,6 @@ values  (1, "Hans", "Schmidt", 0),
         (9, "Markus", "Hoffmann", 1),
         (10, "Laura", "Lehmann", 0);
 
-insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
-values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),
-        ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
-        ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
-
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
 values
     (1, 'Current Account', 1, 2.0, 1500.75, 1),
@@ -45,15 +40,20 @@ values
     (14, 'Corporate Investment', 2, 10.0, 150000.00, 0),
     (15, 'Fixed Deposit', 0, 4.0, 50000.00, 1);
 
-insert into	 account (id, name, type, status, balance, currency_code)
+insert into	 account (id, name, type, status, balance, currency_code, client_id)
 values
-    (1, "DE88370400440532013021", 0, 0, 1500.75, 1),
-    (2, "DE88370400440532013088", 1, 0, 10200.00, 0),
-    (3, "DE88370400440532013545", 2, 2, -5000.50, 1),
-    (4, "DE88370400440532012111", 3, 1, 200.00, 2),
-    (5, "DE88370400440532016543", 4, 0, -1200.00, 0),
-    (6, "DE88370400440532019876", 0, 2, 500.25, 1),
-    (7, "DE88370400440532011254", 1, 1, 2500.00, 2),
-    (8, "DE88370400440532015555", 5, 0, 75.90, 0),
-    (9, "DE88370400440532018634", 3, 2, 0.00, 1),
-    (10, "DE88370400440532010643", 4, 0, -300.40, 2);
+    (1, "DE88370400440532013021", 0, 0, 1500.75, 1, "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
+    (2, "DE88370400440532013088", 1, 0, 10200.00, 0, "20980395-20d0-4ea8-8e4b-de2252a028eb"),
+    (3, "DE88370400440532013545", 2, 2, -5000.50, 1, "9cd1b6c5-06d7-4f6c-9959-3856b1b51045"),
+    (4, "DE88370400440532012111", 3, 1, 200.00, 2, "5e659d3c-3925-457d-ae41-ca69001fb11c"),
+    (5, "DE88370400440532016543", 4, 0, -1200.00, 0, "b03dbcfc-d047-49a7-acbb-f3b1329e1fee"),
+    (6, "DE88370400440532019876", 0, 2, 500.25, 1, "bb10eec7-e408-4f11-9603-ec3c4a371512"),
+    (7, "DE88370400440532011254", 1, 1, 2500.00, 2, "7d1388c1-04df-4473-b15b-fe614594aa3c"),
+    (8, "DE88370400440532015555", 5, 0, 75.90, 0, "3d18c400-a7b3-4bb1-bb29-8f566a43eca1"),
+    (9, "DE88370400440532018634", 3, 2, 0.00, 1, "d07ec73f-702a-479c-a930-f51596d9b899"),
+    (10, "DE88370400440532010643", 4, 0, -300.40, 2, "f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c");
+
+insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
+values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),
+        ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
+        ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
