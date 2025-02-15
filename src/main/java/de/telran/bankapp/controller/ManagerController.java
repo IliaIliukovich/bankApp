@@ -6,6 +6,8 @@ import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.service.ManagerService;
 import jakarta.validation.Valid;
+import org.hibernate.validator.constraints.CodePointLength;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +35,8 @@ public class ManagerController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Manager> getManagerById(@PathVariable Long id) {
-        Optional<Manager> found = service.getManagerById(id);
-        if (found.isPresent()) {
-            return new ResponseEntity<>(found.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Optional<Manager> getManagerById(@PathVariable Long id) {
+        return Optional.ofNullable(service.getManagerById(id));
     }
 
     @GetMapping("/search")
@@ -54,14 +52,11 @@ public class ManagerController {
 
     @PutMapping
     public ResponseEntity<Manager> updateManager(@RequestBody @Valid Manager manager) {
-        Optional<Manager> updated = service.updateManager(manager);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Manager updatedManager = service.updateManager(manager);
+        return new ResponseEntity<>(updatedManager,HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/searshByFirstAndLastName")
+    @GetMapping("/searchByFirstAndLastName")
     public List<Manager> findByFirstNameAndLastName(@RequestParam String firstName, @RequestParam String lastName){
         return service.findByFirstNameAndLastName(firstName,lastName);
     }
@@ -73,18 +68,23 @@ public class ManagerController {
 
     @PatchMapping
     public ResponseEntity<Void> changeManagerStatus(@RequestParam Long id, @RequestParam(required = false) ManagerStatus status) {
-        Integer integer = service.changeManagerStatus(id,status);
-        if(!integer.equals(0)){
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        service.changeManagerStatus(id,status);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteManager(@PathVariable Long id) {
         service.deleteManager(id);
         return ResponseEntity.accepted().build();
+    }
+
+    @PatchMapping("/changeLastName")
+    public ResponseEntity<Manager> changeLastName(@RequestParam Long id,
+                                                  @RequestParam @Length(max = 45,
+                                                          message ="Last name should start with capital" +
+                                                                  " letter and shoulbe no more 45 symbols!") String newLastName){
+        Manager managerWithNewLastName = service.updateLastName(id,newLastName);
+        return new ResponseEntity<>(managerWithNewLastName,HttpStatus.ACCEPTED);
     }
 
 }

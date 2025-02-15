@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +21,9 @@ public class Manager {
 
   @NotNull(message="{validation.manager.lastName}")
   @Pattern(regexp = "\\A[A-ZÜÄÖ]{1}[a-zA-Z+üäö]{1,45}",message = "{validation.manager.lastName}")
+  @Length(max = 45,
+          message ="Last name should start with capital" +
+                  " letter and shoulbe no more 45 symbols!")
   private String lastName;
 
   @NotNull(message = "{validation.manager.firstName}")
