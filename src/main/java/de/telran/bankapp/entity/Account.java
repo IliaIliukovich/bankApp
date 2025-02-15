@@ -30,5 +30,6 @@ public class Account {
     private AccountStatus status;
     private BigDecimal balance;
     private CurrencyCode currencyCode;
+    private String clientId;
 
 }
