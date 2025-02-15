@@ -4,6 +4,8 @@ import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.ClientRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+//@Slf4j
 public class ClientService {
+
+    private static Logger logger = LogManager.getLogger(ClientService.class);
 
     private ClientRepository repository;
 
@@ -21,7 +26,15 @@ public class ClientService {
     }
 
     public List<Client> getAll() {
-        return repository.findAll();
+        List<Client> clients = repository.findAll();
+//        if (log.isDebugEnabled()) {
+//            log.debug("Clients retrieved from db");
+////        log.debug("Client ids: " + clients.stream().map(Client::getId).toList());
+//            log.debug("Client ids: {}", clients.stream().map(Client::getId).toList());
+//        }
+        logger.debug("Clients retrieved from db");
+        logger.debug("Client ids: {}", () -> clients.stream().map(Client::getId).toList());
+        return clients;
     }
 
     public Optional<Client> getClientById(String uuid) {

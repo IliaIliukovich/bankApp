@@ -1,0 +1,15 @@
+Group1
+
+PUT request to `/transaction/transfer?from=<fromId>&to=<toId>&amount=<moneyAmount>`:
+- transfers money between accounts with given ids
+- if the matching records exists and account has enough money to transfer, the response code is 200 and the empty response body in return
+- if there is no record(s) in the collection with the given id, the response code is 404 with error(s) explanation in response
+- if account has not enough money to transfer, the response code is 400 with error explanation in response
+
+Group2
+
+PUT request to `/account/new?clientId=<clientId>&productId=<productId>&initialAmount=<initialAmount>`:
+- creates new account for the given client with the given initial amount of money
+- creates new agreement connected to account with the info retrieved from product by productId
+- if there is no record(s) in the collection with the given clientId or productId, the response code is 404 with error(s) explanation in response
+- if the product status is INACTIVE or initialAmount is more than product limitAmount, the response code is 400 with error explanation in response
