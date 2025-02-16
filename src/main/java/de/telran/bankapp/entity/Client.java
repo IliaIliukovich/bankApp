@@ -37,7 +37,7 @@ public class Client {
     private String taxCode;
 
     //@Email(regexp = "[a-z\\.]+@[a-z]+\\.[a-z]+", message ="{validation.client.email}")
-    @Email(regexp = "^[a-zA-Z][\\\\w.-]*@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$", message ="{validation.client.email}")
+    @Email(regexp = "^[a-zA-Z][\\\\w.-]*@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$", message ="{validation.client.email}"+"{validation.client.email}")
     private String email;
 
     @Length(max = 150, message ="{validation.client.address}")
