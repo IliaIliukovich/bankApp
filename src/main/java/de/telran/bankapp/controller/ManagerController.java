@@ -6,6 +6,7 @@ import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.service.ManagerService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.CodePointLength;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +80,21 @@ public class ManagerController {
     }
 
     @PatchMapping("/changeLastName")
-    public ResponseEntity<Manager> changeLastName(@RequestParam Long id,
-                                                  @RequestParam @Length(max = 45,
-                                                          message ="Last name should start with capital" +
-                                                                  " letter and shoulbe no more 45 symbols!") String newLastName){
-        Manager managerWithNewLastName = service.updateLastName(id,newLastName);
-        return new ResponseEntity<>(managerWithNewLastName,HttpStatus.ACCEPTED);
+    public ResponseEntity<Manager> changeLastName(
+            @RequestParam Long id,
+            @RequestParam
+            @Valid
+            @Pattern(
+                    regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",
+                    message = "Last name should not be null," +
+                            " should be in latin letters," +
+                            " first letter shuld be capital," +
+                            " shuld have only" +
+                            " - ' üäö  and no more than 45 symbols!"
+            ) String newLastName) {
+        Manager managerWithNewLastName = service.updateLastName(id, newLastName);
+        return new ResponseEntity<>(managerWithNewLastName, HttpStatus.ACCEPTED);
     }
+
 
 }

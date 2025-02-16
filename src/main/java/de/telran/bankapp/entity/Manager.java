@@ -20,14 +20,14 @@ public class Manager {
   private Long id;
 
   @NotNull(message="{validation.manager.lastName}")
-  @Pattern(regexp = "\\A[A-ZÜÄÖ]{1}[a-zA-Z+üäö]{1,45}",message = "{validation.manager.lastName}")
+  @Pattern(regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",message = "{validation.manager.lastName}")
   @Length(max = 45,
           message ="Last name should start with capital" +
                   " letter and shoulbe no more 45 symbols!")
   private String lastName;
 
   @NotNull(message = "{validation.manager.firstName}")
-  @Pattern(regexp = "\\A[A-ZÜÄÖ]{1}[a-zA-Z+üäö]{1,45}",message = "{validation.manager.firstName}")
+  @Pattern(regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",message = "{validation.manager.firstName}")
   private String firstName;
 
   @Enumerated(EnumType.STRING)
