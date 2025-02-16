@@ -3,6 +3,7 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.enums.CardType;
 import de.telran.bankapp.service.CardServices;
 import de.telran.bankapp.entity.Card;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,58 +13,88 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/card")
+@RequestMapping("/cards")
 public class CardController {
 
-    private CardServices cardServices;
+    private final CardServices service;
 
     @Autowired
-    public CardController(CardServices cardServices) {
-        this.cardServices = cardServices;
+    public CardController(CardServices service) {
+        this.service = service;
     }
 
     @GetMapping("/all")
-    public List<Card> findAll() {
-        return cardServices.findAll();
+    public ResponseEntity<List<Card>> findAll() {
+        List<Card> cards = service.findAll();
+        if (!cards.isEmpty()) {
+            return new ResponseEntity<>(cards, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("{number}")
-    public Optional<Card> findByNumber(@PathVariable String number) {
-        return Optional.ofNullable(cardServices.findByNumber(number));
+    @GetMapping("/{id}")
+    public ResponseEntity<Card> findById(@PathVariable String id) {
+        Optional<Card> card = service.findByNumber(id);
+        if (card.isPresent()) {
+            return new ResponseEntity<>(card.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/search")
-    public List<Card> findByName(@RequestParam String name) {
-        return cardServices.findByName(name);
+    @GetMapping("/number")
+    public ResponseEntity<Card> findByNumber(@RequestParam String number) {
+        Optional<Card> card = service.findByNumber(number);
+        if (card.isPresent()) {
+            return new ResponseEntity<>(card.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<Card> findByName(@RequestParam String name) {
+        Optional<Card> card = service.findByName(name);
+        if (card.isPresent()) {
+            return new ResponseEntity<>(card.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/type")
+    public ResponseEntity<List<Card>> findByType(@RequestParam CardType type) {
+        List<Card> cards = service.findByType(type);
+        if (!cards.isEmpty()) {
+            return new ResponseEntity<>(cards, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/add")
     public ResponseEntity<Card> addCard(@RequestBody Card card) {
-        Card created = cardServices.addCard(card);
+        Card created = service.addCard(card);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
     public ResponseEntity<Card> updateCard(@RequestBody Card card) {
-        Optional<Card> updated = cardServices.updateCard(card);
+        Optional<Card> updated = service.updateCard(card);
         if(updated.isPresent()) {
             return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PatchMapping("/updateType")
-    public ResponseEntity<Card> updateCardType(@RequestParam String id, @RequestParam CardType type) {
-        Optional<Card> updated = cardServices.updateCardType(id, type);
+    @PatchMapping("/changeType")
+    public ResponseEntity<Card> changeCardType(@RequestParam String id, @RequestParam String type) {
+        Optional<Card> updated = service.changeCardType(id, type);
         if(updated.isPresent()) {
             return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCard(@PathVariable String id) {
-        cardServices.deleteCard(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteCard(@RequestParam String id) {
+        service.deleteCard(id);
         return ResponseEntity.accepted().build();
     }
 }
