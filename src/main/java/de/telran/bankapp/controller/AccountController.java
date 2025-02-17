@@ -1,6 +1,7 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.Account;
+import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,11 @@ public class AccountController {
     @PutMapping("/update/{id}")
     public Account updateAccount (@RequestBody Account account) {
         return service.create(account);
+    }
+
+    @PutMapping("/new")
+    public Account createNewAccount (@RequestParam String clientId, @RequestParam Long productId, @RequestParam BigDecimal initialAmount) {
+        return service.createNewAccount(clientId, productId, initialAmount);
     }
 
     @DeleteMapping("/delete/{id}")

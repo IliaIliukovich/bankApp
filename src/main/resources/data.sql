@@ -11,16 +11,16 @@ values  ("b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0","Schmidt", "Hans", "DE123456789"
         ("f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c", "Hoffmann", "Clara", "DE012345678", "c.hoffmann@example.com", "Bremen, Germany", "+49 421 1234567", "ACTIVE");
 
 insert into manager (id,first_name,last_name,status)
-values  (1, "Hans", "Schmidt", 0),
-        (2, "Anna", "Müller", 1),
-        (3, "Peter", "Weber", 1),
-        (4, "Claudia", "Fischer", 0),
-        (5, "Thomas", "Meyer", 1),
-        (6, "Sophia", "Wagner", 0),
-        (7, "Stefan", "Becker", 1),
-        (8, "Julia", "Schulz", 0),
-        (9, "Markus", "Hoffmann", 1),
-        (10, "Laura", "Lehmann", 0);
+values  (1, "Hans", "Schmidt", "ACTIVE"),
+        (2, "Anna", "Müller", "INACTIVE"),
+        (3, "Peter", "Weber", "INACTIVE"),
+        (4, "Claudia", "Fischer", "ACTIVE"),
+        (5, "Thomas", "Meyer", "INACTIVE"),
+        (6, "Sophia", "Wagner", "ACTIVE"),
+        (7, "Stefan", "Becker", "INACTIVE"),
+        (8, "Julia", "Schulz", "ACTIVE"),
+        (9, "Markus", "Hoffmann", "INACTIVE"),
+        (10, "Laura", "Lehmann", "ACTIVE");
 
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
 values
