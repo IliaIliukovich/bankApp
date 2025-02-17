@@ -39,5 +39,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
+    private String clientId;
 
 }

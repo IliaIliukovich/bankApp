@@ -22,11 +22,6 @@ values  (1, "Hans", "Schmidt", 0),
         (9, "Markus", "Hoffmann", 1),
         (10, "Laura", "Lehmann", 0);
 
-insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
-values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2),
-        ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
-        ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
-
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
 values
     (1, 'Current Account', 1, 2.0, 1500.75, 1),
@@ -57,3 +52,8 @@ values
     (8, 'Olivia Taylor', 'OTHER', 'ACTIVE', 75.90, 'EUR'),
     (9, 'Michael White', 'DEBIT_CARD', 'BLOCKED', 0.00, 'USD'),
     (10, 'Emily Harris', 'CREDIT_CARD', 'ACTIVE', -300.40, 'GBP');
+
+insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
+values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2),
+        ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
+        ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
