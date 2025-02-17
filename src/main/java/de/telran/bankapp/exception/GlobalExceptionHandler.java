@@ -44,9 +44,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BankAppResourceNotFoundException.class)
-    public ResponseEntity<String> handleHttpMessageNotReadableException(BankAppResourceNotFoundException e) {
+    public ResponseEntity<String> handleBankAppResourceNotFoundException(BankAppResourceNotFoundException e) {
         logger.debug("BankAppResourceNotFoundException", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BankAppBadRequestException.class)
+    public ResponseEntity<String> handleBankAppBadRequestException(BankAppBadRequestException e) {
+        logger.debug("BankAppBadRequestException", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
