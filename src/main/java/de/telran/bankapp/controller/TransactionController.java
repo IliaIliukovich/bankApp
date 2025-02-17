@@ -3,6 +3,7 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
+import de.telran.bankapp.exception.InsufficientFundsException;
 import de.telran.bankapp.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -33,7 +35,7 @@ public class TransactionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable String id) {
         Optional<Transaction> optional = service.getTransactionById(id);
         if (optional.isPresent()) {
@@ -80,6 +82,20 @@ public class TransactionController {
             return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/transfer")
+    public ResponseEntity<?> transferMoney(@RequestParam Long fromId,
+                                           @RequestParam Long toId,
+                                           @RequestParam BigDecimal amount) {
+        try {
+            service.transferMoney(fromId, toId, amount);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("One or both accounts not found.");
+        } catch (InsufficientFundsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient funds for transfer.");
+        }
     }
 
 

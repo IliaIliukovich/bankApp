@@ -28,4 +28,7 @@ public class Transaction {
     private TransactionStatus status;
     private Long debitAccountId;// получатель
     private Long creditAccountId;// отправитель
+
+    public Transaction(Long fromId, Long toId, BigDecimal amount, TransactionType transactionType) {
+    }
 }
