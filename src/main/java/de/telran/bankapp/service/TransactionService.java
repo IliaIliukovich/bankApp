@@ -26,8 +26,9 @@ public class TransactionService {
         return repository.findAll();
     }
 
-    public Optional<Transaction> getTransactionById(String id) {
-        return repository.findById(id);
+    public Transaction getTransactionById(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database"));
     }
 
     public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {

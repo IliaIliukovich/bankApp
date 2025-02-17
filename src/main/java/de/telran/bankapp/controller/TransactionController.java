@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/transaction")
 @Validated
 public class TransactionController {
+
+    private static final String UUID_REGEX = "^[a-f0-9\\-]{36}$";
 
     private TransactionService service;
 
@@ -35,13 +36,8 @@ public class TransactionController {
 
     @GetMapping("{id}")
     public ResponseEntity<Transaction> getTransactionById(
-            @PathVariable @Pattern(regexp = "^[a-f0-9\\-]{36}$", message = "{validation.transaction.id}") String id) {
-        Optional<Transaction> optional = service.getTransactionById(id);
-        if (optional.isPresent()) {
-            return new ResponseEntity<>(optional.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+            @PathVariable @Pattern(regexp = UUID_REGEX, message = "{validation.transaction.id}") String id) {
+        return new ResponseEntity<>(service.getTransactionById(id), HttpStatus.OK);
     }
 
     @GetMapping("/search")
@@ -89,7 +85,7 @@ public class TransactionController {
 
     @PatchMapping
     public ResponseEntity<Void> changeStatus(
-            @RequestParam @Pattern(regexp = "^[a-f0-9\\-]{36}$", message = "{validation.transaction.id}") String id,
+            @RequestParam @Pattern(regexp = UUID_REGEX, message = "{validation.transaction.id}") String id,
             @RequestParam TransactionStatus status) {
         service.changeStatusById(id, status);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
