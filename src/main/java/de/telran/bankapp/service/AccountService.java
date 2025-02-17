@@ -4,12 +4,12 @@ import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Agreement;
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Product;
-import de.telran.bankapp.entity.enums.AccountStatus;
-import de.telran.bankapp.entity.enums.AccountType;
-import de.telran.bankapp.entity.enums.AgreementStatus;
-import de.telran.bankapp.entity.enums.CurrencyCode;
+import de.telran.bankapp.entity.enums.*;
+import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.AccountRepository;
 import de.telran.bankapp.repository.AgreementRepository;
+import de.telran.bankapp.repository.ClientRepository;
+import de.telran.bankapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,18 +20,20 @@ import java.util.Optional;
 @Service
 public class AccountService {
 
+    
     private AccountRepository repository;
-    private ProductService productService;
+    private ProductRepository productrepository;
 
-    private ClientService clientService;
+    private ClientRepository clientRepository;
     private AgreementRepository agreementRepository;
 
     @Autowired
-    public AccountService(AccountRepository repository, ProductService productService, AgreementRepository agreementRepository, ClientService clientService) {
+    public AccountService(AccountRepository repository, ProductRepository productRepository,
+                          AgreementRepository agreementRepository,ClientRepository clientRepository) {
         this.repository = repository;
-        this.productService = productService;
         this.agreementRepository = agreementRepository;
-        this.clientService = clientService;
+        this.clientRepository = clientRepository;
+        this.productrepository = productRepository;
     }
 
     public Account getAccountById(Long id) {
@@ -63,25 +65,33 @@ public class AccountService {
 
 
     public Account createNewAccount(String clientId, Long productId, BigDecimal initialAmount) {
-        Optional<Product> product = productService.getProductById(productId);
-        Optional<Client> optionalClient = clientService.getClientById(clientId);
+        Optional<Product> optionalProduct = productrepository.findById(productId);
+        Optional<Client> optionalClient = clientRepository.findById(clientId);
         Account account = null;
-        if (optionalClient.isPresent()) {
-            if (product.isPresent()) {
-                Product product1 = product.get();
-                account = new Account(null, "DE88370400440532013789", AccountType.CHECKING,
-                        AccountStatus.ACTIVE, initialAmount, product1.getCurrencyCode(), clientId);
+        if (optionalClient.isPresent()&& optionalProduct.isPresent()) {
+            
+                Product product = optionalProduct.get();
+                account = new Account(null, "NewAccountName", AccountType.CHECKING,
+                        AccountStatus.ACTIVE, initialAmount, product.getCurrencyCode(), clientId);
 
                 Account saved = repository.save(account);
-                Agreement agreement = new Agreement(null, product1.getInterestRate(), AgreementStatus.ACTIVE,
-                        product1.getLimitAmount(), saved.getId(), productId);
+                Agreement agreement = new Agreement(null, product.getInterestRate(), AgreementStatus.ACTIVE,
+                        product.getLimitAmount(), saved.getId(), productId);
                 agreementRepository.save(agreement);
                 return saved;
-            } else {
-
-            }
+        } else if (optionalClient.isEmpty()) {
+            throw new BankAppResourceNotFoundException("Client with id = " + clientId + " not found in database");
+        } else if (optionalProduct.isEmpty()) {
+            throw new BankAppResourceNotFoundException("Product with id = " + productId + " not found in database");
+        } else if (optionalProduct.get().getStatus().equals(ProductStatus.INACTIVE)) {
+            throw new BankAppResourceNotFoundException("Product with id = " + productId + " has status Inactive!");
+        } else if (initialAmount.compareTo(optionalProduct.get().getLimitAmount()) == 1) {
+            throw new BankAppResourceNotFoundException("Product with id = " + productId +
+                    " has  limitAmount "+optionalProduct.get().getLimitAmount()+" les then initial Amount"
+            +initialAmount+" !");
+        }else {
+            throw new BankAppResourceNotFoundException("New account is not created!");
         }
-        return null;
     }
 }
 
