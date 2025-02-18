@@ -54,6 +54,6 @@ values
     (10, "DE88370400440532010643", 4, 0, -300.40, 2, "f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c");
 
 insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
-values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2),
-        ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
-        ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
+values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),
+        ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
+        ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);

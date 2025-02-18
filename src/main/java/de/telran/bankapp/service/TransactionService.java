@@ -3,6 +3,7 @@ package de.telran.bankapp.service;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
+import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,9 @@ public class TransactionService {
         return repository.findAll();
     }
 
-    public Optional<Transaction> getTransactionById(String id) {
-        return repository.findById(id);
+    public Transaction getTransactionById(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database"));
     }
 
     public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
@@ -47,22 +49,23 @@ public class TransactionService {
         return repository.nativeQuery(type, status);
     }
 
-
     public Transaction addTransaction(Transaction transaction) {
         return repository.save(transaction);
     }
 
-    public Optional<Transaction> updateTransaction(Transaction transaction) {
+    public Transaction updateTransaction(Transaction transaction) {
         String id = transaction.getId();
         Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
-            return Optional.of(repository.save(transaction));
+            return repository.save(transaction);
         }
-        return Optional.empty();
+        throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");
     }
 
-    public Integer changeStatusById(String id, TransactionStatus status) {
-        return repository.updateStatus(id, status);
+    public void changeStatusById(String id, TransactionStatus status) {
+        int integer = repository.updateStatus(id, status);
+        if (integer == 0)
+            throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");
     }
 
     public void deleteNewTransactions() {
