@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AccountService {
@@ -63,11 +64,8 @@ public class AccountService {
     public Account createNewAccount(String clientId, Long productId, BigDecimal initialAmount) {
         Optional<Product> productOptional = productService.getProductById(productId);
         Optional<Client> optionalClient = clientService.getClientById(clientId);
-        if (!optionalClient.isPresent()) {
-            throw new BankAppResourceNotFoundException("Client with id = " + clientId + " not found in database");
-        }
-        if (!productOptional.isPresent()) {
-            throw new BankAppResourceNotFoundException("Product with id = " + productId + " not found in database");
+        if (!optionalClient.isPresent() || !productOptional.isPresent()) {
+            throw new BankAppResourceNotFoundException("Client with id = " + clientId + " or product with id " + productId+ " not found in database");
         }
         Product product = productOptional.get();
         if (product.getStatus() == ProductStatus.INACTIVE) {
@@ -76,7 +74,8 @@ public class AccountService {
         if (initialAmount.compareTo(product.getLimitAmount()) > 0) {
             throw new BankAppBadRequestException("InitialAmount is more than product limitAmount");
         }
-        Account account = new Account(null, "DE88370400440532013789", AccountType.CHECKING,
+        String accountName = createNewAccountName();
+        Account account = new Account(null, accountName, AccountType.CHECKING,
                 AccountStatus.ACTIVE, initialAmount, product.getCurrencyCode(), clientId);
 
         Account savedAccount = repository.save(account);
@@ -84,6 +83,12 @@ public class AccountService {
                 product.getLimitAmount(), savedAccount.getId(), productId);
         agreementRepository.save(agreement);
         return savedAccount;
+    }
+
+    private static String createNewAccountName() {
+        Random random = new Random();
+        Integer randomNumber = 10_000_000 + random.nextInt(90_000_000);
+        return "DE883704004400" + randomNumber;
     }
 }
 
