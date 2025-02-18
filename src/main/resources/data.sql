@@ -57,3 +57,12 @@ insert into transaction (id, type, amount, description, status, debit_account_id
 values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),
         ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
         ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
+
+insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
+values
+    (UUID(), '1415 1532 7818 4133', 'John Smith', 1, '03/29', 1001, 'MASTERCARD'),
+    (UUID(), '2425 3542 9817 3234', 'Emily Johnson', 2, '01/27', 1002, 'VISA'),
+    (UUID(), '4326 1532 0814 2244', 'Michael Brown', 201, '12/30', 1003, 'MASTERCARD'),
+    (UUID(), '3215 2418 1439 5083', 'Sarah Davis', 111, '03/28', 1004, 'VISA'),
+    (UUID(), '9734 7382 9341 3850', 'David Martinez', 15, '05/31', 1005, 'VISA'),
+    (UUID(), '4411 0522 7708 5132', 'Sophia Wilson', 321, '04/27', 1006, 'MASTERCARD');

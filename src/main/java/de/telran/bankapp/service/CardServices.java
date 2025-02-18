@@ -20,58 +20,54 @@ import java.util.Optional;
 @Service
 public class CardServices {
 
-    private CardRepository cardRepository;
+    private final CardRepository repository;
 
     @Autowired
-    public CardServices(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
+    public CardServices(CardRepository repository) {
+        this.repository = repository;
     }
 
     public List<Card> findAll() {
-        return cardRepository.findAll();
+        return repository.findAll();
     }
 
-    public Card findByNumber(String number) {
-        return cardRepository.findByNumber(number);
+    public Optional<Card> findById(String id) {
+        return repository.findById(id);
     }
 
-    public List<Card> findByName(String name) {
-        return cardRepository.findByName(name);
+    public Optional<Card> findByNumber(String number) {
+        return Optional.ofNullable(repository.findByCardNumber(number));
+    }
+
+    public Optional<Card> findByName(String name) {
+        return Optional.ofNullable(repository.findByCardHolder(name));
+    }
+
+    public List<Card> findByType(CardType type) {
+        return repository.findCardByCardType(type);
     }
 
     public Card addCard(Card card) {
-        return cardRepository.addCard(card);
+        return repository.save(card);
     }
 
     public Optional<Card> updateCard(Card card) {
-        String number = card.getCardNumber();
-        Optional<Card> optional = Optional.ofNullable(cardRepository.findByNumber(number));
+        String id = card.getId();
+        Optional<Card> optional = repository.findById(id);
         if(optional.isPresent()) {
-            Card found = optional.get();
-            found.setCardHolder(card.getCardHolder());
-            found.setCardType(card.getCardType());
-            found.setCardNumber(card.getCardNumber());
-            found.setCvv(card.getCvv());
-            found.setExpiryDate(card.getExpiryDate());
-            found.setAccountId(card.getAccountId());
-            return optional.of(found);
-        }
-        return optional.empty();
-    }
-
-    public Optional<Card> updateCardType(String number, CardType type) {
-        Optional<Card> optional = Optional.ofNullable(cardRepository.findByNumber(number));
-        if(optional.isPresent()) {
-            Card card = optional.get();
-            card.setCardType(CardType.valueOf(String.valueOf(type)));
-            return Optional.of(card);
+            Card found = repository.save(card);
+            return Optional.of(found);
         }
         return Optional.empty();
     }
 
-    public void deleteCard(String number) {
-        cardRepository.deleteCard(number);
+    public Integer changeType(String id, CardType type) {
+           CardType cardType = type == null? CardType.VISA : type;
+           return repository.changeType(id, cardType);
     }
 
+    public void deleteCard(String id) {
+        repository.deleteById(id);
+    }
 }
 
