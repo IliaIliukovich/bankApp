@@ -2,6 +2,8 @@ package de.telran.bankapp.entity;
 
 import de.telran.bankapp.entity.enums.CardType;
 
+import de.telran.bankapp.entity.enums.ClientStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,15 +15,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
 public class Card {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Enumerated(EnumType.STRING)
     private CardType cardType;
     private String cardNumber;
     private String cardHolder;
     private Integer cvv;
-    //private LocalDateTime expirationDate; //Replaced with String to simplify data entry.
     private String expiryDate;
     private Long accountId;
-
 }

@@ -2,7 +2,6 @@ package de.telran.bankapp.repository;
 
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;
@@ -29,7 +28,6 @@ public interface ClientRepository extends JpaRepository<Client, String> {
 
     @Query("update Client c set c.status = :status where c.id = :id")
     @Modifying
-    @Transactional
     int updateStatus(String id, ClientStatus status);
 
 }
