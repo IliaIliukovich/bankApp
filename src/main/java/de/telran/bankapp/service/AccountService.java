@@ -21,7 +21,7 @@ import java.util.Random;
 @Service
 public class AccountService {
 
-    private AccountRepository repository;
+    private final AccountRepository repository;
     private ProductService productService;
 
     private ClientService clientService;
@@ -36,7 +36,11 @@ public class AccountService {
     }
 
     public Account getAccountById(Long id) {
-        return repository.findById(id).get();
+        Optional<Account> byId = repository.findById(id);
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
     }
 
     public List<Account> getAll() {
@@ -52,11 +56,9 @@ public class AccountService {
     }
 
 
-
-
         public Account create(Account account) {
-            String id = String.valueOf(account.getId());
-            Optional<Account> optional = repository.findById(Long.valueOf(id));
+            Long id = account.getId();
+            Optional<Account> optional = repository.findById(id);
             if (optional.isPresent()) {
                 return repository.save(account);
             }

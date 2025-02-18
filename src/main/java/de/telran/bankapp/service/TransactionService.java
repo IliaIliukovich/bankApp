@@ -4,7 +4,10 @@ import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
+import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.exception.InsufficientFundsException;
+import de.telran.bankapp.repository.AccountRepository;
 import de.telran.bankapp.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,17 +85,19 @@ public class TransactionService {
 
     public void transferMoney(Long fromId, Long toId, BigDecimal amount) {
         Account fromAccount = accountRepository.findById(fromId)
-                .orElseThrow(() -> new NoSuchElementException("Sender account not found"));
+                .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + fromId + " not found in database"));
 
         Account toAccount = accountRepository.findById(toId)
-                .orElseThrow(() -> new NoSuchElementException("Receiver account not found"));
+                .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + fromId + " not found in database"));
 
 
-                    if (fromAccount.getBalance().compareTo(amount) < 0) {
-                        throw new InsufficientFundsException("Insufficient funds for transfer.");
+        if (fromAccount.getBalance().compareTo(amount) < 0) {
+            throw new BankAppBadRequestException("Insufficient funds for transfer.");
         }
 
-
+        if (!fromAccount.getCurrencyCode().equals(toAccount.getCurrencyCode())) {
+            throw new BankAppBadRequestException("Currency code is not correct.");
+        }
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
 

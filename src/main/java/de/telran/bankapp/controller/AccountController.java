@@ -3,7 +3,12 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.service.AccountService;
+import jakarta.validation.Valid;
+import org.apache.logging.log4j.core.appender.rolling.action.IfAccumulatedFileCount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -45,13 +50,14 @@ public class AccountController {
     }
 
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody @Valid Account account) {
         Account created = service.create(account);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+
+    @PutMapping
     public ResponseEntity<Account> updateAccount (@RequestBody @Valid Account account) {
         Account updated =  service.create(account);
         return  new ResponseEntity<>(updated, HttpStatus.ACCEPTED);

@@ -84,17 +84,12 @@ public class TransactionController {
     }
 
     @PutMapping("/transfer")
-    public ResponseEntity<?> transferMoney(@RequestParam Long fromId,
+    public ResponseEntity<Void> transferMoney(@RequestParam Long fromId,
                                            @RequestParam Long toId,
                                            @RequestParam BigDecimal amount) {
-        try {
-            service.transferMoney(fromId, toId, amount);
+                    service.transferMoney(fromId, toId, amount);
             return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("One or both accounts not found.");
-        } catch (InsufficientFundsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient funds for transfer.");
-        }
+
     }
 
 
