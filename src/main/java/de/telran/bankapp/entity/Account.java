@@ -25,7 +25,7 @@ public class Account {
     private Long id;
 
     @NotNull(message = "{validation.account.name}")
-    @Pattern(regexp = "[a-zA-Z]{2}[0-9]{20}", message = "{validation.account.name}")
+    @Pattern(regexp = "[A-Z]{2}[0-9]{20}", message = "{validation.account.name}")
     private String name;
 
     @Enumerated(EnumType.STRING)
