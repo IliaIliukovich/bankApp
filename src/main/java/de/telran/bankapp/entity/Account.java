@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
@@ -25,8 +24,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "{validation.client.name}")
-    @Pattern(regexp = "[a-zA-Z]{1,150}", message = "{validation.client.name}")
+    @NotNull(message = "{validation.account.name}")
+    @Pattern(regexp = "[a-zA-Z]{2}[0-9]{20}", message = "{validation.account.name}")
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -39,6 +38,7 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
+
     private String clientId;
 
 }

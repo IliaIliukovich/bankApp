@@ -36,9 +36,9 @@ public class AccountService {
     }
 
     public Account getAccountById(Long id) {
-        Optional<Account> byId = repository.findById(id);
-        if (byId.isPresent()) {
-            return byId.get();
+        Optional<Account> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
         }
         throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
     }
@@ -47,25 +47,26 @@ public class AccountService {
         return repository.findAll();
     }
 
-    public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
-        return repository.getAllAccountsByCurrencyCode(CurrencyCode.valueOf(currencyCode));
+    public List<Account> getAllAccountsByCurrencyCode(CurrencyCode currencyCode) {
+        return repository.getAllAccountsByCurrencyCode(currencyCode);
     }
 
     public List<Account> getAllAccountsByBalance(BigDecimal minValue, BigDecimal maxValue) {
         return repository.getAllAccountsByBalance(minValue, maxValue);
     }
 
+    public Account create(Account account) {
+        return repository.save(account);
+    }
 
-        public Account create(Account account) {
-            Long id = account.getId();
-            Optional<Account> optional = repository.findById(id);
-            if (optional.isPresent()) {
-                return repository.save(account);
-            }
-            throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
+    public Account updateAccount(Account account) {
+        Long id = account.getId();
+        Optional<Account> accountOptional = repository.findById(id);
+        if (accountOptional.isPresent()) {
+            return repository.save(account);
         }
-
-
+        throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
+    }
 
     public void deleteAccount(Long id) {
         repository.deleteAccountById(id);

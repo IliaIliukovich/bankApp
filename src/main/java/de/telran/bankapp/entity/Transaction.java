@@ -48,6 +48,4 @@ public class Transaction {
     @Positive(message = "{validation.transaction.creditAccountId}")
     private Long creditAccountId;// отправитель
 
-    public Transaction(Long fromId, Long toId, BigDecimal amount, TransactionType transactionType) {
-    }
 }

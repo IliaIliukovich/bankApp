@@ -3,7 +3,6 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
-import de.telran.bankapp.exception.InsufficientFundsException;
 import de.telran.bankapp.service.TransactionService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
@@ -85,11 +84,10 @@ public class TransactionController {
 
     @PutMapping("/transfer")
     public ResponseEntity<Void> transferMoney(@RequestParam Long fromId,
-                                           @RequestParam Long toId,
-                                           @RequestParam BigDecimal amount) {
-                    service.transferMoney(fromId, toId, amount);
-            return ResponseEntity.ok().build();
-
+                                              @RequestParam Long toId,
+                                              @RequestParam BigDecimal amount) {
+        service.transferMoney(fromId, toId, amount);
+        return ResponseEntity.ok().build();
     }
 
 
@@ -100,7 +98,6 @@ public class TransactionController {
         service.changeStatusById(id, status);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
-
 
     @DeleteMapping
     public ResponseEntity<Void> deleteNewTransactions() {
