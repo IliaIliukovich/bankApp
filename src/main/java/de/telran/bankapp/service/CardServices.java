@@ -61,16 +61,9 @@ public class CardServices {
         return Optional.empty();
     }
 
-    public Optional<Card> changeCardType(String id, String type) {
-        Optional<Card> optional = repository.findById(id);
-        if(optional.isPresent()) {
-            Card card = optional.get();
-            CardType cardType = type == null? CardType.VISA : CardType.valueOf(type);
-            card.setCardType(cardType);
-            Card saved = repository.save(card);
-            return Optional.of(saved);
-        }
-        return Optional.empty();
+    public Integer changeType(String id, CardType type) {
+           CardType cardType = type == null? CardType.VISA : type;
+           return repository.changeType(id, cardType);
     }
 
     public void deleteCard(String id) {

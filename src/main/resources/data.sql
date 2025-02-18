@@ -58,8 +58,8 @@ values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2
         ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
         ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
 
-INSERT INTO card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
-VALUES
+insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
+values
     (UUID(), '1415 1532 7818 4133', 'John Smith', 1, '03/29', 1001, 'MASTERCARD'),
     (UUID(), '2425 3542 9817 3234', 'Emily Johnson', 2, '01/27', 1002, 'VISA'),
     (UUID(), '4326 1532 0814 2244', 'Michael Brown', 201, '12/30', 1003, 'MASTERCARD'),

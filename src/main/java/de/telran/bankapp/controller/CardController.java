@@ -3,7 +3,6 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.entity.enums.CardType;
 import de.telran.bankapp.service.CardServices;
 import de.telran.bankapp.entity.Card;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,10 +83,10 @@ public class CardController {
     }
 
     @PatchMapping("/changeType")
-    public ResponseEntity<Card> changeCardType(@RequestParam String id, @RequestParam String type) {
-        Optional<Card> updated = service.changeCardType(id, type);
-        if(updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+    public ResponseEntity<Void> changeType(@RequestParam String id, @RequestParam CardType type) {
+        Integer changed = service.changeType(id, type);
+        if(!changed.equals(0)) {
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
