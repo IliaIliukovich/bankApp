@@ -61,6 +61,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BankAppBadRequestException.class)
+    public ResponseEntity<String> handleBankAppBadRequestException(BankAppBadRequestException e) {
+        logger.debug("BankAppBadRequestException", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleServerException(Exception e) {
         logger.error("Error: ", e);
