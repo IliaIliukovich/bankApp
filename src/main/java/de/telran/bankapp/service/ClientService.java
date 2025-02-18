@@ -8,12 +8,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 //@Slf4j
+@Transactional(readOnly = true)
 public class ClientService {
 
     private static Logger logger = LogManager.getLogger(ClientService.class);
@@ -49,10 +51,12 @@ public class ClientService {
         return repository.nativeQuery(surname, address);
     }
 
+    @Transactional
     public Client addClient(Client client) {
        return repository.save(client);
     }
 
+    @Transactional
     public Client updateClient(Client client) {
         String id = client.getId();
         Optional<Client> optional = repository.findById(id);
@@ -62,6 +66,7 @@ public class ClientService {
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
+    @Transactional
     public Client updateAddress(String id, String address) {
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
@@ -73,12 +78,14 @@ public class ClientService {
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void changeStatus(String id, ClientStatus status) {
         ClientStatus clientStatus = status == null ? ClientStatus.ACTIVE : status;
         int updated = repository.updateStatus(id, clientStatus);
         if (updated == 0) throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void deleteClient(String id) {
         repository.deleteById(id);
     }
