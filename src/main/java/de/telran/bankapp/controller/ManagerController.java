@@ -86,11 +86,7 @@ public class ManagerController {
             @Valid
             @Pattern(
                     regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",
-                    message = "Last name should not be null," +
-                            " should be in latin letters," +
-                            " first letter shuld be capital," +
-                            " shuld have only" +
-                            " - ' üäö  and no more than 45 symbols!"
+                    message = "{valdation.ManagerController.changeLastName}"
             ) String newLastName) {
         Manager managerWithNewLastName = service.updateLastName(id, newLastName);
         return new ResponseEntity<>(managerWithNewLastName, HttpStatus.ACCEPTED);

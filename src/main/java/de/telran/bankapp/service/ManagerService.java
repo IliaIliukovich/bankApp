@@ -32,11 +32,12 @@ public class ManagerService {
     }
 
     public List<Manager> findByName(String firstName){
-        List<Manager> optional = repository.findByFirstName(firstName);
-        if(!optional.isEmpty()){
-            return optional;
-        }
-        throw  new BankAppResourceNotFoundException("Manager with first name = " + firstName + " not found in database");
+//        List<Manager> optional = repository.findByFirstName(firstName);
+//        if(!optional.isEmpty()){
+//            return optional.get();
+//        }
+//        throw  new BankAppResourceNotFoundException("Manager with first name = " + firstName + " not found in database");
+        return repository.findByFirstName(firstName);
     }
 
     public  List<Manager> findByFirstNameAndLastName(String firstName,String lastName){
@@ -44,13 +45,14 @@ public class ManagerService {
     }
 
     public List<Manager> findFirstLetterFromFirstNameAndFirstLetterFromLastName(String firstName,String lastName){
-        List<Manager> optional = repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
-        if(!optional.isEmpty()){
-            return optional;
-        }
-        throw  new BankAppResourceNotFoundException("Manager with first name with first letter: "
-                + firstName + " and last name with first letter: "
-                +lastName+ " not found in database");
+//        List<Manager> optional = repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
+//        if(!optional.isEmpty()){
+//            return optional;
+//        }
+//        throw  new BankAppResourceNotFoundException("Manager with first name with first letter: "
+//                + firstName + " and last name with first letter: "
+//                +lastName+ " not found in database");
+        return repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
     }
 
     public Manager addManager(Manager manager){

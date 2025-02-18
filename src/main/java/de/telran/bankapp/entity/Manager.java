@@ -22,8 +22,7 @@ public class Manager {
   @NotNull(message="{validation.manager.lastName}")
   @Pattern(regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",message = "{validation.manager.lastName}")
   @Length(max = 45,
-          message ="Last name should start with capital" +
-                  " letter and shoulbe no more 45 symbols!")
+          message ="{validation.manager.lastName}")
   private String lastName;
 
   @NotNull(message = "{validation.manager.firstName}")
