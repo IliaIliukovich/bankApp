@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,9 +46,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BankAppResourceNotFoundException.class)
-    public ResponseEntity<String> handleHttpMessageNotReadableException(BankAppResourceNotFoundException e) {
+    public ResponseEntity<String> handleBankAppResourceNotFoundException(BankAppResourceNotFoundException e) {
         logger.debug("BankAppResourceNotFoundException", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        logger.debug("MethodArgumentTypeMismatchException", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        logger.debug("MissingServletRequestParameterException", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BankAppBadRequestException.class)
+    public ResponseEntity<String> handleBankAppBadRequestException(BankAppBadRequestException e) {
+        logger.debug("BankAppBadRequestException", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
