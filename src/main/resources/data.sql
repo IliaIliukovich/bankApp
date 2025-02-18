@@ -11,34 +11,34 @@ values  ("b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0","Schmidt", "Hans", "DE123456789"
         ("f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c", "Hoffmann", "Clara", "DE012345678", "c.hoffmann@example.com", "Bremen, Germany", "+49 421 1234567", "ACTIVE");
 
 insert into manager (id,first_name,last_name,status)
-values  (1, "Hans", "Schmidt", 0),
-        (2, "Anna", "Müller", 1),
-        (3, "Peter", "Weber", 1),
-        (4, "Claudia", "Fischer", 0),
-        (5, "Thomas", "Meyer", 1),
-        (6, "Sophia", "Wagner", 0),
-        (7, "Stefan", "Becker", 1),
-        (8, "Julia", "Schulz", 0),
-        (9, "Markus", "Hoffmann", 1),
-        (10, "Laura", "Lehmann", 0);
+values  (1, "Hans", "Schmidt", "ACTIVE"),
+        (2, "Anna", "Müller", "INACTIVE"),
+        (3, "Peter", "Weber", "INACTIVE"),
+        (4, "Claudia", "Fischer", "ACTIVE"),
+        (5, "Thomas", "Meyer", "INACTIVE"),
+        (6, "Sophia", "Wagner", "ACTIVE"),
+        (7, "Stefan", "Becker", "INACTIVE"),
+        (8, "Julia", "Schulz", "ACTIVE"),
+        (9, "Markus", "Hoffmann", "INACTIVE"),
+        (10, "Laura", "Lehmann", "ACTIVE");
 
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
 values
-    (1, 'Current Account', 1, 2.0, 1500.75, 1),
-    (2, 'Credit Account', 0, 18.0, 5000.00, 1),
-    (3, 'Business Credit', 2, 18.0, 20000.00, 0),
-    (4, 'Savings Account', 1, 1.5, 7500.25, 1),
-    (5, 'Student Account', 0, 0.5, 1200.00, 1),
-    (6, 'Premium Deposit', 1, 2.8, 10000.00, 0),
-    (7, 'Car Loan', 2, 7.0, 15000.00, 1),
-    (8, 'Mortgage Loan', 1, 3.5, 250000.00, 0),
-    (9, 'Business Loan', 2, 12.0, 50000.00, 0),
-    (10, 'Investment Plan', 0, 5.0, 30000.00, 1),
-    (11, 'Retirement Plan', 1, 3.0, 200000.00, 1),
-    (12, 'Education Loan', 2, 5.5, 25000.00, 1),
-    (13, 'Personal Loan', 1, 8.0, 10000.00, 1),
-    (14, 'Corporate Investment', 2, 10.0, 150000.00, 0),
-    (15, 'Fixed Deposit', 0, 4.0, 50000.00, 1);
+    (1, 'Current Account', "USD", 2.0, 1500.75, "INACTIVE"),
+    (2, 'Credit Account', "EUR", 18.0, 5000.00, "INACTIVE"),
+    (3, 'Business Credit', "GBR", 18.0, 20000.00, "ACTIVE"),
+    (4, 'Savings Account', "USD", 1.5, 7500.25, "INACTIVE"),
+    (5, 'Student Account', "EUR", 0.5, 1200.00, "INACTIVE"),
+    (6, 'Premium Deposit', "USD", 2.8, 10000.00, "ACTIVE"),
+    (7, 'Car Loan', "GBR", 7.0, 15000.00, "INACTIVE"),
+    (8, 'Mortgage Loan', "USD", 3.5, 250000.00, "ACTIVE"),
+    (9, 'Business Loan', "GBR", 12.0, 50000.00, "ACTIVE"),
+    (10, 'Investment Plan', "EUR", 5.0, 30000.00, "INACTIVE"),
+    (11, 'Retirement Plan', "USD", 3.0, 200000.00, "INACTIVE"),
+    (12, 'Education Loan', "GBR", 5.5, 25000.00, "INACTIVE"),
+    (13, 'Personal Loan', "USD", 8.0, 10000.00, "INACTIVE"),
+    (14, 'Corporate Investment', "GBR", 10.0, 150000.00, "ACTIVE"),
+    (15, 'Fixed Deposit', "EUR", 4.0, 50000.00, "INACTIVE");
 
 insert into	 account (id, name, type, status, balance, currency_code, client_id)
 values
@@ -54,9 +54,9 @@ values
     (10, "DE88370400440532010643", 4, 0, -300.40, 2, "f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c");
 
 insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
-values  ("4ea37144-df60-4681-b796-760345166d39", 0, 12.0, "description", 2, 1, 2),
-        ("a75c7e4b-b82d-4cb6-b217-381481609065", 0, 23.0, "description", 1, 1, 3),
-        ("8bdf4491-9b25-4194-a67d-d9929f210d37", 0, 200.0, "description", 0, 2, 3);
+values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),
+        ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
+        ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
 
 insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
 values
