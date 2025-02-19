@@ -14,6 +14,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByName(String name);
 
+    List<Product> findByStatus(ProductStatus status);
+
     @Query("update Product c set c.status = :status where c.id = :id")
     @Modifying
     @Transactional

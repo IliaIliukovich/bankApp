@@ -3,7 +3,9 @@ package de.telran.bankapp.entity;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.entity.enums.ProductStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +39,7 @@ public class Product {
     private Double interestRate;
 
     @Column(name = "limit_amount")
-    @NotNull(message = "Limit amount is required")
+    @NotNull(message = "{validation.product.limitAmount}")
     @DecimalMin(value = "0.0", inclusive = false, message = "{validation.product.amountLessNull")
     private BigDecimal limitAmount;
 
