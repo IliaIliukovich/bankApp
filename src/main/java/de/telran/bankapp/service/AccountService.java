@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountService {
 
     private final AccountRepository repository;
@@ -54,11 +55,12 @@ public class AccountService {
     public List<Account> getAllAccountsByBalance(BigDecimal minValue, BigDecimal maxValue) {
         return repository.getAllAccountsByBalance(minValue, maxValue);
     }
-
+    @Transactional
     public Account create(Account account) {
         return repository.save(account);
     }
 
+    @Transactional
     public Account updateAccount(Account account) {
         Long id = account.getId();
         Optional<Account> accountOptional = repository.findById(id);
@@ -68,6 +70,7 @@ public class AccountService {
         throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void deleteAccount(Long id) {
         repository.deleteAccountById(id);
     }
@@ -98,7 +101,8 @@ public class AccountService {
         return savedAccount;
     }
 
-    private static String createNewAccountName() {
+    @Transactional
+    protected String createNewAccountName() {
         Random random = new Random();
         Integer randomNumber = 10_000_000 + random.nextInt(90_000_000);
         return "DE883704004400" + randomNumber;
