@@ -15,55 +15,54 @@ import java.util.Optional;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductService service;
 
     @Autowired
     public ProductController(ProductService productService) {
-        this.productService = productService;
+        this.service = productService;
     }
 
     @GetMapping("/all")
     public List<Product> getAll() {
-        return productService.getAll();
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
     public Optional<Product> getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+        return service.getProductById(id);
     }
 
     @GetMapping("/search")
     public List<Product> getProductByName(@RequestParam String name) {
-        return productService.getProductByName(name);
+        return service.getProductByName(name);
+    }
+
+    @GetMapping("/searchByStatus")
+    public List<Product> searchProductByStatus(@RequestParam String status) {
+        return service.getProductByStatus(status);
     }
 
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
-        Product addedProduct = productService.addProduct(product);
+        Product addedProduct = service.addProduct(product);
         return ResponseEntity.ok(addedProduct);
     }
 
     @PutMapping
     public ResponseEntity<Product> updateProduct(@RequestBody @Valid Product product) {
-        Optional<Product> updated = productService.updatedProduct(product);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Product updated = service.updatedProduct(product);
+        return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
-        productService.deleteProduct(id);
+        service.deleteProduct(id);
         return ResponseEntity.accepted().build();
     }
 
     @PatchMapping
     public ResponseEntity<Void> changeStatus(@RequestParam Long id, @RequestParam(required = false) String status) {
-        Integer integer = productService.changeStatus(id, status);
-        if (!integer.equals(0)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        service.changeStatus(id, status);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
