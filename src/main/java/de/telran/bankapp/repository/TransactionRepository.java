@@ -3,7 +3,6 @@ package de.telran.bankapp.repository;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;
@@ -27,11 +26,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 
     @Query("update Transaction t set t.status = :status where t.id = :id")
     @Modifying
-    @Transactional
     int updateStatus(String id, TransactionStatus status);
 
     @Modifying
-    @Transactional
     void deleteAllByStatus(TransactionStatus status);
 
 }

@@ -7,12 +7,14 @@ import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class TransactionService {
 
     private TransactionRepository repository;
@@ -49,10 +51,12 @@ public class TransactionService {
         return repository.nativeQuery(type, status);
     }
 
+    @Transactional
     public Transaction addTransaction(Transaction transaction) {
         return repository.save(transaction);
     }
 
+    @Transactional
     public Transaction updateTransaction(Transaction transaction) {
         String id = transaction.getId();
         Optional<Transaction> optional = repository.findById(id);
@@ -62,12 +66,14 @@ public class TransactionService {
         throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void changeStatusById(String id, TransactionStatus status) {
         int integer = repository.updateStatus(id, status);
         if (integer == 0)
             throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void deleteNewTransactions() {
         repository.deleteAllByStatus(TransactionStatus.NEW);
     }
