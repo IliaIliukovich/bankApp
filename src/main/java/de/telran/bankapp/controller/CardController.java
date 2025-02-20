@@ -33,7 +33,7 @@ public class CardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> findById(@PathVariable String id) {
-        Optional<Card> card = service.findByNumber(id);
+        Optional<Card> card = service.findById(id);
         if (card.isPresent()) {
             return new ResponseEntity<>(card.get(), HttpStatus.OK);
         }
