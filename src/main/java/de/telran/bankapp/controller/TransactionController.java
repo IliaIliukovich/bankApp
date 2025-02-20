@@ -82,6 +82,14 @@ public class TransactionController {
         return new ResponseEntity<>(service.updateTransaction(transaction), HttpStatus.ACCEPTED);
     }
 
+    @PutMapping("/transfer")
+    public ResponseEntity<Void> transferMoney(@RequestParam Long fromId,
+                                              @RequestParam Long toId,
+                                              @RequestParam BigDecimal amount) {
+        service.transferMoney(fromId, toId, amount);
+        return ResponseEntity.ok().build();
+    }
+
 
     @PatchMapping
     public ResponseEntity<Void> changeStatus(
@@ -90,7 +98,6 @@ public class TransactionController {
         service.changeStatusById(id, status);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
-
 
     @DeleteMapping
     public ResponseEntity<Void> deleteNewTransactions() {

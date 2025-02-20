@@ -47,4 +47,5 @@ public class Transaction {
     @NotNull(message = "{validation.transaction.creditAccountId}")
     @Positive(message = "{validation.transaction.creditAccountId}")
     private Long creditAccountId;// отправитель
+
 }

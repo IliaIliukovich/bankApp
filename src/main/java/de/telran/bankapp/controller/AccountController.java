@@ -1,14 +1,16 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.Account;
-import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
@@ -33,7 +35,7 @@ public class AccountController {
     }
 
     @GetMapping("/currencyCode/{currencyCode}")
-    public List<Account> getAllAccountsByCurrencyCode(@PathVariable String currencyCode) {
+    public List<Account> getAllAccountsByCurrencyCode(@PathVariable CurrencyCode currencyCode) {
         return service.getAllAccountsByCurrencyCode(currencyCode);
     }
 
@@ -45,18 +47,21 @@ public class AccountController {
     }
 
 
-    @PostMapping("/create")
-    public Account createAccount(@RequestBody Account account) {
-        return service.create(account);
+    @PostMapping
+    public ResponseEntity<Account> createAccount(@RequestBody @Valid Account account) {
+        Account created = service.create(account);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
-    public Account updateAccount (@RequestBody Account account) {
-        return service.create(account);
+
+    @PutMapping
+    public ResponseEntity<Account> updateAccount(@RequestBody @Valid Account account) {
+        Account updated = service.updateAccount(account);
+        return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/new")
-    public Account createNewAccount (@RequestParam String clientId, @RequestParam Long productId, @RequestParam BigDecimal initialAmount) {
+    public Account createNewAccount(@RequestParam String clientId, @RequestParam Long productId, @RequestParam BigDecimal initialAmount) {
         return service.createNewAccount(clientId, productId, initialAmount);
     }
 

@@ -4,12 +4,10 @@ package de.telran.bankapp.entity;
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;
 import de.telran.bankapp.entity.enums.CurrencyCode;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
@@ -25,11 +23,22 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "{validation.account.name}")
+    @Pattern(regexp = "[A-Z]{2}[0-9]{20}", message = "{validation.account.name}")
     private String name;
-    private AccountType type;
-    private AccountStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType Type;
+
+    @Enumerated(EnumType.STRING)
+    private AccountStatus Status;
+
     private BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
+
     private String clientId;
 
 }

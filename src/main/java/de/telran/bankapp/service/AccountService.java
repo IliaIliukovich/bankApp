@@ -19,13 +19,13 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountService {
 
-    private AccountRepository repository;
-    private ProductService productService;
-
-    private ClientService clientService;
-    private AgreementRepository agreementRepository;
+    private final AccountRepository repository;
+    private final ProductService productService;
+    private final ClientService clientService;
+    private final AgreementRepository agreementRepository;
 
     @Autowired
     public AccountService(AccountRepository repository, ProductService productService, AgreementRepository agreementRepository, ClientService clientService) {
@@ -36,27 +36,40 @@ public class AccountService {
     }
 
     public Account getAccountById(Long id) {
-        return repository.findById(id).get();
+        Optional<Account> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
     }
 
     public List<Account> getAll() {
         return repository.findAll();
     }
 
-    public List<Account> getAllAccountsByCurrencyCode(String currencyCode) {
-        return repository.getAllAccountsByCurrencyCode(CurrencyCode.valueOf(currencyCode));
+    public List<Account> getAllAccountsByCurrencyCode(CurrencyCode currencyCode) {
+        return repository.getAllAccountsByCurrencyCode(currencyCode);
     }
 
     public List<Account> getAllAccountsByBalance(BigDecimal minValue, BigDecimal maxValue) {
         return repository.getAllAccountsByBalance(minValue, maxValue);
     }
-
-
+    @Transactional
     public Account create(Account account) {
         return repository.save(account);
-
     }
 
+    @Transactional
+    public Account updateAccount(Account account) {
+        Long id = account.getId();
+        Optional<Account> accountOptional = repository.findById(id);
+        if (accountOptional.isPresent()) {
+            return repository.save(account);
+        }
+        throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
+    }
+
+    @Transactional
     public void deleteAccount(Long id) {
         repository.deleteAccountById(id);
     }
@@ -87,7 +100,8 @@ public class AccountService {
         return savedAccount;
     }
 
-    private static String createNewAccountName() {
+
+    private String createNewAccountName() {
         Random random = new Random();
         Integer randomNumber = 10_000_000 + random.nextInt(90_000_000);
         return "DE883704004400" + randomNumber;

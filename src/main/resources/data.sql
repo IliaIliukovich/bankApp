@@ -25,32 +25,31 @@ values  (1, "Hans", "Schmidt", "ACTIVE"),
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
 values  (1, "Current Account", "USD", 2.0, 1500.75, "INACTIVE"),
         (2, "Credit Account", "EUR", 18.0, 5000.00, "INACTIVE"),
-        (3, "Business Credit", "GBR", 18.0, 20000.00, "ACTIVE"),
+        (3, "Business Credit", "GBP", 18.0, 20000.00, "ACTIVE"),
         (4, "Savings Account", "USD", 1.5, 7500.25, "INACTIVE"),
         (5, "Student Account", "EUR", 0.5, 1200.00, "INACTIVE"),
         (6, "Premium Deposit", "USD", 2.8, 10000.00, "ACTIVE"),
-        (7, "Car Loan", "GBR", 7.0, 15000.00, "INACTIVE"),
+        (7, "Car Loan", "GBP", 7.0, 15000.00, "INACTIVE"),
         (8, "Mortgage Loan", "USD", 3.5, 250000.00, "ACTIVE"),
-        (9, "Business Loan", "GBR", 12.0, 50000.00, "ACTIVE"),
+        (9, "Business Loan", "GBP", 12.0, 50000.00, "ACTIVE"),
         (10, "Investment Plan", "EUR", 5.0, 30000.00, "INACTIVE"),
         (11, "Retirement Plan", "USD", 3.0, 200000.00, "INACTIVE"),
-        (12, "Education Loan", "GBR", 5.5, 25000.00, "INACTIVE"),
+        (12, "Education Loan", "GBP", 5.5, 25000.00, "INACTIVE"),
         (13, "Personal Loan", "USD", 8.0, 10000.00, "INACTIVE"),
-        (14, "Corporate Investment", "GBR", 10.0, 150000.00, "ACTIVE"),
+        (14, "Corporate Investment", "GBP", 10.0, 150000.00, "ACTIVE"),
         (15, "Fixed Deposit", "EUR", 4.0, 50000.00, "INACTIVE");
 
 insert into	 account (id, name, type, status, balance, currency_code, client_id)
-values
-        (1, "DE88370400440532013021", 0, 0, 1500.75, 1, "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
-        (2, "DE88370400440532013088", 1, 0, 10200.00, 0, "20980395-20d0-4ea8-8e4b-de2252a028eb"),
-        (3, "DE88370400440532013545", 2, 2, -5000.50, 1, "9cd1b6c5-06d7-4f6c-9959-3856b1b51045"),
-        (4, "DE88370400440532012111", 3, 1, 200.00, 2, "5e659d3c-3925-457d-ae41-ca69001fb11c"),
-        (5, "DE88370400440532016543", 4, 0, -1200.00, 0, "b03dbcfc-d047-49a7-acbb-f3b1329e1fee"),
-        (6, "DE88370400440532019876", 0, 2, 500.25, 1, "bb10eec7-e408-4f11-9603-ec3c4a371512"),
-        (7, "DE88370400440532011254", 1, 1, 2500.00, 2, "7d1388c1-04df-4473-b15b-fe614594aa3c"),
-        (8, "DE88370400440532015555", 5, 0, 75.90, 0, "3d18c400-a7b3-4bb1-bb29-8f566a43eca1"),
-        (9, "DE88370400440532018634", 3, 2, 0.00, 1, "d07ec73f-702a-479c-a930-f51596d9b899"),
-        (10, "DE88370400440532010643", 4, 0, -300.40, 2, "f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c");
+values  (1, "DE88370400440532013021", "CHECKING", "ACTIVE", 1500.75, "USD", "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
+        (2, "DE88370400440532013088", "SAVINGS", "ACTIVE", 10200.00, "EUR", "20980395-20d0-4ea8-8e4b-de2252a028eb"),
+        (3, "DE88370400440532013545", "LOAN", "BLOCKED", -5000.50, "USD", "9cd1b6c5-06d7-4f6c-9959-3856b1b51045"),
+        (4, "DE88370400440532012111", "DEBIT_CARD", "INACTIVE", 200.00, "GBP", "5e659d3c-3925-457d-ae41-ca69001fb11c"),
+        (5, "DE88370400440532016543", "CREDIT_CARD", "ACTIVE", -1200.00, "EUR", "b03dbcfc-d047-49a7-acbb-f3b1329e1fee"),
+        (6, "DE88370400440532019876", "CHECKING", "BLOCKED", 500.25, "USD", "bb10eec7-e408-4f11-9603-ec3c4a371512"),
+        (7, "DE88370400440532011254", "SAVINGS", "INACTIVE", 2500.00, "GBP", "7d1388c1-04df-4473-b15b-fe614594aa3c"),
+        (8, "DE88370400440532015555", "OTHER", "ACTIVE", 75.90, "EUR", "3d18c400-a7b3-4bb1-bb29-8f566a43eca1"),
+        (9, "DE88370400440532018634", "DEBIT_CARD", "BLOCKED", 0.00, "USD", "d07ec73f-702a-479c-a930-f51596d9b899"),
+        (10, "DE88370400440532010643", "CREDIT_CARD", "ACTIVE", -300.40, "GBP", "f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c");
 
 insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
 values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),

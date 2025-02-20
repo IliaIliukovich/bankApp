@@ -22,7 +22,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.currencyCode= :currencyCode")
     List<Account> getAllAccountsByCurrencyCode(CurrencyCode currencyCode);
 
-   
+
 
     @Query ("DELETE FROM Account a WHERE a.id = :id")
     @Modifying
