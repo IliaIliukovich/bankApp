@@ -49,7 +49,7 @@ public class ClientService {
     public Optional<ClientDto> getClientById(String uuid) {
         Optional<Client> client = repository.findById(uuid);
         ClientDto dto = mapper.entityToDto(client.orElse(null));
-        return Optional.of(dto);
+        return Optional.ofNullable(dto);
     }
 
     public List<ClientDto> findByName(String name) {
