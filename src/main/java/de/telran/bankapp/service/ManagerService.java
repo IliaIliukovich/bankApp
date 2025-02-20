@@ -8,11 +8,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class ManagerService {
 
     private static Logger logger = LogManager.getLogger(ManagerService.class);
@@ -32,11 +34,6 @@ public class ManagerService {
     }
 
     public List<Manager> findByName(String firstName){
-//        List<Manager> optional = repository.findByFirstName(firstName);
-//        if(!optional.isEmpty()){
-//            return optional.get();
-//        }
-//        throw  new BankAppResourceNotFoundException("Manager with first name = " + firstName + " not found in database");
         return repository.findByFirstName(firstName);
     }
 
@@ -45,20 +42,15 @@ public class ManagerService {
     }
 
     public List<Manager> findFirstLetterFromFirstNameAndFirstLetterFromLastName(String firstName,String lastName){
-//        List<Manager> optional = repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
-//        if(!optional.isEmpty()){
-//            return optional;
-//        }
-//        throw  new BankAppResourceNotFoundException("Manager with first name with first letter: "
-//                + firstName + " and last name with first letter: "
-//                +lastName+ " not found in database");
         return repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
     }
 
+    @Transactional
     public Manager addManager(Manager manager){
         return repository.save(manager);
     }
 
+    @Transactional
     public Manager updateManager(Manager manager) {
         Long id = manager.getId();
         Optional<Manager> optional = repository.findById(id);
@@ -77,12 +69,14 @@ public class ManagerService {
         throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void changeManagerStatus(Long id,ManagerStatus status){
         ManagerStatus managerstatus = status == null ? ManagerStatus.ACTIVE : status;
         int updated =  repository.updateStatus(id,managerstatus);
         if(updated == 0)  throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
+    @Transactional
     public void deleteManager(Long id){
         Optional<Manager> managerForDelete = repository.findById(id);
         if (managerForDelete.isPresent()) {
@@ -91,6 +85,7 @@ public class ManagerService {
         throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
+    @Transactional
     public Manager updateLastName(Long id, String newLastName){
         Optional<Manager> optional = repository.findById(id);
         if(optional.isPresent()){

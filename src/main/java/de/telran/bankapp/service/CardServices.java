@@ -4,7 +4,8 @@ package de.telran.bankapp.service;
 import de.telran.bankapp.entity.enums.CardType;
 import de.telran.bankapp.entity.Card;
 import de.telran.bankapp.repository.CardRepository;
-import de.telran.bankapp.entity.Card;
+//import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class CardServices {
 
     private final CardRepository repository;
@@ -47,10 +49,12 @@ public class CardServices {
         return repository.findCardByCardType(type);
     }
 
+    @Transactional
     public Card addCard(Card card) {
         return repository.save(card);
     }
 
+    @Transactional
     public Optional<Card> updateCard(Card card) {
         String id = card.getId();
         Optional<Card> optional = repository.findById(id);
@@ -61,11 +65,13 @@ public class CardServices {
         return Optional.empty();
     }
 
+    @Transactional
     public Integer changeType(String id, CardType type) {
            CardType cardType = type == null? CardType.VISA : type;
            return repository.changeType(id, cardType);
     }
 
+    @Transactional
     public void deleteCard(String id) {
         repository.deleteById(id);
     }

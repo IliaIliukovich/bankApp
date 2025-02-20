@@ -23,22 +23,21 @@ values  (1, "Hans", "Schmidt", "ACTIVE"),
         (10, "Laura", "Lehmann", "ACTIVE");
 
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
-values
-    (1, 'Current Account', "USD", 2.0, 1500.75, "INACTIVE"),
-    (2, 'Credit Account', "EUR", 18.0, 5000.00, "INACTIVE"),
-    (3, 'Business Credit', "GBP", 18.0, 20000.00, "ACTIVE"),
-    (4, 'Savings Account', "USD", 1.5, 7500.25, "INACTIVE"),
-    (5, 'Student Account', "EUR", 0.5, 1200.00, "INACTIVE"),
-    (6, 'Premium Deposit', "USD", 2.8, 10000.00, "ACTIVE"),
-    (7, 'Car Loan', "GBP", 7.0, 15000.00, "INACTIVE"),
-    (8, 'Mortgage Loan', "USD", 3.5, 250000.00, "ACTIVE"),
-    (9, 'Business Loan', "GBP", 12.0, 50000.00, "ACTIVE"),
-    (10, 'Investment Plan', "EUR", 5.0, 30000.00, "INACTIVE"),
-    (11, 'Retirement Plan', "USD", 3.0, 200000.00, "INACTIVE"),
-    (12, 'Education Loan', "GBP", 5.5, 25000.00, "INACTIVE"),
-    (13, 'Personal Loan', "USD", 8.0, 10000.00, "INACTIVE"),
-    (14, 'Corporate Investment', "GBP", 10.0, 150000.00, "ACTIVE"),
-    (15, 'Fixed Deposit', "EUR", 4.0, 50000.00, "INACTIVE");
+values  (1, "Current Account", "USD", 2.0, 1500.75, "INACTIVE"),
+        (2, "Credit Account", "EUR", 18.0, 5000.00, "INACTIVE"),
+        (3, "Business Credit", "GBP", 18.0, 20000.00, "ACTIVE"),
+        (4, "Savings Account", "USD", 1.5, 7500.25, "INACTIVE"),
+        (5, "Student Account", "EUR", 0.5, 1200.00, "INACTIVE"),
+        (6, "Premium Deposit", "USD", 2.8, 10000.00, "ACTIVE"),
+        (7, "Car Loan", "GBP", 7.0, 15000.00, "INACTIVE"),
+        (8, "Mortgage Loan", "USD", 3.5, 250000.00, "ACTIVE"),
+        (9, "Business Loan", "GBP", 12.0, 50000.00, "ACTIVE"),
+        (10, "Investment Plan", "EUR", 5.0, 30000.00, "INACTIVE"),
+        (11, "Retirement Plan", "USD", 3.0, 200000.00, "INACTIVE"),
+        (12, "Education Loan", "GBP", 5.5, 25000.00, "INACTIVE"),
+        (13, "Personal Loan", "USD", 8.0, 10000.00, "INACTIVE"),
+        (14, "Corporate Investment", "GBP", 10.0, 150000.00, "ACTIVE"),
+        (15, "Fixed Deposit", "EUR", 4.0, 50000.00, "INACTIVE");
 
 insert into	 account (id, name, type, status, balance, currency_code, client_id)
 values  (1, "DE88370400440532013021", "CHECKING", "ACTIVE", 1500.75, "USD", "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
@@ -58,10 +57,9 @@ values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description",
         ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
 
 insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
-values
-    (UUID(), '1415 1532 7818 4133', 'John Smith', 1, '03/29', 1001, 'MASTERCARD'),
-    (UUID(), '2425 3542 9817 3234', 'Emily Johnson', 2, '01/27', 1002, 'VISA'),
-    (UUID(), '4326 1532 0814 2244', 'Michael Brown', 201, '12/30', 1003, 'MASTERCARD'),
-    (UUID(), '3215 2418 1439 5083', 'Sarah Davis', 111, '03/28', 1004, 'VISA'),
-    (UUID(), '9734 7382 9341 3850', 'David Martinez', 15, '05/31', 1005, 'VISA'),
-    (UUID(), '4411 0522 7708 5132', 'Sophia Wilson', 321, '04/27', 1006, 'MASTERCARD');
+values  ("e5b1bf42-46a5-4fc2-9c69-6884c1a942ae", "1415 1532 7818 4133", "John Smith", 1, "03/29", 1, "MASTERCARD"),
+        ("855ee7f8-b727-4aa4-bdf7-54c6428ce429", "2425 3542 9817 3234", "Emily Johnson", 2, "01/27", 2, "VISA"),
+        ("3922f2b5-732e-46ca-811f-753a18170018", "4326 1532 0814 2244", "Michael Brown", 201, "12/30", 3, "MASTERCARD"),
+        ("6f00b07d-5b81-4a2c-bac5-3dde080832d7", "3215 2418 1439 5083", "Sarah Davis", 111, "03/28", 4, "VISA"),
+        ("74b2a73e-82fa-42bc-953e-fcf571c3c8b4", "9734 7382 9341 3850", "David Martinez", 15, "05/31", 5, "VISA"),
+        ("36112d3f-65c9-4f85-a356-d2ed6c42da1a", "4411 0522 7708 5132", "Sophia Wilson", 321, "04/27", 6, "MASTERCARD");

@@ -1,0 +1,8 @@
+Определить транзакции для методов сервисного слоя
+
+Yevhen ---> Product
+Oksana ---> Transaction
+Deyan ---> Manager
+Vladimir ---> Account
+Dmitri ---> Card
+Artur ---> AppUser

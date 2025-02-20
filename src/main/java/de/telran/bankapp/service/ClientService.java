@@ -31,7 +31,7 @@ public class ClientService {
         List<Client> clients = repository.findAll();
 //        if (log.isDebugEnabled()) {
 //            log.debug("Clients retrieved from db");
-////        log.debug("Client ids: " + clients.stream().map(Client::getId).toList());
+//            log.debug("Client ids: " + clients.stream().map(Client::getId).toList());
 //            log.debug("Client ids: {}", clients.stream().map(Client::getId).toList());
 //        }
         logger.debug("Clients retrieved from db");
