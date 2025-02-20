@@ -1,8 +1,11 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.ClientCreateDto;
+import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.ClientMapper;
 import de.telran.bankapp.repository.ClientRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,13 +24,17 @@ public class ClientService {
     private static Logger logger = LogManager.getLogger(ClientService.class);
 
     private ClientRepository repository;
+    private ClientMapper mapper;
 
     @Autowired
-    public ClientService(ClientRepository repository) {
+    public ClientService(ClientRepository repository, ClientMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public List<Client> getAll() {
+
+
+    public List<ClientDto> getAll() {
         List<Client> clients = repository.findAll();
 //        if (log.isDebugEnabled()) {
 //            log.debug("Clients retrieved from db");
@@ -36,44 +43,51 @@ public class ClientService {
 //        }
         logger.debug("Clients retrieved from db");
         logger.debug("Client ids: {}", () -> clients.stream().map(Client::getId).toList());
-        return clients;
+        return mapper.entityListToDto(clients);
     }
 
-    public Optional<Client> getClientById(String uuid) {
-        return repository.findById(uuid);
+    public Optional<ClientDto> getClientById(String uuid) {
+        Optional<Client> client = repository.findById(uuid);
+        ClientDto dto = mapper.entityToDto(client.orElse(null));
+        return Optional.of(dto);
     }
 
-    public List<Client> findByName(String name) {
-        return repository.findByFirstName(name);
+    public List<ClientDto> findByName(String name) {
+        List<Client> clients = repository.findByFirstName(name);
+        return mapper.entityListToDto(clients);
     }
 
-    public List<Client> searchBySurnameAndAddress(String surname, String address) {
-        return repository.nativeQuery(surname, address);
+    public List<ClientDto> searchBySurnameAndAddress(String surname, String address) {
+        List<Client> clients = repository.nativeQuery(surname, address);
+        return mapper.entityListToDto(clients);
     }
 
     @Transactional
-    public Client addClient(Client client) {
-       return repository.save(client);
+    public ClientDto addClient(ClientCreateDto dto) {
+        Client client = mapper.createDtoToEntity(dto);
+        Client saved = repository.save(client);
+        return mapper.entityToDto(saved);
     }
 
     @Transactional
-    public Client updateClient(Client client) {
+    public ClientDto updateClient(ClientDto client) {
         String id = client.getId();
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
-            return repository.save(client);
+            Client saved = repository.save(mapper.dtoToEntity(client));
+            return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
 
     @Transactional
-    public Client updateAddress(String id, String address) {
+    public ClientDto updateAddress(String id, String address) {
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
             Client client = optional.get();
             client.setAddress(address);
             Client saved = repository.save(client);
-            return saved;
+            return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }

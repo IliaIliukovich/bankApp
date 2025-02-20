@@ -1,5 +1,6 @@
 package de.telran.bankapp.controller;
 
+import de.telran.bankapp.dto.AccountCreateDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.service.AccountService;
@@ -61,8 +62,8 @@ public class AccountController {
     }
 
     @PutMapping("/new")
-    public Account createNewAccount(@RequestParam String clientId, @RequestParam Long productId, @RequestParam BigDecimal initialAmount) {
-        return service.createNewAccount(clientId, productId, initialAmount);
+    public Account createNewAccount(@RequestBody AccountCreateDto dto) {
+        return service.createNewAccount(dto);
     }
 
     @DeleteMapping("/delete/{id}")

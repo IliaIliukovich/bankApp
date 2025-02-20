@@ -29,10 +29,10 @@ public class Account {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private AccountType Type;
+    private AccountType type;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus Status;
+    private AccountStatus status;
 
     private BigDecimal balance;
 

@@ -1,6 +1,7 @@
 package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.dto.ClientCreateDto;
+import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.service.ClientService;
 import jakarta.validation.Valid;
@@ -28,34 +29,34 @@ public class ClientController {
     }
 
     @GetMapping("/all")
-    public List<Client> getAll() {
+    public List<ClientDto> getAll() {
         return service.getAll();
     }
 
     @GetMapping("{uuid}")
-    public Optional<Client> getClientById(@PathVariable String uuid) {
+    public Optional<ClientDto> getClientById(@PathVariable String uuid) {
         return service.getClientById(uuid);
     }
 
     @GetMapping("/search")
-    public List<Client> findByName(@RequestParam String name) {
+    public List<ClientDto> findByName(@RequestParam String name) {
         return service.findByName(name);
     }
 
     @GetMapping("/searchBySurnameAndAddress")
-    public List<Client> findByName(@RequestParam String surname, @RequestParam String address) {
+    public List<ClientDto> findByName(@RequestParam String surname, @RequestParam String address) {
         return service.searchBySurnameAndAddress(surname, address);
     }
 
     @PostMapping
-    public ResponseEntity<Client> addClient(@RequestBody @Valid Client client) {
-        Client created = service.addClient(client);
+    public ResponseEntity<ClientDto> addClient(@RequestBody @Valid ClientCreateDto client) {
+        ClientDto created = service.addClient(client);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Client> updateClient(@RequestBody @Valid Client client) {
-        Client updated = service.updateClient(client);
+    public ResponseEntity<ClientDto> updateClient(@RequestBody @Valid ClientDto client) {
+        ClientDto updated = service.updateClient(client);
         return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     }
 
@@ -66,10 +67,10 @@ public class ClientController {
     }
 
     @PatchMapping("/changeAddress")
-    public ResponseEntity<Client> changeAddress(@RequestParam String id,
+    public ResponseEntity<ClientDto> changeAddress(@RequestParam String id,
                                                 @RequestParam @Length(max = 150, message ="{validation.client.address}")
                                                 String address){
-        Client client = service.updateAddress(id, address);
+        ClientDto client = service.updateAddress(id, address);
         return new ResponseEntity<>(client, HttpStatus.ACCEPTED);
     }
 

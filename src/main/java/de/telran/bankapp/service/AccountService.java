@@ -1,5 +1,6 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.AccountCreateDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Agreement;
 import de.telran.bankapp.entity.Client;
@@ -7,8 +8,10 @@ import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.entity.enums.*;
 import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.AccountMapper;
 import de.telran.bankapp.repository.AccountRepository;
 import de.telran.bankapp.repository.AgreementRepository;
+import de.telran.bankapp.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,15 +27,21 @@ public class AccountService {
 
     private final AccountRepository repository;
     private final ProductService productService;
-    private final ClientService clientService;
+    private final ClientRepository clientRepository;
     private final AgreementRepository agreementRepository;
+    private final AccountMapper mapper;
 
     @Autowired
-    public AccountService(AccountRepository repository, ProductService productService, AgreementRepository agreementRepository, ClientService clientService) {
+    public AccountService(AccountRepository repository,
+                          ProductService productService,
+                          ClientRepository clientRepository,
+                          AgreementRepository agreementRepository,
+                          AccountMapper mapper) {
         this.repository = repository;
         this.productService = productService;
+        this.clientRepository = clientRepository;
         this.agreementRepository = agreementRepository;
-        this.clientService = clientService;
+        this.mapper = mapper;
     }
 
     public Account getAccountById(Long id) {
@@ -76,28 +85,37 @@ public class AccountService {
 
 
     @Transactional
-    public Account createNewAccount(String clientId, Long productId, BigDecimal initialAmount) {
-        Optional<Product> productOptional = productService.getProductById(productId);
-        Optional<Client> optionalClient = clientService.getClientById(clientId);
-        if (!optionalClient.isPresent() || !productOptional.isPresent()) {
-            throw new BankAppResourceNotFoundException("Client with id = " + clientId + " or product with id " + productId+ " not found in database");
-        }
-        Product product = productOptional.get();
-        if (product.getStatus() == ProductStatus.INACTIVE) {
-            throw new BankAppBadRequestException("The product status is INACTIVE");
-        }
-        if (initialAmount.compareTo(product.getLimitAmount()) > 0) {
-            throw new BankAppBadRequestException("InitialAmount is more than product limitAmount");
-        }
-        String accountName = createNewAccountName();
-        Account account = new Account(null, accountName, AccountType.CHECKING,
-                AccountStatus.ACTIVE, initialAmount, product.getCurrencyCode(), clientId);
+    public Account createNewAccount(AccountCreateDto dto) {
+        Optional<Product> productOptional = productService.getProductById(dto.getProductId());
+        Optional<Client> optionalClient = clientRepository.findById(dto.getClientId());
 
+        validateAccountDto(dto, optionalClient, productOptional);
+
+        Product product = productOptional.get();
+
+        Account account = mapper.createDtoToEntity(dto);
+        account.setName(createNewAccountName());
+        account.setCurrencyCode(product.getCurrencyCode());
         Account savedAccount = repository.save(account);
+
         Agreement agreement = new Agreement(null, product.getInterestRate(), AgreementStatus.ACTIVE,
-                product.getLimitAmount(), savedAccount.getId(), productId);
+                product.getLimitAmount(), savedAccount.getId(), dto.getProductId());
         agreementRepository.save(agreement);
         return savedAccount;
+    }
+
+    private static void validateAccountDto(AccountCreateDto dto,
+                                           Optional<Client> optionalClient,
+                                           Optional<Product> productOptional) {
+        if (optionalClient.isEmpty() || productOptional.isEmpty()) {
+            throw new BankAppResourceNotFoundException("Client with id = " + dto.getClientId() + " or product with id " + dto.getProductId() + " not found in database");
+        }
+        if (productOptional.get().getStatus() == ProductStatus.INACTIVE) {
+            throw new BankAppBadRequestException("The product status is INACTIVE");
+        }
+        if (dto.getInitialAmount().compareTo(productOptional.get().getLimitAmount()) > 0) {
+            throw new BankAppBadRequestException("InitialAmount is more than product limitAmount");
+        }
     }
 
 
