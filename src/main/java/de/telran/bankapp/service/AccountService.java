@@ -24,9 +24,8 @@ public class AccountService {
 
     private final AccountRepository repository;
     private final ProductService productService;
-
-    private ClientService clientService;
-    private AgreementRepository agreementRepository;
+    private final ClientService clientService;
+    private final AgreementRepository agreementRepository;
 
     @Autowired
     public AccountService(AccountRepository repository, ProductService productService, AgreementRepository agreementRepository, ClientService clientService) {
