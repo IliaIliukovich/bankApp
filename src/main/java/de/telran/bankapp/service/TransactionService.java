@@ -8,6 +8,7 @@ import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.AccountRepository;
 import de.telran.bankapp.repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +81,7 @@ public class TransactionService {
         repository.deleteAllByStatus(TransactionStatus.NEW);
     }
 
-
+    @Transactional
     public void transferMoney(Long fromId, Long toId, BigDecimal amount) {
         Optional<Account> fromAccountOptional = accountRepository.findById(fromId);
         Optional<Account> toAccountOptional = accountRepository.findById(toId);

@@ -23,7 +23,7 @@ import java.util.Random;
 public class AccountService {
 
     private final AccountRepository repository;
-    private ProductService productService;
+    private final ProductService productService;
 
     private ClientService clientService;
     private AgreementRepository agreementRepository;
@@ -101,8 +101,8 @@ public class AccountService {
         return savedAccount;
     }
 
-    @Transactional
-    protected String createNewAccountName() {
+
+    private String createNewAccountName() {
         Random random = new Random();
         Integer randomNumber = 10_000_000 + random.nextInt(90_000_000);
         return "DE883704004400" + randomNumber;
