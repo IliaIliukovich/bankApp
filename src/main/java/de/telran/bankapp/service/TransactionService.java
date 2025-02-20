@@ -8,7 +8,6 @@ import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.repository.AccountRepository;
 import de.telran.bankapp.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
