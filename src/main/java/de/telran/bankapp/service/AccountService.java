@@ -93,6 +93,8 @@ public class AccountService {
 
         Product product = productOptional.get();
 
+//        Account newAccount = Account.builder().name("Name").status(AccountStatus.ACTIVE).id(123L).build();
+
         Account account = mapper.createDtoToEntity(dto);
         account.setName(createNewAccountName());
         account.setCurrencyCode(product.getCurrencyCode());
@@ -121,7 +123,7 @@ public class AccountService {
 
     private String createNewAccountName() {
         Random random = new Random();
-        Integer randomNumber = 10_000_000 + random.nextInt(90_000_000);
+        int randomNumber = 10_000_000 + random.nextInt(90_000_000);
         return "DE883704004400" + randomNumber;
     }
 }
