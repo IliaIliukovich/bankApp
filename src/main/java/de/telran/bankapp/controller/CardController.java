@@ -1,5 +1,6 @@
 package de.telran.bankapp.controller;
 
+import de.telran.bankapp.dto.CardCreateDto;
 import de.telran.bankapp.entity.enums.CardType;
 import de.telran.bankapp.service.CardServices;
 import de.telran.bankapp.entity.Card;
@@ -70,6 +71,12 @@ public class CardController {
     @PostMapping("/add")
     public ResponseEntity<Card> addCard(@RequestBody Card card) {
         Card created = service.addCard(card);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<Card> newCard(@RequestBody CardCreateDto cardCreateDto) {
+        Card created = service.newCard(cardCreateDto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 

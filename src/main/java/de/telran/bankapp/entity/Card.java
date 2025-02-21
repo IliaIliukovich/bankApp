@@ -1,15 +1,11 @@
 package de.telran.bankapp.entity;
 
 import de.telran.bankapp.entity.enums.CardType;
-
-import de.telran.bankapp.entity.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,5 +23,7 @@ public class Card {
     private String cardHolder;
     private Integer cvv;
     private String expiryDate;
-    private Long accountId;
+
+    @OneToOne
+    private Account account;
 }
