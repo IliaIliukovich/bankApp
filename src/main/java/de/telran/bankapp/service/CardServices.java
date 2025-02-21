@@ -1,20 +1,21 @@
 package de.telran.bankapp.service;
 
 
-import de.telran.bankapp.entity.enums.CardType;
+import de.telran.bankapp.dto.AccountCreateDto;
+import de.telran.bankapp.dto.CardCreateDto;
+import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Card;
+import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.entity.enums.AccountType;
+import de.telran.bankapp.entity.enums.CardType;
+import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.repository.CardRepository;
-//import jakarta.transaction.Transactional;
-import org.springframework.transaction.annotation.Transactional;
+import de.telran.bankapp.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +24,14 @@ import java.util.Optional;
 public class CardServices {
 
     private final CardRepository repository;
+    private final AccountService accountService;
+    private final ClientRepository clientRepository;
 
     @Autowired
-    public CardServices(CardRepository repository) {
+    public CardServices(CardRepository repository, AccountService accountService, ClientRepository clientRepository) {
         this.repository = repository;
+        this.accountService = accountService;
+        this.clientRepository = clientRepository;
     }
 
     public List<Card> findAll() {
@@ -74,6 +79,23 @@ public class CardServices {
     @Transactional
     public void deleteCard(String id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public Card newCard(CardCreateDto cardCreateDto) {
+        String clientId = cardCreateDto.getClientId();
+        Optional<Client> clientById = clientRepository.findById(clientId);
+        if (clientById.isEmpty()) {
+            throw new BankAppBadRequestException("Client not found");
+        }
+        AccountCreateDto accountCreateDto = new AccountCreateDto(clientId, 1L, new BigDecimal("0.00"), AccountType.DEBIT_CARD);
+        Account newAccount = accountService.createNewAccount(accountCreateDto);
+        Client client = clientById.get();
+        String name = client.getFirstName() + " " + client.getLastName();
+        CardType cardType = CardType.valueOf(cardCreateDto.getCardType());
+        Card card = new Card(null, cardType, "1215 1532 7818 4135", name, 255, "12/30", newAccount);
+
+        return repository.save(card);
     }
 }
 

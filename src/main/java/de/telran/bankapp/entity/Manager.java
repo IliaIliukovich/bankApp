@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -31,5 +33,8 @@ public class Manager {
 
   @Enumerated(EnumType.STRING)
   private ManagerStatus status;
+
+  @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+  private List<Client> clients;
 
 }

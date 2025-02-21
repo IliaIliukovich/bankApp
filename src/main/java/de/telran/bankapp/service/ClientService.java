@@ -3,10 +3,12 @@ package de.telran.bankapp.service;
 import de.telran.bankapp.dto.ClientCreateDto;
 import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.ClientMapper;
 import de.telran.bankapp.repository.ClientRepository;
+import de.telran.bankapp.repository.ManagerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,13 @@ public class ClientService {
     private static Logger logger = LogManager.getLogger(ClientService.class);
 
     private ClientRepository repository;
+    private ManagerRepository managerRepository;
     private ClientMapper mapper;
 
     @Autowired
-    public ClientService(ClientRepository repository, ClientMapper mapper) {
+    public ClientService(ClientRepository repository, ManagerRepository managerRepository, ClientMapper mapper) {
         this.repository = repository;
+        this.managerRepository = managerRepository;
         this.mapper = mapper;
     }
 
@@ -49,7 +53,7 @@ public class ClientService {
     public Optional<ClientDto> getClientById(String uuid) {
         Optional<Client> client = repository.findById(uuid);
         ClientDto dto = mapper.entityToDto(client.orElse(null));
-        return Optional.of(dto);
+        return Optional.ofNullable(dto);
     }
 
     public List<ClientDto> findByName(String name) {
@@ -65,16 +69,27 @@ public class ClientService {
     @Transactional
     public ClientDto addClient(ClientCreateDto dto) {
         Client client = mapper.createDtoToEntity(dto);
+        if (dto.getManager_id() != null) {
+//            Manager manager = managerRepository.findById(dto.getManager_id()).orElse(null);
+            Manager manager = managerRepository.getReferenceById(dto.getManager_id()); // lazy loading
+//            System.out.println(manager.getFirstName() + " " + manager.getLastName());
+            client.setManager(manager);
+        }
         Client saved = repository.save(client);
         return mapper.entityToDto(saved);
     }
 
     @Transactional
-    public ClientDto updateClient(ClientDto client) {
-        String id = client.getId();
+    public ClientDto updateClient(ClientDto dto) {
+        String id = dto.getId();
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Client saved = repository.save(mapper.dtoToEntity(client));
+            Client client = mapper.dtoToEntity(dto);
+            if (dto.getManager_id() != null) {
+                Manager manager = managerRepository.getReferenceById(dto.getManager_id()); // lazy loading
+                client.setManager(manager);
+            }
+            Client saved = repository.save(client);
             return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
