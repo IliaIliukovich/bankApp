@@ -1,6 +1,8 @@
 package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entity.Transaction;
+import de.telran.bankapp.dto.TransactionCreateDto;
+import de.telran.bankapp.dto.TransactionDto;
+import de.telran.bankapp.dto.TransactionTransferDto;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
 import de.telran.bankapp.service.TransactionService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/transaction")
@@ -30,63 +33,61 @@ public class TransactionController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Transaction>> getAllTransactions() {
+    public ResponseEntity<List<TransactionDto>> getAllTransactions() {
         return new ResponseEntity<>(service.getAllTransactions(), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Transaction> getTransactionById(
+    public Optional<TransactionDto> getTransactionById(
             @PathVariable @Pattern(regexp = UUID_REGEX, message = "{validation.transaction.id}") String id) {
-        return new ResponseEntity<>(service.getTransactionById(id), HttpStatus.OK);
+        return service.getTransactionById(id);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Transaction>> findTransactionsByTypeAndAmount(
+    public ResponseEntity<List<TransactionDto>> findTransactionsByTypeAndAmount(
             @RequestParam TransactionType type,
             @RequestParam BigDecimal minAmount) {
-        List<Transaction> transactions = service.findTransactionsByTypeAndAmount(type, minAmount);
+        List<TransactionDto> transactions = service.findTransactionsByTypeAndAmount(type, minAmount);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @GetMapping("/searchTransactionsByType/{type}")
-    public ResponseEntity<List<Transaction>> searchTransactionsByType(@PathVariable TransactionType type) {
-        List<Transaction> transactions = service.findTransactionsByType(type);
+    public ResponseEntity<List<TransactionDto>> searchTransactionsByType(@PathVariable TransactionType type) {
+        List<TransactionDto> transactions = service.findTransactionsByType(type);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @GetMapping("/searchTransactionsByStatusNotAndAmountBetween")
-    public ResponseEntity<List<Transaction>> searchTransactionsByStatusNotAndAmountBetween(
+    public ResponseEntity<List<TransactionDto>> searchTransactionsByStatusNotAndAmountBetween(
             @RequestParam TransactionStatus status,
             @RequestParam(required = false) BigDecimal minAmount,
             @RequestParam(required = false) BigDecimal maxAmount) {
-        List<Transaction> transactions = service.findTransactionByStatusNotAndAmountBetween(status, minAmount, maxAmount);
+        List<TransactionDto> transactions = service.findTransactionByStatusNotAndAmountBetween(status, minAmount, maxAmount);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @GetMapping("/searchTransactionsByTypeAndByStatus")
-    public ResponseEntity<List<Transaction>> searchTransactionsByTypeAndByStatus(
+    public ResponseEntity<List<TransactionDto>> searchTransactionsByTypeAndByStatus(
             @RequestParam TransactionType type,
             @RequestParam TransactionStatus status) {
-        List<Transaction> transactions = service.findTransactionsByTypeAndByStatus(type, status);
+        List<TransactionDto> transactions = service.findTransactionsByTypeAndByStatus(type, status);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> addTransaction(@RequestBody @Valid Transaction transaction) {
-        Transaction added = service.addTransaction(transaction);
+    public ResponseEntity<TransactionDto> addTransaction(@RequestBody @Valid TransactionCreateDto transaction) {
+        TransactionDto added = service.addTransaction(transaction);
         return new ResponseEntity<>(added, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Transaction> updateTransaction(@RequestBody @Valid Transaction transaction) {
+    public ResponseEntity<TransactionDto> updateTransaction(@RequestBody @Valid TransactionDto transaction) {
         return new ResponseEntity<>(service.updateTransaction(transaction), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/transfer")
-    public ResponseEntity<Void> transferMoney(@RequestParam Long fromId,
-                                              @RequestParam Long toId,
-                                              @RequestParam BigDecimal amount) {
-        service.transferMoney(fromId, toId, amount);
+    public ResponseEntity<Void> transferMoney(@RequestBody @Valid TransactionTransferDto dto) {
+        service.transferMoney(dto);
         return ResponseEntity.ok().build();
     }
 
