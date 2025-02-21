@@ -1,5 +1,6 @@
 package de.telran.bankapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,5 +35,17 @@ public class Client {
 
     @Enumerated(EnumType.STRING)
     private ClientStatus status;
+
+    // unidirectional -- bidirectional
+    // One to One
+    // One to Many
+    // Many to One
+    // Many to Many
+
+//    private Long manager_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Manager manager;
 
 }

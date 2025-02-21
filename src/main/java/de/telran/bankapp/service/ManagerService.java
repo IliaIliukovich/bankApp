@@ -1,8 +1,10 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,10 +22,12 @@ public class ManagerService {
     private static Logger logger = LogManager.getLogger(ManagerService.class);
 
     private ManagerRepository repository;
+    private ClientRepository clientRepository;
 
     @Autowired
-    public ManagerService(ManagerRepository repository) {
+    public ManagerService(ManagerRepository repository, ClientRepository clientRepository) {
         this.repository = repository;
+        this.clientRepository = clientRepository;
     }
 
     public List<Manager> getAll(){
@@ -80,9 +84,15 @@ public class ManagerService {
     public void deleteManager(Long id){
         Optional<Manager> managerForDelete = repository.findById(id);
         if (managerForDelete.isPresent()) {
+            List<Client> clients = managerForDelete.get().getClients();
+            for (Client c  : clients) {
+                c.setManager(null);
+            }
+            clientRepository.saveAll(clients);
             repository.deleteById(id);
+        } else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     @Transactional
