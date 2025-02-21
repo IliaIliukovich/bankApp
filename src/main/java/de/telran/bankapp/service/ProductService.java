@@ -1,8 +1,10 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.ProductDto;
 import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.entity.enums.ProductStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.ProductMapper;
 import de.telran.bankapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,31 +17,33 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ProductService {
     private final ProductRepository repository;
+    private final ProductMapper mapper;
 
     @Autowired
-    public ProductService(ProductRepository repo) {
+    public ProductService(ProductRepository repo, ProductMapper mapper) {
         this.repository = repo;
+        this.mapper = mapper;
     }
 
-    public List<Product> getAll() {
-        return repository.findAll();
+    public List<ProductDto> getAll() {
+        List<Product> products = repository.findAll();
+        return mapper.toDto(products);
     }
 
-    public Optional<Product> getProductById(Long id) {
-        Optional<Product> byId = repository.findById(id);
-        if (byId.isEmpty()) {
-            throw new BankAppResourceNotFoundException(String.format("Product with id = %d not found", id));
-        }
-        return repository.findById(id);
+    public Optional<ProductDto> getProductById(Long id) {
+        Optional<Product> product = repository.findById(id);
+        ProductDto productDto = mapper.toDto(product.orElse(null));
+        return Optional.of(productDto);
     }
 
-    public List<Product> getProductByName(String name) {
-        return repository.findByName(name);
+    public List<ProductDto> getProductByName(String name) {
+        List<Product> products = repository.findByName(name);
+        return mapper.toDto(products);
     }
 
-    public List<Product> getProductByStatus(String status) {
-        ProductStatus enumStatus = ProductStatus.valueOf(status.toUpperCase());
-        return repository.findByStatus(enumStatus);
+    public List<ProductDto> getProductByStatus(String status) {
+        List<Product> products = repository.findByStatus(ProductStatus.valueOf(status));
+        return mapper.toDto(products);
     }
 
     @Transactional

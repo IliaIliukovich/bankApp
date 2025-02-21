@@ -1,5 +1,6 @@
 package de.telran.bankapp.controller;
 
+import de.telran.bankapp.dto.ProductDto;
 import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.service.ProductService;
 import jakarta.validation.Valid;
@@ -23,22 +24,22 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public List<Product> getAll() {
+    public List<ProductDto> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {
+    public Optional<ProductDto> getProductById(@PathVariable Long id) {
         return service.getProductById(id);
     }
 
     @GetMapping("/search")
-    public List<Product> getProductByName(@RequestParam String name) {
+    public List<ProductDto> getProductByName(@RequestParam String name) {
         return service.getProductByName(name);
     }
 
     @GetMapping("/searchByStatus")
-    public List<Product> searchProductByStatus(@RequestParam String status) {
+    public List<ProductDto> searchProductByStatus(@RequestParam String status) {
         return service.getProductByStatus(status);
     }
 

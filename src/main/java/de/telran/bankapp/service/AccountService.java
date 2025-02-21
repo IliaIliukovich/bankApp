@@ -1,10 +1,10 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.dto.AccountCreateDto;
+import de.telran.bankapp.dto.ProductDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Agreement;
 import de.telran.bankapp.entity.Client;
-import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.entity.enums.*;
 import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
@@ -86,12 +86,12 @@ public class AccountService {
 
     @Transactional
     public Account createNewAccount(AccountCreateDto dto) {
-        Optional<Product> productOptional = productService.getProductById(dto.getProductId());
+        Optional<ProductDto> productOptional = productService.getProductById(dto.getProductId());
         Optional<Client> optionalClient = clientRepository.findById(dto.getClientId());
 
         validateAccountDto(dto, optionalClient, productOptional);
 
-        Product product = productOptional.get();
+        ProductDto product = productOptional.get();
 
 //        Account newAccount = Account.builder().name("Name").status(AccountStatus.ACTIVE).id(123L).build();
 
@@ -108,7 +108,7 @@ public class AccountService {
 
     private static void validateAccountDto(AccountCreateDto dto,
                                            Optional<Client> optionalClient,
-                                           Optional<Product> productOptional) {
+                                           Optional<ProductDto> productOptional) {
         if (optionalClient.isEmpty() || productOptional.isEmpty()) {
             throw new BankAppResourceNotFoundException("Client with id = " + dto.getClientId() + " or product with id " + dto.getProductId() + " not found in database");
         }
