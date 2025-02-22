@@ -21,14 +21,14 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class CardServices {
+public class CardService {
 
     private final CardRepository repository;
     private final AccountService accountService;
     private final ClientRepository clientRepository;
 
     @Autowired
-    public CardServices(CardRepository repository, AccountService accountService, ClientRepository clientRepository) {
+    public CardService(CardRepository repository, AccountService accountService, ClientRepository clientRepository) {
         this.repository = repository;
         this.accountService = accountService;
         this.clientRepository = clientRepository;
@@ -86,16 +86,23 @@ public class CardServices {
         String clientId = cardCreateDto.getClientId();
         Optional<Client> clientById = clientRepository.findById(clientId);
         if (clientById.isEmpty()) {
-            throw new BankAppBadRequestException("Client not found");
+            throw new BankAppBadRequestException("Client with id = " + clientId + " not found");
         }
+
         AccountCreateDto accountCreateDto = new AccountCreateDto(clientId, 1L, new BigDecimal("0.00"), AccountType.DEBIT_CARD);
         Account newAccount = accountService.createNewAccount(accountCreateDto);
-        Client client = clientById.get();
-        String name = client.getFirstName() + " " + client.getLastName();
-        CardType cardType = CardType.valueOf(cardCreateDto.getCardType());
-        Card card = new Card(null, cardType, "1215 1532 7818 4135", name, 255, "12/30", newAccount);
 
+        CardType cardType = CardType.valueOf(cardCreateDto.getCardType());
+        Card card = createNewCard(cardType, clientById.get(), newAccount);
         return repository.save(card);
+    }
+
+    private static Card createNewCard(CardType cardType, Client client, Account account) {
+        String cardHolder = client.getFirstName() + " " + client.getLastName();
+        String cardNumber = "1215 1532 7818 4135";
+        int cvv = 255;
+        String expiryDate = "12/30";
+        return new Card(null, cardType, cardNumber, cardHolder, cvv, expiryDate, account);
     }
 }
 
