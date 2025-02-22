@@ -14,7 +14,7 @@ public interface ClientMapper {
     @Mapping(target = "manager", ignore = true)
     Client dtoToEntity(ClientDto dto);
 
-    @Mapping(target = "manager_id", source = "manager.id")
+    @Mapping(target = "managerId", source = "manager.id")
     ClientDto entityToDto(Client entity);
 
     List<ClientDto> entityListToDto(List<Client> entities);

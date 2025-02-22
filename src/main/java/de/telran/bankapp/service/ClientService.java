@@ -69,10 +69,9 @@ public class ClientService {
     @Transactional
     public ClientDto addClient(ClientCreateDto dto) {
         Client client = mapper.createDtoToEntity(dto);
-        if (dto.getManager_id() != null) {
-//            Manager manager = managerRepository.findById(dto.getManager_id()).orElse(null);
-            Manager manager = managerRepository.getReferenceById(dto.getManager_id()); // lazy loading
-//            System.out.println(manager.getFirstName() + " " + manager.getLastName());
+        if (dto.getManagerId() != null) {
+//            Manager manager = managerRepository.findById(dto.getManagerId()).orElse(null);
+            Manager manager = managerRepository.getReferenceById(dto.getManagerId()); // lazy loading
             client.setManager(manager);
         }
         Client saved = repository.save(client);
@@ -85,8 +84,8 @@ public class ClientService {
         Optional<Client> optional = repository.findById(id);
         if (optional.isPresent()) {
             Client client = mapper.dtoToEntity(dto);
-            if (dto.getManager_id() != null) {
-                Manager manager = managerRepository.getReferenceById(dto.getManager_id()); // lazy loading
+            if (dto.getManagerId() != null) {
+                Manager manager = managerRepository.getReferenceById(dto.getManagerId()); // lazy loading
                 client.setManager(manager);
             }
             Client saved = repository.save(client);
