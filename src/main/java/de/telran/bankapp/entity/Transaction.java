@@ -24,7 +24,7 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
-   private BigDecimal amount;
+    private BigDecimal amount;
 
     private String description;
 

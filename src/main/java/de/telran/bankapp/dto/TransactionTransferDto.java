@@ -7,8 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
+import org.hibernate.validator.constraints.Length;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +25,13 @@ public class TransactionTransferDto {
 
     @NotNull(message = "{validation.transaction.amount}")
     @DecimalMin(value = "0.01", message = "{validation.transaction.amount}")
-    private BigDecimal moneyAmount;
+    private String moneyAmount;
+
+    @NotNull
+    @Length(max = 150, message = "{validation.transaction.description}")
+    private String description;
+
+    @NotNull(message = "{validation.transaction.type}")
+    private String transactionType;
 
 }

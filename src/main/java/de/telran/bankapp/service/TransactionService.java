@@ -20,8 +20,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static de.telran.bankapp.entity.enums.TransactionType.TRANSFER;
-
 @Service
 @Transactional(readOnly = true)
 public class TransactionService {
@@ -105,13 +103,12 @@ public class TransactionService {
     public void transferMoney(TransactionTransferDto dto) {
         Long fromId = dto.getFromId();
         Long toId = dto.getToId();
-        BigDecimal amount = dto.getMoneyAmount();
+        BigDecimal amount = new BigDecimal(dto.getMoneyAmount());
 
         Account fromAccount = accountRepository.findById(fromId)
-               .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + fromId + " not found in database"));
-        Account toAccount =  accountRepository.findById(toId)
+                .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + fromId + " not found in database"));
+        Account toAccount = accountRepository.findById(toId)
                 .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + toId + " not found in database"));
-
 
         validateTransactionDto(amount, fromAccount, toAccount);
 
@@ -121,9 +118,10 @@ public class TransactionService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        Transaction transaction = new Transaction(null, TRANSFER, amount,
-                "Money transferred from account " + fromId + " to " + toId,
-                TransactionStatus.COMPLETED, toId, fromId);
+        Transaction transaction = transactionMapper.createTransactionTransferDtoToEntity(dto);
+//        Transaction transaction = new Transaction(null, TRANSFER, amount,
+//                "Money transferred from account " + fromId + " to " + toId,
+//                TransactionStatus.COMPLETED, toId, fromId);
 
         repository.save(transaction);
     }
