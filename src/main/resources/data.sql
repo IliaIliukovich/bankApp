@@ -56,7 +56,8 @@ values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description",
         ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
         ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3),
         ("40d4b66c-c7df-44aa-b362-22b70ffc6df3", "PAYMENT", 22.0, "description", "APPROVED", 1, 2),
-        ("34511ef8-2968-478c-8f0f-4d2bcb0e9a44", "PAYMENT", 300.4, "description", "APPROVED", 4, 10);
+        ("34511ef8-2968-478c-8f0f-4d2bcb0e9a44", "PAYMENT", 300.4, "description", "APPROVED", 4, 10),
+        ("6e0a061a-a846-45b2-9960-f4b830890b2c", "TRANSFER", 100, "transfer between own accounts", "APPROVED", 2, 8);
 
 insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
 values  ("e5b1bf42-46a5-4fc2-9c69-6884c1a942ae", "1415 1532 7818 4133", "Hans Schmidt", 1, "03/29", 1, "MASTERCARD"),
