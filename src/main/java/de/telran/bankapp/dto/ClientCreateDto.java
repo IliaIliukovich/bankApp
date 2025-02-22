@@ -33,6 +33,6 @@ public class ClientCreateDto {
 
     private String phone;
 
-    private Long manager_id;
+    private Long managerId;
 
 }

@@ -38,6 +38,6 @@ public class ClientDto {
 
     private ClientStatus status;
 
-    private Long manager_id;
+    private Long managerId;
 
 }
