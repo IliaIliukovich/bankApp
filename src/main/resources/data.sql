@@ -23,7 +23,7 @@ values  ("b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0","Schmidt", "Hans", "DE123456789"
         ("f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c", "Hoffmann", "Clara", "DE012345678", "c.hoffmann@example.com", "Bremen, Germany", "+49 421 1234567", "ACTIVE", null);
 
 insert into product (id, name, currency_code, interest_rate, limit_amount, status)
-values  (1, "Current Account", "USD", 2.0, 1500.75, "INACTIVE"),
+values  (1, "Current Account", "USD", 2.0, 1500.75, "ACTIVE"),
         (2, "Credit Account", "EUR", 18.0, 5000.00, "INACTIVE"),
         (3, "Business Credit", "GBP", 18.0, 20000.00, "ACTIVE"),
         (4, "Savings Account", "USD", 1.5, 7500.25, "INACTIVE"),
@@ -57,9 +57,9 @@ values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description",
         ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
 
 insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
-values  ("e5b1bf42-46a5-4fc2-9c69-6884c1a942ae", "1415 1532 7818 4133", "John Smith", 1, "03/29", 1, "MASTERCARD"),
-        ("855ee7f8-b727-4aa4-bdf7-54c6428ce429", "2425 3542 9817 3234", "Emily Johnson", 2, "01/27", 2, "VISA"),
-        ("3922f2b5-732e-46ca-811f-753a18170018", "4326 1532 0814 2244", "Michael Brown", 201, "12/30", 3, "MASTERCARD"),
-        ("6f00b07d-5b81-4a2c-bac5-3dde080832d7", "3215 2418 1439 5083", "Sarah Davis", 111, "03/28", 4, "VISA"),
-        ("74b2a73e-82fa-42bc-953e-fcf571c3c8b4", "9734 7382 9341 3850", "David Martinez", 15, "05/31", 5, "VISA"),
-        ("36112d3f-65c9-4f85-a356-d2ed6c42da1a", "4411 0522 7708 5132", "Sophia Wilson", 321, "04/27", 6, "MASTERCARD");
+values  ("e5b1bf42-46a5-4fc2-9c69-6884c1a942ae", "1415 1532 7818 4133", "Hans Schmidt", 1, "03/29", 1, "MASTERCARD"),
+        ("855ee7f8-b727-4aa4-bdf7-54c6428ce429", "2425 3542 9817 3234", "Anna Müller", 2, "01/27", 2, "VISA"),
+        ("3922f2b5-732e-46ca-811f-753a18170018", "4326 1532 0814 2244", "Peter Klein", 201, "12/30", 3, "MASTERCARD"),
+        ("6f00b07d-5b81-4a2c-bac5-3dde080832d7", "3215 2418 1439 5083", "Maria Schneider", 111, "03/28", 4, "VISA"),
+        ("74b2a73e-82fa-42bc-953e-fcf571c3c8b4", "9734 7382 9341 3850", "Lukas Fischer", 15, "05/31", 5, "VISA"),
+        ("36112d3f-65c9-4f85-a356-d2ed6c42da1a", "4411 0522 7708 5132", "Sophie Weber", 321, "04/27", 6, "MASTERCARD");

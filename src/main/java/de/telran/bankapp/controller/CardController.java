@@ -2,7 +2,7 @@ package de.telran.bankapp.controller;
 
 import de.telran.bankapp.dto.CardCreateDto;
 import de.telran.bankapp.entity.enums.CardType;
-import de.telran.bankapp.service.CardServices;
+import de.telran.bankapp.service.CardService;
 import de.telran.bankapp.entity.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/cards")
+@RequestMapping("/card")
 public class CardController {
 
-    private final CardServices service;
+    private final CardService service;
 
     @Autowired
-    public CardController(CardServices service) {
+    public CardController(CardService service) {
         this.service = service;
     }
 
