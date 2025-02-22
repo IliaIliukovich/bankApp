@@ -40,21 +40,23 @@ values  (1, "Current Account", "USD", 2.0, 1500.75, "ACTIVE"),
         (15, "Fixed Deposit", "EUR", 4.0, 50000.00, "INACTIVE");
 
 insert into	 account (id, name, type, status, balance, currency_code, client_id)
-values  (1, "DE88370400440532013021", "CHECKING", "ACTIVE", 1500.75, "USD", "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
+values  (1, "DE88370400440532013021", "CHECKING", "ACTIVE", 1500.75, "EUR", "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
         (2, "DE88370400440532013088", "SAVINGS", "ACTIVE", 10200.00, "EUR", "20980395-20d0-4ea8-8e4b-de2252a028eb"),
-        (3, "DE88370400440532013545", "LOAN", "BLOCKED", -5000.50, "USD", "9cd1b6c5-06d7-4f6c-9959-3856b1b51045"),
+        (3, "DE88370400440532013545", "LOAN", "BLOCKED", -5000.50, "EUR", "9cd1b6c5-06d7-4f6c-9959-3856b1b51045"),
         (4, "DE88370400440532012111", "DEBIT_CARD", "INACTIVE", 200.00, "GBP", "5e659d3c-3925-457d-ae41-ca69001fb11c"),
         (5, "DE88370400440532016543", "CREDIT_CARD", "ACTIVE", -1200.00, "EUR", "b03dbcfc-d047-49a7-acbb-f3b1329e1fee"),
         (6, "DE88370400440532019876", "CHECKING", "BLOCKED", 500.25, "USD", "bb10eec7-e408-4f11-9603-ec3c4a371512"),
         (7, "DE88370400440532011254", "SAVINGS", "INACTIVE", 2500.00, "GBP", "7d1388c1-04df-4473-b15b-fe614594aa3c"),
-        (8, "DE88370400440532015555", "OTHER", "ACTIVE", 75.90, "EUR", "3d18c400-a7b3-4bb1-bb29-8f566a43eca1"),
+        (8, "DE88370400440532015555", "OTHER", "ACTIVE", 75.90, "EUR", "20980395-20d0-4ea8-8e4b-de2252a028eb"),
         (9, "DE88370400440532018634", "DEBIT_CARD", "BLOCKED", 0.00, "USD", "d07ec73f-702a-479c-a930-f51596d9b899"),
-        (10, "DE88370400440532010643", "CREDIT_CARD", "ACTIVE", -300.40, "GBP", "f6bc3ef4-4894-42f2-9c7b-66b9a8b80c7c");
+        (10, "DE88370400440532010643", "CREDIT_CARD", "ACTIVE", -300.40, "GBP", "20980395-20d0-4ea8-8e4b-de2252a028eb");
 
 insert into transaction (id, type, amount, description, status, debit_account_id, credit_account_id)
 values  ("4ea37144-df60-4681-b796-760345166d39", "PAYMENT", 12.0, "description", "APPROVED", 1, 2),
         ("a75c7e4b-b82d-4cb6-b217-381481609065", "PAYMENT", 23.0, "description", "PENDING", 1, 3),
-        ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3);
+        ("8bdf4491-9b25-4194-a67d-d9929f210d37", "PAYMENT", 200.0, "description", "NEW", 2, 3),
+        ("40d4b66c-c7df-44aa-b362-22b70ffc6df3", "PAYMENT", 22.0, "description", "APPROVED", 1, 2),
+        ("34511ef8-2968-478c-8f0f-4d2bcb0e9a44", "PAYMENT", 300.4, "description", "APPROVED", 4, 10);
 
 insert into card (id, card_number, card_holder, cvv, expiry_date, account_id, card_type)
 values  ("e5b1bf42-46a5-4fc2-9c69-6884c1a942ae", "1415 1532 7818 4133", "Hans Schmidt", 1, "03/29", 1, "MASTERCARD"),
