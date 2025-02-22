@@ -4,6 +4,7 @@ import de.telran.bankapp.dto.CardCreateDto;
 import de.telran.bankapp.entity.enums.CardType;
 import de.telran.bankapp.service.CardService;
 import de.telran.bankapp.entity.Card;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class CardController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Card> newCard(@RequestBody CardCreateDto cardCreateDto) {
+    public ResponseEntity<Card> newCard(@RequestBody @Valid CardCreateDto cardCreateDto) {
         Card created = service.newCard(cardCreateDto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
