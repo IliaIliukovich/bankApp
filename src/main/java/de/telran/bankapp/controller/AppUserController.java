@@ -1,0 +1,85 @@
+package de.telran.bankapp.controller;
+
+import de.telran.bankapp.entity.AppUser;
+import de.telran.bankapp.repository.AppUserRepository;
+import de.telran.bankapp.service.AppUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/users")
+public class AppUserController {
+
+    @Autowired
+    private final AppUserService appUserService;
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    public AppUserController(AppUserService appUserService) {
+        this.appUserService = appUserService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AppUser>> getAllUsers() {
+        return ResponseEntity.ok(appUserService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public Optional<AppUser> getUserById(@PathVariable String id) {
+        return appUserService.getAppUserById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<AppUser> createUser(@RequestBody AppUser user) {
+        AppUser created = appUserService.addAppUser(user);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+    @PutMapping
+    public ResponseEntity<AppUser> updateAppUser(@RequestBody AppUser user) {
+        if (user.getId() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<AppUser> updated = appUserService.updateAppUser(user);
+        if (updated.isPresent()) {
+            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+//    @PutMapping
+//    public ResponseEntity<AppUser> updateAppUser(@RequestBody AppUser user) {
+//        Optional<AppUser> updated = appUserService.updateAppUser(user);
+//        if (updated.isPresent()) {
+//            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
+//@PatchMapping("/{id}")
+//public ResponseEntity<Void> appUserStatus(@PathVariable String id, @RequestParam(required = false) String status) {
+//    appUserService.changeStatus(id, status);
+//    return new ResponseEntity<>(HttpStatus.ACCEPTED);
+//}
+@PatchMapping("/{id}")
+public ResponseEntity<String> appUserStatus(@PathVariable String id, @RequestParam(required = false) String status) {
+    boolean updated = appUserService.changeStatus(id, status);
+
+    if (!updated) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    return ResponseEntity.status(HttpStatus.ACCEPTED).body("User status updated successfully");
+}
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        appUserService.deleteAppUser(id);
+        return ResponseEntity.noContent().build();
+    }
+}
