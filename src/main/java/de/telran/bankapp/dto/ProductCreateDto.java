@@ -5,7 +5,10 @@ import de.telran.bankapp.entity.enums.ProductStatus;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -13,9 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
-public class ProductDto {
-    private Long id;
+public class ProductCreateDto {
 
     @NotNull(message = "{validation.product.productNameNotNull}")
     @Size(min = 2, max = 50, message = "{validation.product.productName}")

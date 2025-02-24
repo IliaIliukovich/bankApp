@@ -1,7 +1,7 @@
 package de.telran.bankapp.controller;
 
+import de.telran.bankapp.dto.ProductCreateDto;
 import de.telran.bankapp.dto.ProductDto;
-import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +44,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
-        Product addedProduct = service.addProduct(product);
+    public ResponseEntity<ProductDto> addProduct(@RequestBody @Valid ProductCreateDto productDto) {
+        ProductDto addedProduct = service.addProduct(productDto);
         return ResponseEntity.ok(addedProduct);
     }
 
     @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody @Valid Product product) {
-        Product updated = service.updatedProduct(product);
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody @Valid ProductDto productDto) {
+        ProductDto updated = service.updatedProduct(productDto);
         return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     }
 

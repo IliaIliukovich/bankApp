@@ -1,5 +1,6 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.ProductCreateDto;
 import de.telran.bankapp.dto.ProductDto;
 import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.entity.enums.ProductStatus;
@@ -27,28 +28,30 @@ public class ProductService {
 
     public List<ProductDto> getAll() {
         List<Product> products = repository.findAll();
-        return mapper.toDto(products);
+        return mapper.entityListToDto(products);
     }
 
     public Optional<ProductDto> getProductById(Long id) {
         Optional<Product> product = repository.findById(id);
-        ProductDto productDto = mapper.toDto(product.orElse(null));
+        ProductDto productDto = mapper.entityToDto(product.orElse(null));
         return Optional.of(productDto);
     }
 
     public List<ProductDto> getProductByName(String name) {
         List<Product> products = repository.findByName(name);
-        return mapper.toDto(products);
+        return mapper.entityListToDto(products);
     }
 
     public List<ProductDto> getProductByStatus(String status) {
         List<Product> products = repository.findByStatus(ProductStatus.valueOf(status));
-        return mapper.toDto(products);
+        return mapper.entityListToDto(products);
     }
 
     @Transactional
-    public Product addProduct(Product product) {
-        return repository.save(product);
+    public ProductDto addProduct(ProductCreateDto dto) {
+        Product product = mapper.createDtoToEntity(dto);
+        Product savedProduct = repository.save(product);
+        return mapper.entityToDto(savedProduct);
     }
 
     @Transactional
@@ -57,12 +60,13 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updatedProduct(Product product) {
-        Long id = product.getId();
+    public ProductDto updatedProduct(ProductDto productDto) {
+        Long id = productDto.getId();
         Optional<Product> optional = repository.findById(id);
         if (optional.isPresent()) {
+            Product product = mapper.dtoToEntity(productDto);
             Product savedProduct = repository.save(product);
-            return savedProduct;
+            return mapper.entityToDto(savedProduct);
         }
         throw new BankAppResourceNotFoundException(String.format("Product with id = %d not found", id));
     }
