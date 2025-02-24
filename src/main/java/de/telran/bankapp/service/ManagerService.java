@@ -2,10 +2,12 @@ package de.telran.bankapp.service;
 
 import de.telran.bankapp.dto.ManagerCreateDto;
 import de.telran.bankapp.dto.ManagerDto;
+import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.ManagerMapper;
+import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -25,12 +27,21 @@ public class ManagerService {
 
     private ManagerRepository repository;
     private ManagerMapper mapper;
+    private ClientRepository clientRepository;
 
     @Autowired
-    public ManagerService( ManagerRepository repository, ManagerMapper mapper) {
-        this.mapper = mapper;
+    public ManagerService(ManagerRepository repository, ManagerMapper mapper, ClientRepository clientRepository) {
         this.repository = repository;
+        this.mapper = mapper;
+        this.clientRepository = clientRepository;
     }
+
+
+//    public ManagerService( ManagerRepository repository, ManagerMapper mapper) {
+//        this.mapper = mapper;
+//        this.repository = repository;
+//    }
+
 
     public List<ManagerDto> getAll(){
         List<Manager> managers = repository.findAll();
@@ -70,8 +81,9 @@ public class ManagerService {
         if (optional.isPresent()) {
             Manager savedManager = repository.save(mapper.dtoToEntity(manager));
             return mapper.entityToDto(savedManager);
+        } else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     public ManagerDto getManagerById(Long id) {
@@ -79,8 +91,9 @@ public class ManagerService {
         if (optional.isPresent()) {
             ManagerDto found = mapper.entityToDto(optional.get()) ;
             return found;
+        }else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     @Transactional
@@ -91,13 +104,27 @@ public class ManagerService {
     }
 
     @Transactional
+//    public void deleteManager(Long id){
+//        Optional<Manager> managerForDelete = repository.findById(id);
+//        if (managerForDelete.isPresent()) {
+//            repository.deleteById(id);
+//        }
+//        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
+//    }
     public void deleteManager(Long id){
         Optional<Manager> managerForDelete = repository.findById(id);
         if (managerForDelete.isPresent()) {
+            List<Client> clients = managerForDelete.get().getClients();
+            for (Client c  : clients) {
+                c.setManager(null);
+            }
+            clientRepository.saveAll(clients);
             repository.deleteById(id);
+        } else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
+
 
     @Transactional
     public ManagerDto updateLastName(Long id, String newLastName){
@@ -107,8 +134,9 @@ public class ManagerService {
             manager.setLastName(newLastName);
             Manager managerWithNewLastName = repository.save(manager);
             return mapper.entityToDto(managerWithNewLastName);
+        }else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
 

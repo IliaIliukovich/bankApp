@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -28,4 +30,6 @@ public class ManagerDto {
     private String firstName;
 
     private ManagerStatus status;
+
+    private List<ClientDto> clientsDto;
 }
