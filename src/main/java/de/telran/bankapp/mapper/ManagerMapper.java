@@ -20,8 +20,6 @@ public interface ManagerMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", constant = "ACTIVE")
-    default Manager createDtoToEntity(ManagerCreateDto dto) {
-        return null;
-    }
+    Manager createDtoToEntity(ManagerCreateDto dto);
 
 }

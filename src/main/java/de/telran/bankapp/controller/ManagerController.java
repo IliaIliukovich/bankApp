@@ -2,15 +2,10 @@ package de.telran.bankapp.controller;
 
 import de.telran.bankapp.dto.ManagerCreateDto;
 import de.telran.bankapp.dto.ManagerDto;
-import de.telran.bankapp.entity.Account;
-import de.telran.bankapp.entity.Client;
-import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.service.ManagerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.CodePointLength;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
