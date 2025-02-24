@@ -105,12 +105,13 @@ public class TransactionService {
         Long toId = dto.getToId();
         BigDecimal amount = new BigDecimal(dto.getMoneyAmount());
 
-        Account fromAccount = accountRepository.findById(fromId)
-                .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + fromId + " not found in database"));
-        Account toAccount = accountRepository.findById(toId)
-                .orElseThrow(() -> new BankAppResourceNotFoundException("Account with id = " + toId + " not found in database"));
+        Optional<Account> fromAccountOptional = accountRepository.findById(fromId);
+        Optional<Account> toAccountOptional = accountRepository.findById(toId);
 
-        validateTransactionDto(amount, fromAccount, toAccount);
+        validateTransactionDto(dto, fromAccountOptional, toAccountOptional);
+
+        Account fromAccount = fromAccountOptional.get();
+        Account toAccount = toAccountOptional.get();
 
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
@@ -119,19 +120,23 @@ public class TransactionService {
         accountRepository.save(toAccount);
 
         Transaction transaction = mapper.createTransactionTransferDtoToEntity(dto);
-//        Transaction transaction = new Transaction(null, TRANSFER, amount,
-//                "Money transferred from account " + fromId + " to " + toId,
-//                TransactionStatus.COMPLETED, toId, fromId);
-
         repository.save(transaction);
     }
 
-    private void validateTransactionDto(BigDecimal amount, Account fromAccount, Account toAccount) {
+    private void validateTransactionDto(TransactionTransferDto dto,
+                                        Optional<Account> fromAccountOptional,
+                                        Optional<Account> toAccountOptional) {
 
-        if (fromAccount.getBalance().compareTo(amount) < 0) {
+        if (fromAccountOptional.isEmpty() || toAccountOptional.isEmpty()) {
+            throw new BankAppResourceNotFoundException("Client with id = " + dto.getFromId() + " or with id = " + dto.getToId() + " not found in database");
+        }
+
+        Account fromAccount = fromAccountOptional.get();
+        if (fromAccount.getBalance().compareTo(new BigDecimal(dto.getMoneyAmount())) < 0) {
             throw new BankAppBadRequestException("Insufficient funds for transfer");
         }
 
+        Account toAccount = toAccountOptional.get();
         if (fromAccount.getCurrencyCode() != toAccount.getCurrencyCode()) {
             throw new BankAppBadRequestException("Currency code is not correct");
         }
