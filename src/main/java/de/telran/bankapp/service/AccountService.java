@@ -36,7 +36,6 @@ public class AccountService {
 
     @Autowired
     public AccountService(AccountRepository repository,
-                          ProductService productService,
                           ClientRepository clientRepository,
                           AgreementRepository agreementRepository,
                           AccountMapper mapper, ProductRepository productRepository) {
