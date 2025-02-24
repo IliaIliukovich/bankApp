@@ -95,8 +95,9 @@ public class ManagerService {
         Optional<Manager> managerForDelete = repository.findById(id);
         if (managerForDelete.isPresent()) {
             repository.deleteById(id);
+        }else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     @Transactional
