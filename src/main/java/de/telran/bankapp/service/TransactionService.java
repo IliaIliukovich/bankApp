@@ -27,53 +27,53 @@ public class TransactionService {
 
     private final TransactionRepository repository;
     private final AccountRepository accountRepository;
-    private final TransactionMapper transactionMapper;
+    private final TransactionMapper mapper;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, AccountRepository accountRepository, TransactionMapper transactionMapper) {
+    public TransactionService(TransactionRepository repository, AccountRepository accountRepository, TransactionMapper mapper) {
         this.repository = repository;
         this.accountRepository = accountRepository;
-        this.transactionMapper = transactionMapper;
+        this.mapper = mapper;
     }
 
     public List<TransactionDto> getAllTransactions() {
         List<Transaction> transactions = repository.findAll();
-        return transactionMapper.entityListToDto(transactions);
+        return mapper.entityListToDto(transactions);
     }
 
     public Optional<TransactionDto> getTransactionById(String id) {
         Optional<Transaction> optional = repository.findById(id);
-        TransactionDto transactionDto = transactionMapper.entityToDto(optional.orElse(null));
-        return Optional.of(transactionDto);
+        TransactionDto transactionDto = mapper.entityToDto(optional.orElse(null));
+        return Optional.ofNullable(transactionDto);
     }
 
     public List<TransactionDto> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
         List<Transaction> transactions = repository.findAllByTypeAndAmountIsGreaterThanEqual(type, minAmount);
-        return transactionMapper.entityListToDto(transactions);
+        return mapper.entityListToDto(transactions);
     }
 
     public List<TransactionDto> findTransactionsByType(TransactionType type) {
         List<Transaction> transactions = repository.findAllByType(type);
-        return transactionMapper.entityListToDto(transactions);
+        return mapper.entityListToDto(transactions);
     }
 
     public List<TransactionDto> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount) {
         BigDecimal min = minAmount == null ? new BigDecimal("0.00") : minAmount;
         BigDecimal max = maxAmount == null ? new BigDecimal("50000.00") : maxAmount;
         List<Transaction> transactions = repository.findTransactionByStatusNotAndAmountBetween(status, min, max);
-        return transactionMapper.entityListToDto(transactions);
+        return mapper.entityListToDto(transactions);
     }
 
     public List<TransactionDto> findTransactionsByTypeAndByStatus(TransactionType type, TransactionStatus status) {
         List<Transaction> transactions = repository.nativeQuery(type, status);
-        return transactionMapper.entityListToDto(transactions);
+        return mapper.entityListToDto(transactions);
     }
 
     @Transactional
     public TransactionDto addTransaction(TransactionCreateDto dto) {
-        Transaction transaction = transactionMapper.createDtoToEntity(dto);
+        Transaction transaction = mapper.createDtoToEntity(dto);
         Transaction saved = repository.save(transaction);
-        return transactionMapper.entityToDto(saved);
+        return mapper.entityToDto(saved);
     }
 
     @Transactional
@@ -81,8 +81,8 @@ public class TransactionService {
         String id = dto.getId();
         Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Transaction saved = repository.save(transactionMapper.dtoToEntity(dto));
-            return transactionMapper.entityToDto(saved);
+            Transaction saved = repository.save(mapper.dtoToEntity(dto));
+            return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");
     }
@@ -118,7 +118,7 @@ public class TransactionService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        Transaction transaction = transactionMapper.createTransactionTransferDtoToEntity(dto);
+        Transaction transaction = mapper.createTransactionTransferDtoToEntity(dto);
 //        Transaction transaction = new Transaction(null, TRANSFER, amount,
 //                "Money transferred from account " + fromId + " to " + toId,
 //                TransactionStatus.COMPLETED, toId, fromId);
