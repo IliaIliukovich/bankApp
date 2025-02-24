@@ -22,6 +22,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "int")
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -34,7 +35,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
 
-    @Column(name = "interest_rate")
+    @Column(name = "interest_rate", columnDefinition = "DECIMAL(15,2)")
     @NotNull(message = "{validation.product.interestRateNotNull}")
     private Double interestRate;
 
