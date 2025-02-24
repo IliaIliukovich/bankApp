@@ -33,13 +33,9 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
-    @NotNull(message = "{validation.transaction.debitAccountId}")
-    @Positive(message = "{validation.transaction.debitAccountId}")
     @Column(columnDefinition = "int")
     private Long debitAccountId;// получатель
 
-    @NotNull(message = "{validation.transaction.creditAccountId}")
-    @Positive(message = "{validation.transaction.creditAccountId}")
     @Column(columnDefinition = "int")
     private Long creditAccountId;// отправитель
 
