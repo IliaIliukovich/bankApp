@@ -19,6 +19,7 @@ public class Manager {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int")
   private Long id;
 
   @NotNull(message="{validation.manager.lastName}")

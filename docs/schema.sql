@@ -24,7 +24,7 @@ USE `bankApp` ;
 DROP TABLE IF EXISTS `bankApp`.`manager` ;
 
 CREATE TABLE IF NOT EXISTS `bankApp`.`manager` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `first_name` VARCHAR(150) NULL,
     `last_name` VARCHAR(150) NULL,
     `status` VARCHAR(150) NULL,
@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS `bankApp`.`client` (
     `email` VARCHAR(45) NULL,
     `address` VARCHAR(250) NULL,
     `phone` VARCHAR(45) NULL,
-    `clientcol` VARCHAR(45) NULL,
     `manager_id` INT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -66,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `bankApp`.`client` (
 DROP TABLE IF EXISTS `bankApp`.`account` ;
 
 CREATE TABLE IF NOT EXISTS `bankApp`.`account` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(150) NULL,
     `type` VARCHAR(150) NULL,
     `status` VARCHAR(150) NULL,
@@ -90,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `bankApp`.`account` (
 DROP TABLE IF EXISTS `bankApp`.`product` ;
 
 CREATE TABLE IF NOT EXISTS `bankApp`.`product` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(150) NULL,
     `status` VARCHAR(150) NULL,
     `currency_code` VARCHAR(150) NULL,
@@ -107,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `bankApp`.`product` (
 DROP TABLE IF EXISTS `bankApp`.`agreement` ;
 
 CREATE TABLE IF NOT EXISTS `bankApp`.`agreement` (
-    `id` INT NOT NULL,
+    `id` VARCHAR(255) NOT NULL,
     `interest_rate` DECIMAL(15,2) NULL,
     `status` VARCHAR(150) NULL,
     `sum` DECIMAL(15,2) NULL,
@@ -137,7 +136,7 @@ DROP TABLE IF EXISTS `bankApp`.`transaction` ;
 
 CREATE TABLE IF NOT EXISTS `bankApp`.`transaction` (
     `id` VARCHAR(36) NOT NULL,
-    `type` INT NULL,
+    `type` VARCHAR(150) NULL,
     `amount` DECIMAL(15,2) NULL,
     `description` VARCHAR(150) NULL,
     `status` VARCHAR(45) NULL,
@@ -164,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `bankApp`.`transaction` (
 DROP TABLE IF EXISTS `bankApp`.`app_user` ;
 
 CREATE TABLE IF NOT EXISTS `bankApp`.`app_user` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(45) NOT NULL,
     `password` VARCHAR(45) NOT NULL,
     `role` VARCHAR(45) NOT NULL,

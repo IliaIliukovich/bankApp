@@ -1,5 +1,4 @@
-package de.telran.bankapp.entity;
-
+package de.telran.bankapp.dto;
 
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;
@@ -7,7 +6,10 @@ import de.telran.bankapp.entity.enums.CurrencyCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -15,29 +17,20 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
-@Entity
+public class AccountDto {
 
-public class Account {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "int")
     private Long id;
 
     @NotNull(message = "{validation.account.name}")
     @Pattern(regexp = "[A-Z]{2}[0-9]{20}", message = "{validation.account.name}")
     private String name;
 
-    @Enumerated(EnumType.STRING)
     private AccountType type;
 
-    @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
     private BigDecimal balance;
 
-    @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
 
     private String clientId;

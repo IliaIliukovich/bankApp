@@ -1,6 +1,8 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.dto.AccountCreateDto;
+import de.telran.bankapp.dto.AccountDto;
+import de.telran.bankapp.dto.AccountPostCreateDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.service.AccountService;
@@ -26,22 +28,22 @@ public class AccountController {
 
 
     @GetMapping("/all")
-    public List<Account> getAll() {
+    public List<AccountDto> getAll() {
         return service.getAll();
     }
 
     @GetMapping("{id}")
-    Account getAccountById(@PathVariable Long id) {
+    AccountDto getAccountById(@PathVariable Long id) {
         return service.getAccountById(id);
     }
 
     @GetMapping("/currencyCode/{currencyCode}")
-    public List<Account> getAllAccountsByCurrencyCode(@PathVariable CurrencyCode currencyCode) {
+    public List<AccountDto> getAllAccountsByCurrencyCode(@PathVariable CurrencyCode currencyCode) {
         return service.getAllAccountsByCurrencyCode(currencyCode);
     }
 
     @GetMapping("/search")
-    public List<Account> getAllAccountsByBalance(
+    public List<AccountDto> getAllAccountsByBalance(
             @RequestParam(name = "minValue", required = false, defaultValue = "0") BigDecimal minValue,
             @RequestParam(name = "maxValue", required = false, defaultValue = "1000000") BigDecimal maxValue) {
         return service.getAllAccountsByBalance(minValue, maxValue);
@@ -49,16 +51,16 @@ public class AccountController {
 
 
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody @Valid Account account) {
-        Account created = service.create(account);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public ResponseEntity<AccountDto> createAccount(@RequestBody @Valid AccountPostCreateDto dto) {
+        AccountDto accountDto = service.create(dto);
+        return new ResponseEntity<>(accountDto, HttpStatus.CREATED);
     }
 
 
     @PutMapping
-    public ResponseEntity<Account> updateAccount(@RequestBody @Valid Account account) {
-        Account updated = service.updateAccount(account);
-        return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
+    public ResponseEntity<AccountDto> updateAccount(@RequestBody @Valid AccountDto dto) {
+        AccountDto accountDto = service.updateAccount(dto);
+        return new ResponseEntity<>(accountDto, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/new")
