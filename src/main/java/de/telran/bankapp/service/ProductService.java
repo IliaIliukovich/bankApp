@@ -33,8 +33,12 @@ public class ProductService {
 
     public Optional<ProductDto> getProductById(Long id) {
         Optional<Product> product = repository.findById(id);
-        ProductDto productDto = mapper.entityToDto(product.orElse(null));
-        return Optional.of(productDto);
+        if (product.isPresent()) {
+            ProductDto productDto = mapper.entityToDto(product.orElse(null));
+            return Optional.of(productDto);
+        } else {
+            throw new BankAppResourceNotFoundException(String.format("Product with id = %d not found", id));
+        }
     }
 
     public List<ProductDto> getProductByName(String name) {
