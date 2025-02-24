@@ -1,6 +1,7 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.AppUser;
+import de.telran.bankapp.entity.enums.UserRole;
 import de.telran.bankapp.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,16 @@ public class AppUserService {
     }
 
 
-    public boolean changeStatus(String id, String status) {
-        return false;
+    public boolean changeRole(String id, UserRole role) {
+        Optional<AppUser> optional = appUserRepository.findById(id);
+        if (optional.isPresent()) {
+            AppUser user = optional.get();
+            user.setRole(role);
+            appUserRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

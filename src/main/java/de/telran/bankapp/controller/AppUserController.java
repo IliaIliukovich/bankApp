@@ -1,6 +1,7 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.AppUser;
+import de.telran.bankapp.entity.enums.UserRole;
 import de.telran.bankapp.repository.AppUserRepository;
 import de.telran.bankapp.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,29 +53,16 @@ public class AppUserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-//    @PutMapping
-//    public ResponseEntity<AppUser> updateAppUser(@RequestBody AppUser user) {
-//        Optional<AppUser> updated = appUserService.updateAppUser(user);
-//        if (updated.isPresent()) {
-//            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-//@PatchMapping("/{id}")
-//public ResponseEntity<Void> appUserStatus(@PathVariable String id, @RequestParam(required = false) String status) {
-//    appUserService.changeStatus(id, status);
-//    return new ResponseEntity<>(HttpStatus.ACCEPTED);
-//}
-@PatchMapping("/{id}")
-public ResponseEntity<String> appUserStatus(@PathVariable String id, @RequestParam(required = false) String status) {
-    boolean updated = appUserService.changeStatus(id, status);
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateAppUserRole(@PathVariable String id, @RequestParam(required = false) UserRole role) {
+        boolean updated = appUserService.changeRole(id, role);
 
-    if (!updated) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        if (!updated) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User role updated successfully");
     }
-
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body("User status updated successfully");
-}
 
 
     @DeleteMapping("/{id}")
