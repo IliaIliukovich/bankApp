@@ -1,11 +1,13 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.dto.ManagerCreateDto;
 import de.telran.bankapp.dto.ManagerDto;
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.ClientMapper;
 import de.telran.bankapp.mapper.ManagerMapper;
 import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
@@ -28,6 +30,7 @@ public class ManagerService {
     private ManagerRepository repository;
     private ManagerMapper mapper;
     private ClientRepository clientRepository;
+    public ClientMapper clientMapper;
 
     @Autowired
     public ManagerService(ManagerRepository repository, ManagerMapper mapper, ClientRepository clientRepository) {
@@ -35,13 +38,6 @@ public class ManagerService {
         this.mapper = mapper;
         this.clientRepository = clientRepository;
     }
-
-
-//    public ManagerService( ManagerRepository repository, ManagerMapper mapper) {
-//        this.mapper = mapper;
-//        this.repository = repository;
-//    }
-
 
     public List<ManagerDto> getAll(){
         List<Manager> managers = repository.findAll();
@@ -70,6 +66,13 @@ public class ManagerService {
     @Transactional
     public ManagerDto addManager( ManagerCreateDto dto){
         Manager manager = mapper.createDtoToEntity(dto);
+        if(dto.getClientsDto() != null) {
+            List<ClientDto> clientsDto = dto.getClientsDto();
+            for (ClientDto c: clientsDto){
+                Client client = clientMapper.dtoToEntity(c);
+                client.setManager(manager);
+            }
+        }
         Manager savedManager = repository.save(manager);
         return mapper.entityToDto(savedManager);
     }
