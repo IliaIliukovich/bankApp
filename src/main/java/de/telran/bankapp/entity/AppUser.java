@@ -1,10 +1,7 @@
 package de.telran.bankapp.entity;
 
 import de.telran.bankapp.entity.enums.UserRole;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -19,6 +16,7 @@ public class AppUser {
   private String id;
   private String email;
   private String password;
+  @Enumerated(EnumType.STRING)
   private UserRole role;
 
 }

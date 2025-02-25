@@ -92,6 +92,11 @@ public class AccountService {
     }
 
 
+    public AccountDto create(AccountCreateDto dto) {
+        Account newAccount = createNewAccount(dto);
+        return mapper.entityToDto(newAccount);
+    }
+
     @Transactional
     public Account createNewAccount(AccountCreateDto dto) {
         Optional<Product> productOptional = productRepository.findById(dto.getProductId());
@@ -106,6 +111,7 @@ public class AccountService {
         Account account = mapper.createDtoToEntity(dto);
         account.setName(createNewAccountName());
         account.setCurrencyCode(product.getCurrencyCode());
+        account.setClient(optionalClient.get());
         Account savedAccount = repository.save(account);
 
         Agreement agreement = new Agreement(null, product.getInterestRate(), AgreementStatus.ACTIVE,

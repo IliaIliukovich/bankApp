@@ -3,7 +3,6 @@ package de.telran.bankapp.controller;
 import de.telran.bankapp.dto.AccountCreateDto;
 import de.telran.bankapp.dto.AccountDto;
 import de.telran.bankapp.dto.AccountPostCreateDto;
-import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.service.AccountService;
 import jakarta.validation.Valid;
@@ -64,8 +63,8 @@ public class AccountController {
     }
 
     @PutMapping("/new")
-    public Account createNewAccount(@RequestBody AccountCreateDto dto) {
-        return service.createNewAccount(dto);
+    public AccountDto createNewAccount(@RequestBody AccountCreateDto dto) {
+        return service.create(dto);
     }
 
     @DeleteMapping("/delete/{id}")

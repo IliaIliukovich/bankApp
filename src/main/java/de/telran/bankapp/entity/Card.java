@@ -1,5 +1,6 @@
 package de.telran.bankapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.CardType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,5 +26,6 @@ public class Card {
     private String expiryDate;
 
     @OneToOne
+    @JsonIgnore
     private Account account;
 }
