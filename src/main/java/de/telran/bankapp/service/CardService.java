@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Transactional(readOnly = true)
@@ -97,12 +98,29 @@ public class CardService {
         return repository.save(card);
     }
 
-    private static Card createNewCard(CardType cardType, Client client, Account account) {
+    private Card createNewCard(CardType cardType, Client client, Account account) {
         String cardHolder = client.getFirstName() + " " + client.getLastName();
-        String cardNumber = "1215 1532 7818 4135";
-        int cvv = 255;
+        String cardNumber = generateCardNumber();
+        int cvv = generateCvv();
         String expiryDate = "12/30";
         return new Card(null, cardType, cardNumber, cardHolder, cvv, expiryDate, account);
+    }
+
+    private Integer generateCvv() {
+        return new Random().nextInt(900) + 100;
+    }
+
+    private String generateCardNumber() {
+        Random random = new Random();
+        StringBuilder cardNumber = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            int part = random.nextInt(9000) + 1000;
+            if (i > 0) {
+                cardNumber.append(" ");
+            }
+            cardNumber.append(part);
+        }
+        return cardNumber.toString();
     }
 }
 
