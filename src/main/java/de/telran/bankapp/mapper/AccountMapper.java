@@ -12,14 +12,25 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
+    @Mapping(target = "clientId", source = "client.id")
     AccountDto entityToDto(Account entity);
 
     List<AccountDto> entityListToDto(List<Account> accounts);
 
+    @Mapping(target = "debitTransactions", ignore = true)
+    @Mapping(target = "creditTransactions", ignore = true)
+    @Mapping(target = "client", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Account createPostDtoToEntity(AccountPostCreateDto dto);
 
+    @Mapping(target = "debitTransactions", ignore = true)
+    @Mapping(target = "creditTransactions", ignore = true)
+    @Mapping(target = "client", ignore = true)
     Account dtoToEntity(AccountDto dto);
 
+    @Mapping(target = "debitTransactions", ignore = true)
+    @Mapping(target = "creditTransactions", ignore = true)
+    @Mapping(target = "client", ignore = true)
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "currencyCode", ignore = true)
     @Mapping(target = "id", ignore = true)
@@ -27,5 +38,6 @@ public interface AccountMapper {
     @Mapping(target = "type", source = "accountType")
     @Mapping(target = "balance", source = "initialAmount")
     Account createDtoToEntity(AccountCreateDto dto);
+
 
 }

@@ -12,20 +12,26 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
 
+    @Mapping(target = "debitAccount", ignore = true)
+    @Mapping(target = "creditAccount", ignore = true)
     Transaction dtoToEntity(TransactionDto dto);
 
+    @Mapping(target = "debitAccountId", source = "debitAccount.id")
+    @Mapping(target = "creditAccountId", source = "creditAccount.id")
     TransactionDto entityToDto(Transaction transaction);
 
     List<TransactionDto> entityListToDto(List<Transaction> transactions);
 
+    @Mapping(target = "debitAccount", ignore = true)
+    @Mapping(target = "creditAccount", ignore = true)
     @Mapping(target = "status", constant = "NEW")
     @Mapping(target = "type", defaultValue = "PAYMENT")
     @Mapping(target = "id", ignore = true)
     Transaction createDtoToEntity(TransactionCreateDto dto);
 
     @Mapping(target = "status", constant = "COMPLETED")
-    @Mapping(target = "debitAccountId", source = "toId")
-    @Mapping(target = "creditAccountId", source = "fromId")
+    @Mapping(target = "debitAccount.id", source = "toId")
+    @Mapping(target = "creditAccount.id", source = "fromId")
     @Mapping(target = "type", source = "transactionType")
     @Mapping(target = "amount", source = "moneyAmount")
     @Mapping(target = "id", ignore = true)

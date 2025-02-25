@@ -3,15 +3,15 @@ package de.telran.bankapp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "client")
 public class Client {
@@ -47,5 +47,8 @@ public class Client {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Manager manager;
+
+    @OneToMany(mappedBy = "client")
+    private List<Account> accounts;
 
 }

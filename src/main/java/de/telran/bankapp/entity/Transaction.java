@@ -1,14 +1,12 @@
 package de.telran.bankapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -17,6 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString(exclude = {"creditAccount", "debitAccount"})//@ToString(exclude = {"account1"})
 public class Transaction {
 
     @Id
@@ -33,10 +32,15 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
-    @Column(columnDefinition = "int")
-    private Long debitAccountId;// получатель
+//    private Long debitAccountId;// получатель
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "debit_account_id", columnDefinition = "int")
+    @JsonIgnore
+    private Account debitAccount;
 
-    @Column(columnDefinition = "int")
-    private Long creditAccountId;// отправитель
-
+//    private Long creditAccountId;// отправитель
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "credit_account_id", columnDefinition = "int")
+    @JsonIgnore
+    private Account creditAccount;
 }
