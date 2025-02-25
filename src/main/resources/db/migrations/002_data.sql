@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset ilia.iliukovich:002
+
 insert into manager (id,first_name,last_name,status)
 values  (1, "Hans", "Schmidt", "ACTIVE"),
         (2, "Anna", "Müller", "INACTIVE"),

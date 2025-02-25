@@ -1,0 +1,18 @@
+-- liquibase formatted sql
+-- changeset ilia.iliukovich:003
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+ALTER TABLE client
+MODIFY COLUMN id VARCHAR(36) NOT NULL;
+
+ALTER TABLE agreement
+    MODIFY COLUMN id VARCHAR(36) NOT NULL;
+
+ALTER TABLE app_user
+    MODIFY COLUMN id VARCHAR(36) NOT NULL;
+
+ALTER TABLE card
+    MODIFY COLUMN id VARCHAR(36) NOT NULL;
+
+SET FOREIGN_KEY_CHECKS = 1;
