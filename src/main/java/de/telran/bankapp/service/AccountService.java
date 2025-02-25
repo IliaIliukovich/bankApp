@@ -1,6 +1,8 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.dto.AccountCreateDto;
+import de.telran.bankapp.dto.AccountDto;
+import de.telran.bankapp.dto.AccountPostCreateDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Agreement;
 import de.telran.bankapp.entity.Client;
@@ -46,36 +48,40 @@ public class AccountService {
         this.productRepository = productRepository;
     }
 
-    public Account getAccountById(Long id) {
+    public AccountDto getAccountById(Long id) {
         Optional<Account> optional = repository.findById(id);
         if (optional.isPresent()) {
-            return optional.get();
+            return mapper.entityToDto(optional.get());
         }
         throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
     }
 
-    public List<Account> getAll() {
-        return repository.findAll();
+    public List<AccountDto> getAll() {
+        return mapper.entityListToDto(repository.findAll());
     }
 
-    public List<Account> getAllAccountsByCurrencyCode(CurrencyCode currencyCode) {
-        return repository.getAllAccountsByCurrencyCode(currencyCode);
+    public List<AccountDto> getAllAccountsByCurrencyCode(CurrencyCode currencyCode) {
+        return mapper.entityListToDto(repository.getAllAccountsByCurrencyCode(currencyCode));
     }
 
-    public List<Account> getAllAccountsByBalance(BigDecimal minValue, BigDecimal maxValue) {
-        return repository.getAllAccountsByBalance(minValue, maxValue);
+    public List<AccountDto> getAllAccountsByBalance(BigDecimal minValue, BigDecimal maxValue) {
+        return mapper.entityListToDto(repository.getAllAccountsByBalance(minValue, maxValue));
     }
     @Transactional
-    public Account create(Account account) {
-        return repository.save(account);
+    public AccountDto create(AccountPostCreateDto dto) {
+        Account account = mapper.createPostDtoToEntity(dto);
+        return mapper.entityToDto(repository.save(account));
     }
 
     @Transactional
-    public Account updateAccount(Account account) {
-        Long id = account.getId();
+    public AccountDto updateAccount(AccountDto dto) {
+
+        Long id = dto.getId();
+
         Optional<Account> accountOptional = repository.findById(id);
         if (accountOptional.isPresent()) {
-            return repository.save(account);
+            Account account = mapper.dtoToEntity(dto);
+            return mapper.entityToDto(repository.save(account));
         }
         throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
     }
