@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -23,5 +25,7 @@ public class ManagerCreateDto {
     @NotNull(message = "{validation.manager.firstName}")
     @Pattern(regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",message = "{validation.manager.firstName}")
     private String firstName;
+
+    private List<ClientDto> clientsDto;
 
 }
