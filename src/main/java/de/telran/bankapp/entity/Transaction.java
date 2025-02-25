@@ -1,6 +1,5 @@
 package de.telran.bankapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
 import jakarta.persistence.*;
@@ -32,12 +31,10 @@ public class Transaction {
 //    private Long debitAccountId;// получатель
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "debit_account_id", columnDefinition = "int")
-    @JsonIgnore
     private Account debitAccount;
 
 //    private Long creditAccountId;// отправитель
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_account_id", columnDefinition = "int")
-    @JsonIgnore
     private Account creditAccount;
 }

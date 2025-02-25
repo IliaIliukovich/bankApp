@@ -1,7 +1,6 @@
 package de.telran.bankapp.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;
 import de.telran.bankapp.entity.enums.CurrencyCode;
@@ -39,7 +38,6 @@ public class Account {
     private CurrencyCode currencyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     private Client client;
 
     @OneToMany(mappedBy = "debitAccount")

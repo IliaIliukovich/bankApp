@@ -1,6 +1,5 @@
 package de.telran.bankapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,7 +44,6 @@ public class Client {
 //    private Long manager_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     private Manager manager;
 
     @OneToMany(mappedBy = "client")
