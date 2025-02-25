@@ -131,24 +131,35 @@ public class ClientService {
         Client client = repository.findById(uuid)
                 .orElseThrow(() -> new BankAppResourceNotFoundException("Client with id = " + uuid + " not found in database"));
 
-        List<Account> accounts = client.getAccounts();
-
-        Map<CurrencyCode, BigDecimal> balanceByCurrency = accounts.stream()
-                .collect(Collectors.groupingBy(Account::getCurrencyCode,
-                        Collectors.mapping(Account::getBalance, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
-
-        Map<CurrencyCode, BigDecimal> incomesByCurrencyCode = accounts.stream()
-                .flatMap(account -> account.getDebitTransactions().stream()
-                        .filter(t -> t.getDebitAccount().getId().equals(account.getId()) && !t.getCreditAccount().getClient().equals(client)))
-                .collect(Collectors.groupingBy(t -> t.getDebitAccount().getCurrencyCode(),
-                        Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
-
-        Map<CurrencyCode, BigDecimal> expensesByCurrencyCode = accounts.stream()
-                .flatMap(account -> account.getCreditTransactions().stream()
-                        .filter(t -> t.getCreditAccount().getId().equals(account.getId()) && !t.getDebitAccount().getClient().equals(client)))
-                .collect(Collectors.groupingBy(t -> t.getCreditAccount().getCurrencyCode(),
-                        Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+        Map<CurrencyCode, BigDecimal> balanceByCurrency = getBalanceByCurrency(client);
+        Map<CurrencyCode, BigDecimal> incomesByCurrencyCode = getIncomesByCurrencyCode(client);
+        Map<CurrencyCode, BigDecimal> expensesByCurrencyCode = getExpensesByCurrencyCode(client);
 
         return new ClientAccountStatisticsDto(balanceByCurrency, incomesByCurrencyCode, expensesByCurrencyCode);
+    }
+
+    private static Map<CurrencyCode, BigDecimal> getExpensesByCurrencyCode(Client client) {
+        Map<CurrencyCode, BigDecimal> expensesByCurrencyCode = client.getAccounts().stream()
+                .flatMap(account -> account.getCreditTransactions().stream()
+                        .filter(t -> !t.getDebitAccount().getClient().equals(client)))
+                .collect(Collectors.groupingBy(t -> t.getCreditAccount().getCurrencyCode(),
+                        Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+        return expensesByCurrencyCode;
+    }
+
+    private static Map<CurrencyCode, BigDecimal> getIncomesByCurrencyCode(Client client) {
+        Map<CurrencyCode, BigDecimal> incomesByCurrencyCode = client.getAccounts().stream()
+                .flatMap(account -> account.getDebitTransactions().stream()
+                        .filter(t -> !t.getCreditAccount().getClient().equals(client)))
+                .collect(Collectors.groupingBy(t -> t.getDebitAccount().getCurrencyCode(),
+                        Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+        return incomesByCurrencyCode;
+    }
+
+    private static Map<CurrencyCode, BigDecimal> getBalanceByCurrency(Client client) {
+        Map<CurrencyCode, BigDecimal> balanceByCurrency = client.getAccounts().stream()
+                .collect(Collectors.groupingBy(Account::getCurrencyCode,
+                        Collectors.mapping(Account::getBalance, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+        return balanceByCurrency;
     }
 }

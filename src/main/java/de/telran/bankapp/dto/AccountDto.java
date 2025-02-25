@@ -3,7 +3,6 @@ package de.telran.bankapp.dto;
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;
 import de.telran.bankapp.entity.enums.CurrencyCode;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,5 +34,9 @@ public class AccountDto {
     private CurrencyCode currencyCode;
 
     private String clientId;
+
+//    private List<TransactionDto> debitTransactions;
+
+//    private List<TransactionDto> creditTransactions;
 
 }

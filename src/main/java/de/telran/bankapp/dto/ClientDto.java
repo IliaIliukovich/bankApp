@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -39,5 +41,7 @@ public class ClientDto {
     private ClientStatus status;
 
     private Long managerId;
+
+//    private List<AccountDto> accounts;
 
 }
