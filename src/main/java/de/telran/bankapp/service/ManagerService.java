@@ -70,8 +70,9 @@ public class ManagerService {
         if (optional.isPresent()) {
             Manager savedManager = repository.save(mapper.dtoToEntity(manager));
             return mapper.entityToDto(savedManager);
+        } else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     public ManagerDto getManagerById(Long id) {
@@ -79,8 +80,9 @@ public class ManagerService {
         if (optional.isPresent()) {
             ManagerDto found = mapper.entityToDto(optional.get()) ;
             return found;
+        } else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     @Transactional
@@ -108,8 +110,9 @@ public class ManagerService {
             manager.setLastName(newLastName);
             Manager managerWithNewLastName = repository.save(manager);
             return mapper.entityToDto(managerWithNewLastName);
+        }else {
+            throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
 
