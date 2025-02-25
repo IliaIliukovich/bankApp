@@ -1,7 +1,6 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.dto.ClientDto;
-import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.dto.ManagerCreateDto;
 import de.telran.bankapp.dto.ManagerDto;
 import de.telran.bankapp.entity.Manager;
@@ -16,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import de.telran.bankapp.entity.Client;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,16 +26,16 @@ public class ManagerService {
 
     private static Logger logger = LogManager.getLogger(ManagerService.class);
 
-    private final ManagerRepository repository;
-    private final ClientRepository clientRepository;
-    private final ManagerMapper mapper;
+    private ManagerRepository repository;
+    private ManagerMapper mapper;
+    private ClientRepository clientRepository;
     public ClientMapper clientMapper;
 
     @Autowired
-    public ManagerService(ManagerMapper mapper, ClientRepository clientRepository, ManagerRepository repository, ClientMapper clientMapper) {
+    public ManagerService(ManagerRepository repository, ManagerMapper mapper, ClientRepository clientRepository, ClientMapper clientMapper) {
+        this.repository = repository;
         this.mapper = mapper;
         this.clientRepository = clientRepository;
-        this.repository = repository;
         this.clientMapper = clientMapper;
     }
 
@@ -56,7 +56,7 @@ public class ManagerService {
     /*
     corect query in Postman:
     get: http://localhost:8080/manager/search?firstName=PeterNew
-    */
+     */
 
     public  List<ManagerDto> findByFirstNameAndLastName(String firstName,String lastName){
         List<Manager> managers = repository.findByFirstNameAndLastName(firstName,lastName);
@@ -73,7 +73,6 @@ public class ManagerService {
     corect query in Postman:
     get: http://localhost:8080/manager/searchByFirstLetterFromFirstNameAndFirstLetterFromLastName?firstName=P&&lastName=W
      */
-
 
     @Transactional
     public ManagerDto addManager( ManagerCreateDto dto){
@@ -112,6 +111,7 @@ N.B.!! [] is very important becouse ManagerCreateDto has field: private List<Cli
 which in JSON is [] !!!
      */
 
+    @Transactional
     public ManagerDto updateManager(ManagerDto managerDto) {
         Long id = managerDto.getId();
         Optional<Manager> optional = repository.findById(id);
@@ -165,18 +165,6 @@ which in JSON is [] !!!
     ]
 }
      */
-
-
-    @Transactional
-    public ManagerDto updateManager(ManagerDto manager) {
-        Long id = manager.getId();
-        Optional<Manager> optional = repository.findById(id);
-        if (optional.isPresent()) {
-            Manager savedManager = repository.save(mapper.dtoToEntity(manager));
-            return mapper.entityToDto(savedManager);
-        }
-        throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
-    }
 
     public ManagerDto getManagerById(Long id) {
         Optional<Manager> optional = repository.findById(id);
