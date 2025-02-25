@@ -1,11 +1,15 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.TransactionCreateDto;
+import de.telran.bankapp.dto.TransactionDto;
+import de.telran.bankapp.dto.TransactionTransferDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.entity.enums.TransactionType;
 import de.telran.bankapp.exception.BankAppBadRequestException;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.TransactionMapper;
 import de.telran.bankapp.repository.AccountRepository;
 import de.telran.bankapp.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +20,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static de.telran.bankapp.entity.enums.TransactionType.TRANSFER;
-
 @Service
 @Transactional(readOnly = true)
 public class TransactionService {
@@ -25,51 +27,62 @@ public class TransactionService {
 
     private final TransactionRepository repository;
     private final AccountRepository accountRepository;
+    private final TransactionMapper mapper;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, AccountRepository accountRepository) {
+    public TransactionService(TransactionRepository repository, AccountRepository accountRepository, TransactionMapper mapper) {
         this.repository = repository;
         this.accountRepository = accountRepository;
+        this.mapper = mapper;
     }
 
-    public List<Transaction> getAllTransactions() {
-        return repository.findAll();
+    public List<TransactionDto> getAllTransactions() {
+        List<Transaction> transactions = repository.findAll();
+        return mapper.entityListToDto(transactions);
     }
 
-    public Transaction getTransactionById(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database"));
+    public Optional<TransactionDto> getTransactionById(String id) {
+        Optional<Transaction> optional = repository.findById(id);
+        TransactionDto transactionDto = mapper.entityToDto(optional.orElse(null));
+        return Optional.ofNullable(transactionDto);
     }
 
-    public List<Transaction> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
-        return repository.findAllByTypeAndAmountIsGreaterThanEqual(type, minAmount);
+    public List<TransactionDto> findTransactionsByTypeAndAmount(TransactionType type, BigDecimal minAmount) {
+        List<Transaction> transactions = repository.findAllByTypeAndAmountIsGreaterThanEqual(type, minAmount);
+        return mapper.entityListToDto(transactions);
     }
 
-    public List<Transaction> findTransactionsByType(TransactionType type) {
-        return repository.findAllByType(type);
+    public List<TransactionDto> findTransactionsByType(TransactionType type) {
+        List<Transaction> transactions = repository.findAllByType(type);
+        return mapper.entityListToDto(transactions);
     }
 
-    public List<Transaction> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount) {
+    public List<TransactionDto> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount) {
         BigDecimal min = minAmount == null ? new BigDecimal("0.00") : minAmount;
         BigDecimal max = maxAmount == null ? new BigDecimal("50000.00") : maxAmount;
-        return repository.findTransactionByStatusNotAndAmountBetween(status, min, max);
+        List<Transaction> transactions = repository.findTransactionByStatusNotAndAmountBetween(status, min, max);
+        return mapper.entityListToDto(transactions);
     }
 
-    public List<Transaction> findTransactionsByTypeAndByStatus(TransactionType type, TransactionStatus status) {
-        return repository.nativeQuery(type, status);
-    }
-
-    @Transactional
-    public Transaction addTransaction(Transaction transaction) {
-        return repository.save(transaction);
+    public List<TransactionDto> findTransactionsByTypeAndByStatus(TransactionType type, TransactionStatus status) {
+        List<Transaction> transactions = repository.nativeQuery(type, status);
+        return mapper.entityListToDto(transactions);
     }
 
     @Transactional
-    public Transaction updateTransaction(Transaction transaction) {
-        String id = transaction.getId();
+    public TransactionDto addTransaction(TransactionCreateDto dto) {
+        Transaction transaction = mapper.createDtoToEntity(dto);
+        Transaction saved = repository.save(transaction);
+        return mapper.entityToDto(saved);
+    }
+
+    @Transactional
+    public TransactionDto updateTransaction(TransactionDto dto) {
+        String id = dto.getId();
         Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
-            return repository.save(transaction);
+            Transaction saved = repository.save(mapper.dtoToEntity(dto));
+            return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");
     }
@@ -87,35 +100,46 @@ public class TransactionService {
     }
 
     @Transactional
-    public void transferMoney(Long fromId, Long toId, BigDecimal amount) {
+    public void transferMoney(TransactionTransferDto dto) {
+        Long fromId = dto.getFromId();
+        Long toId = dto.getToId();
+        BigDecimal amount = new BigDecimal(dto.getMoneyAmount());
+
         Optional<Account> fromAccountOptional = accountRepository.findById(fromId);
         Optional<Account> toAccountOptional = accountRepository.findById(toId);
 
-        if (fromAccountOptional.isEmpty() || toAccountOptional.isEmpty()) {
-            throw new BankAppResourceNotFoundException("Client with id = " + fromId + " or with id = " + toId + " not found in database");
-        }
+        validateTransactionDto(dto, fromAccountOptional, toAccountOptional);
+
         Account fromAccount = fromAccountOptional.get();
         Account toAccount = toAccountOptional.get();
 
-        if (fromAccount.getBalance().compareTo(amount) < 0) {
-            throw new BankAppBadRequestException("Insufficient funds for transfer.");
-        }
-
-        if (!fromAccount.getCurrencyCode().equals(toAccount.getCurrencyCode())) {
-            throw new BankAppBadRequestException("Currency code is not correct.");
-        }
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-
-        Transaction transaction = new Transaction(null, TRANSFER, amount,
-                "Money transferred from account " + fromId + " to " + toId,
-                TransactionStatus.COMPLETED, toId, fromId);
-
+        Transaction transaction = mapper.createTransactionTransferDtoToEntity(dto);
         repository.save(transaction);
+    }
+
+    private void validateTransactionDto(TransactionTransferDto dto,
+                                        Optional<Account> fromAccountOptional,
+                                        Optional<Account> toAccountOptional) {
+
+        if (fromAccountOptional.isEmpty() || toAccountOptional.isEmpty()) {
+            throw new BankAppResourceNotFoundException("Client with id = " + dto.getFromId() + " or with id = " + dto.getToId() + " not found in database");
+        }
+
+        Account fromAccount = fromAccountOptional.get();
+        if (fromAccount.getBalance().compareTo(new BigDecimal(dto.getMoneyAmount())) < 0) {
+            throw new BankAppBadRequestException("Insufficient funds for transfer");
+        }
+
+        Account toAccount = toAccountOptional.get();
+        if (fromAccount.getCurrencyCode() != toAccount.getCurrencyCode()) {
+            throw new BankAppBadRequestException("Currency code is not correct");
+        }
     }
 
 
