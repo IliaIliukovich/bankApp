@@ -42,6 +42,8 @@ public class ClientDto {
 
     private Long managerId;
 
+    private Integer age;
+
 //    private List<AccountDto> accounts;
 
 }

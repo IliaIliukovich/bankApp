@@ -35,4 +35,6 @@ public class ClientCreateDto {
 
     private Long managerId;
 
+    private Integer age;
+
 }

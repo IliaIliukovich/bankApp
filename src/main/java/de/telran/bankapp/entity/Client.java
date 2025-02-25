@@ -32,6 +32,8 @@ public class Client {
 
     private String phone;
 
+    private Integer age;
+
     @Enumerated(EnumType.STRING)
     private ClientStatus status;
 
