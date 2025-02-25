@@ -1,9 +1,12 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.entity.Client;
+import de.telran.bankapp.dto.ManagerCreateDto;
+import de.telran.bankapp.dto.ManagerDto;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.ManagerMapper;
 import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
 import org.apache.logging.log4j.LogManager;
@@ -21,56 +24,66 @@ public class ManagerService {
 
     private static Logger logger = LogManager.getLogger(ManagerService.class);
 
-    private ManagerRepository repository;
-    private ClientRepository clientRepository;
+    private final ManagerRepository repository;
+    private final ClientRepository clientRepository;
+    private final ManagerMapper mapper;
 
     @Autowired
-    public ManagerService(ManagerRepository repository, ClientRepository clientRepository) {
+    public ManagerService(ManagerRepository repository, ClientRepository clientRepository, ManagerMapper mapper) {
         this.repository = repository;
         this.clientRepository = clientRepository;
+        this.mapper = mapper;
     }
 
-    public List<Manager> getAll(){
+    public List<ManagerDto> getAll(){
         List<Manager> managers = repository.findAll();
         logger.debug("Managers retrieved from db");
         logger.debug("manager ids: {}", () -> managers.stream().map(Manager::getId).toList());
-        return managers;
+        return mapper.entityListToDto(managers);
     }
 
-    public List<Manager> findByName(String firstName){
-        return repository.findByFirstName(firstName);
+    public List<ManagerDto> findByName(String firstName){
+        List<Manager> managers = repository.findByFirstName(firstName);
+        return mapper.entityListToDto(managers);
     }
 
-    public  List<Manager> findByFirstNameAndLastName(String firstName,String lastName){
-        return repository.findByFirstNameAndLastName(firstName,lastName);
+    public  List<ManagerDto> findByFirstNameAndLastName(String firstName,String lastName){
+        List<Manager> managers = repository.findByFirstNameAndLastName(firstName,lastName);
+        return mapper.entityListToDto(managers);
     }
 
-    public List<Manager> findFirstLetterFromFirstNameAndFirstLetterFromLastName(String firstName,String lastName){
-        return repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(firstName,lastName);
+    public List<ManagerDto> findFirstLetterFromFirstNameAndFirstLetterFromLastName(
+            String firstName,String lastName){
+        List<Manager> managers = repository.findFirstLetterFromFirstNameAndFirstLetterFromLastName(
+                firstName,lastName);
+        return mapper.entityListToDto(managers);
     }
 
     @Transactional
-    public Manager addManager(Manager manager){
-        return repository.save(manager);
+    public ManagerDto addManager( ManagerCreateDto dto){
+        Manager manager = mapper.createDtoToEntity(dto);
+        Manager savedManager = repository.save(manager);
+        return mapper.entityToDto(savedManager);
     }
 
     @Transactional
-    public Manager updateManager(Manager manager) {
+    public ManagerDto updateManager(ManagerDto manager) {
         Long id = manager.getId();
         Optional<Manager> optional = repository.findById(id);
         if (optional.isPresent()) {
-            return repository.save(manager);
+            Manager savedManager = repository.save(mapper.dtoToEntity(manager));
+            return mapper.entityToDto(savedManager);
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
+        throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
-    public Manager getManagerById(Long id) {
+    public ManagerDto getManagerById(Long id) {
         Optional<Manager> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Manager found = optional.get();
+            ManagerDto found = mapper.entityToDto(optional.get()) ;
             return found;
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
+        throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
     @Transactional
@@ -96,15 +109,15 @@ public class ManagerService {
     }
 
     @Transactional
-    public Manager updateLastName(Long id, String newLastName){
+    public ManagerDto updateLastName(Long id, String newLastName){
         Optional<Manager> optional = repository.findById(id);
         if(optional.isPresent()){
             Manager manager = optional.get();
             manager.setLastName(newLastName);
             Manager managerWithNewLastName = repository.save(manager);
-            return managerWithNewLastName;
+            return mapper.entityToDto(managerWithNewLastName);
         }
-        throw  new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
+        throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
 
