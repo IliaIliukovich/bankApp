@@ -16,11 +16,9 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class AppUserController {
 
-    @Autowired
+    
     private final AppUserService appUserService;
     @Autowired
-    private AppUserRepository appUserRepository;
-
     public AppUserController(AppUserService appUserService) {
         this.appUserService = appUserService;
     }
