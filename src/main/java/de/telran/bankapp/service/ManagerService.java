@@ -6,6 +6,7 @@ import de.telran.bankapp.dto.ManagerDto;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.ClientMapper;
 import de.telran.bankapp.mapper.ManagerMapper;
 import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
@@ -27,13 +28,18 @@ public class ManagerService {
     private final ManagerRepository repository;
     private final ClientRepository clientRepository;
     private final ManagerMapper mapper;
+    public ClientMapper clientMapper;
 
     @Autowired
-    public ManagerService(ManagerRepository repository, ClientRepository clientRepository, ManagerMapper mapper) {
-        this.repository = repository;
-        this.clientRepository = clientRepository;
+    public ManagerService(ManagerMapper mapper, ClientRepository clientRepository, ManagerRepository repository, ClientMapper clientMapper) {
         this.mapper = mapper;
+        this.clientRepository = clientRepository;
+        this.repository = repository;
+        this.clientMapper = clientMapper;
     }
+
+
+
 
     public List<ManagerDto> getAll(){
         List<Manager> managers = repository.findAll();
