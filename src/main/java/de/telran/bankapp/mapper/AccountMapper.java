@@ -39,5 +39,4 @@ public interface AccountMapper {
     @Mapping(target = "balance", source = "initialAmount")
     Account createDtoToEntity(AccountCreateDto dto);
 
-
 }
