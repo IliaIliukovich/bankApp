@@ -1,5 +1,6 @@
 package de.telran.bankapp.controller;
 
+import de.telran.bankapp.dto.ClientAccountStatisticsDto;
 import de.telran.bankapp.dto.ClientCreateDto;
 import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.enums.ClientStatus;
@@ -46,6 +47,11 @@ public class ClientController {
     @GetMapping("/searchBySurnameAndAddress")
     public List<ClientDto> findByName(@RequestParam String surname, @RequestParam String address) {
         return service.searchBySurnameAndAddress(surname, address);
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ClientAccountStatisticsDto> getSummaryInfo(@RequestParam String uuid) {
+        return new ResponseEntity<>(service.getSummaryInfo(uuid), HttpStatus.OK);
     }
 
     @PostMapping

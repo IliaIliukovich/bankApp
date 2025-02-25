@@ -1,15 +1,15 @@
 package de.telran.bankapp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.telran.bankapp.entity.enums.AccountStatus;
 import de.telran.bankapp.entity.enums.AccountType;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,8 +25,6 @@ public class Account {
     @Column(columnDefinition = "int")
     private Long id;
 
-    @NotNull(message = "{validation.account.name}")
-    @Pattern(regexp = "[A-Z]{2}[0-9]{20}", message = "{validation.account.name}")
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -40,6 +38,14 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private CurrencyCode currencyCode;
 
-    private String clientId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Client client;
+
+    @OneToMany(mappedBy = "debitAccount")
+    private List<Transaction> debitTransactions;
+
+    @OneToMany(mappedBy = "creditAccount")
+    private List<Transaction> creditTransactions;
 
 }

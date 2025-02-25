@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ClientMapper {
 
+    @Mapping(target = "accounts", ignore = true)
     @Mapping(target = "manager", ignore = true)
     Client dtoToEntity(ClientDto dto);
 
@@ -19,6 +20,7 @@ public interface ClientMapper {
 
     List<ClientDto> entityListToDto(List<Client> entities);
 
+    @Mapping(target = "accounts", ignore = true)
     @Mapping(target = "manager", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", constant = "ACTIVE")
