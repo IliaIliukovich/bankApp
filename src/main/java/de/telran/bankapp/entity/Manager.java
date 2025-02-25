@@ -4,6 +4,8 @@ import de.telran.bankapp.entity.enums.ManagerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -14,6 +16,7 @@ public class Manager {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int")
   private Long id;
 
   private String lastName;
@@ -22,5 +25,8 @@ public class Manager {
 
   @Enumerated(EnumType.STRING)
   private ManagerStatus status;
+
+  @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+  private List<Client> clients;
 
 }

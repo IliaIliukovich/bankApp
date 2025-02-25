@@ -1,0 +1,10 @@
+1. Создать dto для своего entity (одно или несколько).
+2. Переделать контроллеры так, чтобы они получали/выдавали только dto.
+3. Создать соответствующие мапперы mapstruct и переделать логику сервисов.
+
+Yevhen ---> Product
+Oksana ---> Transaction
+Deyan ---> Manager
+Vladimir ---> Account
+Dmitri ---> Card
+Artur ---> AppUser

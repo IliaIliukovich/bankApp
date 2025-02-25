@@ -1,0 +1,29 @@
+Task1
+
+1. Установить отношения One-to-one между Card и Account
+2. Реализовать REST API для открытия новой банковской карты:
+
+	URL: /card/new
+	Метод: POST
+	Тело запроса:
+	{
+	  "clientId": "string",
+	  "cardType": "string"
+	}
+	Ожидаемые HTTP статусы: 201 Created, 400 Bad Request
+
+При открытии карты создается новый счет типа DEBIT_CARD на основе продукта с id = 1 ("Current Account").
+
+Task2
+
+1. Установить отношения One-to-many между Client и Account, Account и Transaction
+2. Реализовать REST API вывода статистики по всем счетам клиента.
+В статистику включить:
+- общий суммарный баланс в разных валютах
+- суммарные расходы
+- суммарные доходы
+
+	URL: /client/summary
+	Метод: GET
+
+	Ожидаемые HTTP статусы: 200, 404

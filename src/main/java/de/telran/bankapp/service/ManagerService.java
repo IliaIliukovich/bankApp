@@ -1,13 +1,14 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.dto.ManagerCreateDto;
 import de.telran.bankapp.dto.ManagerDto;
 import de.telran.bankapp.entity.Manager;
 import de.telran.bankapp.entity.enums.ManagerStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.ManagerMapper;
+import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
-import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,15 @@ public class ManagerService {
 
     private static Logger logger = LogManager.getLogger(ManagerService.class);
 
-    private ManagerRepository repository;
-    private ManagerMapper mapper;
+    private final ManagerRepository repository;
+    private final ClientRepository clientRepository;
+    private final ManagerMapper mapper;
 
     @Autowired
-    public ManagerService( ManagerRepository repository, ManagerMapper mapper) {
-        this.mapper = mapper;
+    public ManagerService(ManagerRepository repository, ClientRepository clientRepository, ManagerMapper mapper) {
         this.repository = repository;
+        this.clientRepository = clientRepository;
+        this.mapper = mapper;
     }
 
     public List<ManagerDto> getAll(){
@@ -94,6 +97,11 @@ public class ManagerService {
     public void deleteManager(Long id){
         Optional<Manager> managerForDelete = repository.findById(id);
         if (managerForDelete.isPresent()) {
+            List<Client> clients = managerForDelete.get().getClients();
+            for (Client c  : clients) {
+                c.setManager(null);
+            }
+            clientRepository.saveAll(clients);
             repository.deleteById(id);
         } else {
             throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");

@@ -1,8 +1,10 @@
 package de.telran.bankapp.controller;
 
+import de.telran.bankapp.dto.CardCreateDto;
 import de.telran.bankapp.entity.enums.CardType;
-import de.telran.bankapp.service.CardServices;
+import de.telran.bankapp.service.CardService;
 import de.telran.bankapp.entity.Card;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/cards")
+@RequestMapping("/card")
 public class CardController {
 
-    private final CardServices service;
+    private final CardService service;
 
     @Autowired
-    public CardController(CardServices service) {
+    public CardController(CardService service) {
         this.service = service;
     }
 
@@ -70,6 +72,12 @@ public class CardController {
     @PostMapping("/add")
     public ResponseEntity<Card> addCard(@RequestBody Card card) {
         Card created = service.addCard(card);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<Card> newCard(@RequestBody @Valid CardCreateDto cardCreateDto) {
+        Card created = service.newCard(cardCreateDto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
