@@ -1,8 +1,11 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.ProductCreateDto;
+import de.telran.bankapp.dto.ProductDto;
 import de.telran.bankapp.entity.Product;
 import de.telran.bankapp.entity.enums.ProductStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.mapper.ProductMapper;
 import de.telran.bankapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,36 +18,44 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ProductService {
     private final ProductRepository repository;
+    private final ProductMapper mapper;
 
     @Autowired
-    public ProductService(ProductRepository repo) {
+    public ProductService(ProductRepository repo, ProductMapper mapper) {
         this.repository = repo;
+        this.mapper = mapper;
     }
 
-    public List<Product> getAll() {
-        return repository.findAll();
+    public List<ProductDto> getAll() {
+        List<Product> products = repository.findAll();
+        return mapper.entityListToDto(products);
     }
 
-    public Optional<Product> getProductById(Long id) {
-        Optional<Product> byId = repository.findById(id);
-        if (byId.isEmpty()) {
+    public Optional<ProductDto> getProductById(Long id) {
+        Optional<Product> product = repository.findById(id);
+        if (product.isPresent()) {
+            ProductDto productDto = mapper.entityToDto(product.orElse(null));
+            return Optional.of(productDto);
+        } else {
             throw new BankAppResourceNotFoundException(String.format("Product with id = %d not found", id));
         }
-        return repository.findById(id);
     }
 
-    public List<Product> getProductByName(String name) {
-        return repository.findByName(name);
+    public List<ProductDto> getProductByName(String name) {
+        List<Product> products = repository.findByName(name);
+        return mapper.entityListToDto(products);
     }
 
-    public List<Product> getProductByStatus(String status) {
-        ProductStatus enumStatus = ProductStatus.valueOf(status.toUpperCase());
-        return repository.findByStatus(enumStatus);
+    public List<ProductDto> getProductByStatus(String status) {
+        List<Product> products = repository.findByStatus(ProductStatus.valueOf(status));
+        return mapper.entityListToDto(products);
     }
 
     @Transactional
-    public Product addProduct(Product product) {
-        return repository.save(product);
+    public ProductDto addProduct(ProductCreateDto dto) {
+        Product product = mapper.createDtoToEntity(dto);
+        Product savedProduct = repository.save(product);
+        return mapper.entityToDto(savedProduct);
     }
 
     @Transactional
@@ -53,12 +64,13 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updatedProduct(Product product) {
-        Long id = product.getId();
+    public ProductDto updatedProduct(ProductDto productDto) {
+        Long id = productDto.getId();
         Optional<Product> optional = repository.findById(id);
         if (optional.isPresent()) {
+            Product product = mapper.dtoToEntity(productDto);
             Product savedProduct = repository.save(product);
-            return savedProduct;
+            return mapper.entityToDto(savedProduct);
         }
         throw new BankAppResourceNotFoundException(String.format("Product with id = %d not found", id));
     }
