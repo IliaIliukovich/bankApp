@@ -8,5 +8,5 @@
     <include file="db/migrations/002_data.sql"/>
     <include file="db/migrations/003_change_uuid_type.sql"/>
     <include file="db/migrations/004_client_age_added.sql"/>
-
+    <include file="db/migrations/005_app_user.sql"/>
 </databaseChangeLog>
