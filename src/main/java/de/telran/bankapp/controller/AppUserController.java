@@ -1,71 +1,71 @@
 package de.telran.bankapp.controller;
 
-import de.telran.bankapp.entity.AppUser;
-import de.telran.bankapp.entity.enums.UserRole;
-import de.telran.bankapp.repository.AppUserRepository;
+import de.telran.bankapp.dto.AppUserDto;
+import de.telran.bankapp.exception.ResourceNotFoundException;
 import de.telran.bankapp.service.AppUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
-public class AppUserController {
+class AppUserController {
+    private final AppUserService service;
 
-    
-    private final AppUserService appUserService;
-    @Autowired
-    public AppUserController(AppUserService appUserService) {
-        this.appUserService = appUserService;
+    public AppUserController(AppUserService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<AppUser>> getAllUsers() {
-        return ResponseEntity.ok(appUserService.getAll());
+    public List<AppUserDto> getAllUsers() {
+        return service.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public Optional<AppUser> getUserById(@PathVariable String id) {
-        return appUserService.getAppUserById(id);
+    public AppUserDto getUserById(@PathVariable String id) {
+        return service.getUserById(id);
     }
 
     @PostMapping
-    public ResponseEntity<AppUser> createUser(@RequestBody AppUser user) {
-        AppUser created = appUserService.addAppUser(user);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public AppUserDto createUser(@Valid @RequestBody AppUserDto user) {
+        return service.createUser(user);
     }
-    @PutMapping
-    public ResponseEntity<AppUser> updateAppUser(@RequestBody AppUser user) {
-        if (user.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-        Optional<AppUser> updated = appUserService.updateAppUser(user);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id) {
+        service.deleteUser(id);
+    }
+
+    @PutMapping("/{id}")
+    public AppUserDto updateUser(@PathVariable String id, @Valid @RequestBody AppUserDto userDetails) {
+        return service.updateUser(id, userDetails);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateAppUserRole(@PathVariable String id, @RequestParam(required = false) UserRole role) {
-        boolean updated = appUserService.changeRole(id, role);
-
-        if (!updated) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User role updated successfully");
+    public AppUserDto patchUser(@PathVariable String id, @RequestBody Map<String, Object> updates) {
+        return service.patchUser(id, updates);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        appUserService.deleteAppUser(id);
-        return ResponseEntity.noContent().build();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .collect(Collectors.toMap(
+                        fieldError -> fieldError.getField(),
+                        fieldError -> fieldError.getDefaultMessage(),
+                        (existing, replacement) -> existing
+                ));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
+

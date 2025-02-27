@@ -1,65 +1,68 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.AppUserDto;
 import de.telran.bankapp.entity.AppUser;
 import de.telran.bankapp.entity.enums.UserRole;
+import de.telran.bankapp.exception.ResourceNotFoundException;
+import de.telran.bankapp.mapper.AppUserMapper;
+import org.springframework.transaction.annotation.Transactional;
 import de.telran.bankapp.repository.AppUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AppUserService {
-    private final AppUserRepository repo;
-    private final AppUserRepository appUserRepository;
+    private final AppUserRepository repository;
+    private final AppUserMapper mapper = AppUserMapper.INSTANCE;
 
-    @Autowired
-    public AppUserService(AppUserRepository repo, AppUserRepository appUserRepository) {
-        this.repo = repo;
-        this.appUserRepository = appUserRepository;
+    public AppUserService(AppUserRepository repository) {
+        this.repository = repository;
     }
 
-    public List<AppUser> getAll() {
-        return repo.findAll();
+    public List<AppUserDto> getAllUsers() {
+        return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
-    public Optional<AppUser> getAppUserById(String id) {
-        return repo.findById(id);
+    public AppUserDto getUserById(String id) {
+        return mapper.toDto(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found")));
     }
 
-    public AppUser addAppUser(AppUser user) {
-        return repo.save(user);
+    @Transactional
+    public AppUserDto createUser(AppUserDto userDto) {
+        AppUser user = repository.save(mapper.toEntity(userDto));
+        return mapper.toDto(user);
     }
 
-    public Optional<AppUser> updateAppUser(AppUser user) {
-        String id = user.getId();
-        Optional<AppUser> optional = appUserRepository.findById(id);
-        if (optional.isPresent()) {
-            AppUser saved = appUserRepository.save(user);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
-        }
+    @Transactional
+    public void deleteUser(String id) {
+        repository.deleteById(id);
     }
 
-
-    public void deleteAppUser(String id) {
-        appUserRepository.deleteById(id);
+    @Transactional
+    public AppUserDto updateUser(String id, AppUserDto userDetails) {
+        AppUser user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setEmail(userDetails.getEmail());
+        user.setRole(userDetails.getRole());
+        return mapper.toDto(repository.save(user));
     }
 
-
-    public boolean changeRole(String id, UserRole role) {
-        Optional<AppUser> optional = appUserRepository.findById(id);
-        if (optional.isPresent()) {
-            AppUser user = optional.get();
-            user.setRole(role);
-            appUserRepository.save(user);
-            return true;
-        } else {
-            return false;
-        }
+    @Transactional
+    public AppUserDto patchUser(String id, Map<String, Object> updates) {
+        AppUser user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "email":
+                    user.setEmail((String) value);
+                    break;
+                case "role":
+                    user.setRole(UserRole.valueOf((String) value));
+                    break;
+            }
+        });
+        return mapper.toDto(repository.save(user));
     }
-
-
 }
+
