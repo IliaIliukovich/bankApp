@@ -70,17 +70,19 @@ public class AccountService {
     @Transactional
     public AccountDto create(AccountPostCreateDto dto) {
         Account account = mapper.createPostDtoToEntity(dto);
+        Client client = clientRepository.getReferenceById(dto.getClientId());
+        account.setClient(client);
         return mapper.entityToDto(repository.save(account));
     }
 
     @Transactional
     public AccountDto updateAccount(AccountDto dto) {
-
         Long id = dto.getId();
-
         Optional<Account> accountOptional = repository.findById(id);
         if (accountOptional.isPresent()) {
             Account account = mapper.dtoToEntity(dto);
+            Client client = clientRepository.getReferenceById(dto.getClientId());
+            account.setClient(client);
             return mapper.entityToDto(repository.save(account));
         }
         throw new BankAppResourceNotFoundException("Account with id = " + id + " not found in database");
