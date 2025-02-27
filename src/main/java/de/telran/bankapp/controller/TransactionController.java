@@ -70,7 +70,7 @@ public class TransactionController {
     public ResponseEntity<List<TransactionDto>> searchTransactionsByTypeAndByStatus(
             @RequestParam TransactionType type,
             @RequestParam TransactionStatus status) {
-        List<TransactionDto> transactions = service.findTransactionsByTypeAndByStatus(type, status);
+        List<TransactionDto> transactions = service.findByTypeAndStatus(type, status);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 

@@ -64,14 +64,18 @@ public class TransactionService {
         return mapper.entityListToDto(transactions);
     }
 
-    public List<TransactionDto> findTransactionsByTypeAndByStatus(TransactionType type, TransactionStatus status) {
-        List<Transaction> transactions = repository.nativeQuery(type, status);
+    public List<TransactionDto> findByTypeAndStatus(TransactionType type, TransactionStatus status) {
+        List<Transaction> transactions = repository.findByTypeAndStatus(type, status);
         return mapper.entityListToDto(transactions);
     }
 
     @Transactional
     public TransactionDto addTransaction(TransactionCreateDto dto) {
         Transaction transaction = mapper.createDtoToEntity(dto);
+        Account creditAccount = accountRepository.getReferenceById(dto.getCreditAccountId());
+        Account debitAccount = accountRepository.getReferenceById(dto.getDebitAccountId());
+        transaction.setCreditAccount(creditAccount);
+        transaction.setDebitAccount(debitAccount);
         Transaction saved = repository.save(transaction);
         return mapper.entityToDto(saved);
     }
@@ -81,7 +85,12 @@ public class TransactionService {
         String id = dto.getId();
         Optional<Transaction> optional = repository.findById(id);
         if (optional.isPresent()) {
-            Transaction saved = repository.save(mapper.dtoToEntity(dto));
+            Transaction transaction = mapper.dtoToEntity(dto);
+            Account creditAccount = accountRepository.getReferenceById(dto.getCreditAccountId());
+            Account debitAccount = accountRepository.getReferenceById(dto.getDebitAccountId());
+            transaction.setDebitAccount(debitAccount);
+            transaction.setCreditAccount(creditAccount);
+            Transaction saved = repository.save(transaction);
             return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Transaction with id = " + id + " not found in database");

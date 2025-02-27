@@ -63,7 +63,7 @@ public class AccountController {
     }
 
     @PutMapping("/new")
-    public AccountDto createNewAccount(@RequestBody AccountCreateDto dto) {
+    public AccountDto createNewAccount(@RequestBody @Valid AccountCreateDto dto) {
         return service.create(dto);
     }
 
