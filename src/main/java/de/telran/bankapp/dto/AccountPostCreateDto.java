@@ -22,15 +22,19 @@ public class AccountPostCreateDto {
     @Pattern(regexp = "[A-Z]{2}[0-9]{20}", message = "{validation.account.name}")
     private String name;
 
+    @NotNull(message = "{validation.account.type}")
     private AccountType type;
 
+    @NotNull(message = "{validation.account.status}")
     private AccountStatus status;
 
+    @NotNull(message = "{validation.account.balance}")
     private BigDecimal balance;
 
+    @NotNull(message = "{validation.account.currencyCode}")
     private CurrencyCode currencyCode;
 
+    @Pattern(regexp = "^[a-f0-9\\-]{36}$", message = "{validation.account.clientId}")
     private String clientId;
-
 
 }
