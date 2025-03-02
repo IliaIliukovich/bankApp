@@ -13,7 +13,9 @@ public class AppUser {
 
     @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
+    @Column(name = "id", columnDefinition = "varchar(36)")
+
+    private String id;
   private String email;
   private String password;
   @Enumerated(EnumType.STRING)
