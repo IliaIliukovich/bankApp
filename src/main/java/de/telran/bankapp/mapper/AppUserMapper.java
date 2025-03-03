@@ -3,14 +3,12 @@ package de.telran.bankapp.mapper;
 import de.telran.bankapp.dto.AppUserDto;
 import de.telran.bankapp.entity.AppUser;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AppUserMapper {
-    AppUserMapper INSTANCE = Mappers.getMapper(AppUserMapper.class);
 
-    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "password", constant = "***")
     AppUserDto toDto(AppUser user);
 
     AppUser toEntity(AppUserDto userDto);

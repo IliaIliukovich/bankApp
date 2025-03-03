@@ -4,9 +4,6 @@ import de.telran.bankapp.entity.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 @Setter
 @Getter
@@ -14,31 +11,15 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "app_user")
 public class AppUser {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "id", columnDefinition = "varchar(36)")
-  private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", columnDefinition = "varchar(36)")
+    private String id;
+    private String email;
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-  @Email(message = "Invalid email format")
-  @NotBlank(message = "Email is required")
-  private String email;
-
-  @NotBlank(message = "Password is required")
-  @Size(min = 6, message = "Password must be at least 6 characters")
-  private String password;
-
-  @Enumerated(EnumType.STRING)
-  private UserRole role;
-
-
-  public String getId() { return id; }
-  public void setId(String id) { this.id = id; }
-  public String getEmail() { return email; }
-  public void setEmail(String email) { this.email = email; }
-  public String getPassword() { return password; }
-  public void setPassword(String password) { this.password = password; }
-  public UserRole getRole() { return role; }
-  public void setRole(UserRole role) { this.role = role; }
 }
 
 

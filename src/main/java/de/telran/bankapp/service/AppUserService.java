@@ -2,24 +2,28 @@ package de.telran.bankapp.service;
 
 import de.telran.bankapp.dto.AppUserDto;
 import de.telran.bankapp.entity.AppUser;
-import de.telran.bankapp.entity.enums.UserRole;
-import de.telran.bankapp.exception.ResourceNotFoundException;
+import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.AppUserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import de.telran.bankapp.repository.AppUserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class AppUserService {
-    private final AppUserRepository repository;
-    private final AppUserMapper mapper = AppUserMapper.INSTANCE;
 
-    public AppUserService(AppUserRepository repository) {
+    private final AppUserRepository repository;
+    private final AppUserMapper mapper;
+
+    @Autowired
+    public AppUserService(AppUserRepository repository, AppUserMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public List<AppUserDto> getAllUsers() {
@@ -27,7 +31,8 @@ public class AppUserService {
     }
 
     public AppUserDto getUserById(String id) {
-        return mapper.toDto(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found")));
+        AppUser user = repository.findById(id).orElseThrow(() -> new BankAppResourceNotFoundException("User with id = " + id + " not found"));
+        return mapper.toDto(user);
     }
 
     @Transactional
@@ -42,27 +47,18 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserDto updateUser(String id, AppUserDto userDetails) {
-        AppUser user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        user.setEmail(userDetails.getEmail());
-        user.setRole(userDetails.getRole());
-        return mapper.toDto(repository.save(user));
+    public AppUserDto updateUser(AppUserDto userDetails) {
+        if (userDetails.getId() != null) {
+            Optional<AppUser> optional = repository.findById(userDetails.getId());
+            if (optional.isPresent()) {
+                AppUser user = optional.get();
+                user.setEmail(userDetails.getEmail());
+                user.setRole(userDetails.getRole());
+                return mapper.toDto(repository.save(user));
+            }
+        }
+        throw new BankAppResourceNotFoundException("User with id = " + userDetails.getId() + " not found");
     }
 
-    @Transactional
-    public AppUserDto patchUser(String id, Map<String, Object> updates) {
-        AppUser user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        updates.forEach((key, value) -> {
-            switch (key) {
-                case "email":
-                    user.setEmail((String) value);
-                    break;
-                case "role":
-                    user.setRole(UserRole.valueOf((String) value));
-                    break;
-            }
-        });
-        return mapper.toDto(repository.save(user));
-    }
 }
 

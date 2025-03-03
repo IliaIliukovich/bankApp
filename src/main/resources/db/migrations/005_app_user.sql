@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset ilia.iliukovich:005
+
 insert into app_user (id, email, password, role, client_id)
 values  ( "fbf170d8-0d7b-4d74-9385-2b0fcca15e4c", "h.schmidt@example.com", "password456", "CLIENT", "b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0"),
         ( "cfa9822d-db69-461c-8b72-196351fd8a0c", "a.mueller@example.com", "password789", "CLIENT","20980395-20d0-4ea8-8e4b-de2252a028eb"),

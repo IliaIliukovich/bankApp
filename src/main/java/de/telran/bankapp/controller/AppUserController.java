@@ -1,29 +1,25 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.dto.AppUserDto;
-import de.telran.bankapp.exception.ResourceNotFoundException;
 import de.telran.bankapp.service.AppUserService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @RestController
-@RequestMapping("/users")
-class AppUserController {
+@RequestMapping("/user")
+public class AppUserController {
+
     private final AppUserService service;
 
+    @Autowired
     public AppUserController(AppUserService service) {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<AppUserDto> getAllUsers() {
         return service.getAllUsers();
     }
@@ -43,30 +39,10 @@ class AppUserController {
         service.deleteUser(id);
     }
 
-    @PutMapping("/{id}")
-    public AppUserDto updateUser(@PathVariable String id, @Valid @RequestBody AppUserDto userDetails) {
-        return service.updateUser(id, userDetails);
+    @PutMapping
+    public AppUserDto updateUser(@Valid @RequestBody AppUserDto userDetails) {
+        return service.updateUser(userDetails);
     }
 
-    @PatchMapping("/{id}")
-    public AppUserDto patchUser(@PathVariable String id, @RequestBody Map<String, Object> updates) {
-        return service.patchUser(id, updates);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                        fieldError -> fieldError.getField(),
-                        fieldError -> fieldError.getDefaultMessage(),
-                        (existing, replacement) -> existing
-                ));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
 }
 
