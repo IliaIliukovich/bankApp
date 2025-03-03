@@ -1,21 +1,22 @@
 package de.telran.bankapp.entity;
 
 import de.telran.bankapp.entity.enums.UserRole;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
 @Table(name = "app_user")
 public class AppUser {
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "id", columnDefinition = "varchar(36)")
   private String id;
 
   @Email(message = "Invalid email format")
@@ -39,3 +40,5 @@ public class AppUser {
   public UserRole getRole() { return role; }
   public void setRole(UserRole role) { this.role = role; }
 }
+
+

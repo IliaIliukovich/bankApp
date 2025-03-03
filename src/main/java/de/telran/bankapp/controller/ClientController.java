@@ -5,6 +5,8 @@ import de.telran.bankapp.dto.ClientCreateDto;
 import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.service.ClientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(("/client"))
 @Validated
+@Tag(name = "Client Controller", description = "REST API for managing clients in the app")
 public class ClientController {
 
     private ClientService service;
@@ -29,16 +32,19 @@ public class ClientController {
         this.service = service;
     }
 
+    @Operation(summary = "Returns all app clients")
     @GetMapping("/all")
     public List<ClientDto> getAll() {
         return service.getAll();
     }
 
+    @Operation(summary = "Returns a client by id")
     @GetMapping("{uuid}")
     public Optional<ClientDto> getClientById(@PathVariable String uuid) {
         return service.getClientById(uuid);
     }
 
+    @Operation(summary = "Search by the provided name")
     @GetMapping("/search")
     public List<ClientDto> findByName(@RequestParam String name) {
         return service.findByName(name);

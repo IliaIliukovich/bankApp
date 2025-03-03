@@ -21,8 +21,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 
     List<Transaction> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount);
 
-    @NativeQuery("select * from transaction t where t.type = :type% and t.status = :status%")
-    List<Transaction> nativeQuery(TransactionType type, TransactionStatus status);
+    @NativeQuery("select * from transaction t where t.type = :#{#type?.name()} and t.status = :#{#status?.name()}")
+    List<Transaction> findByTypeAndStatus(TransactionType type, TransactionStatus status);
 
     @Query("update Transaction t set t.status = :status where t.id = :id")
     @Modifying
