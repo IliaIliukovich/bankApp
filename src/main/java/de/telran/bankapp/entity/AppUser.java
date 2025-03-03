@@ -1,22 +1,26 @@
 package de.telran.bankapp.entity;
 
 import de.telran.bankapp.entity.enums.UserRole;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.persistence.*;
-import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
+@Table(name = "app_user")
 public class AppUser {
 
-  @Id
+    @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
+    @Column(name = "id", columnDefinition = "varchar(36)")
+
+    private String id;
   private String email;
   private String password;
   @Enumerated(EnumType.STRING)
   private UserRole role;
 
 }
+
+

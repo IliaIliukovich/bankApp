@@ -1,71 +1,48 @@
 package de.telran.bankapp.controller;
 
 import de.telran.bankapp.entity.AppUser;
-import de.telran.bankapp.entity.enums.UserRole;
-import de.telran.bankapp.repository.AppUserRepository;
 import de.telran.bankapp.service.AppUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/users")
-public class AppUserController {
+class AppUserController {
+    private final AppUserService service;
 
-    
-    private final AppUserService appUserService;
-    @Autowired
-    public AppUserController(AppUserService appUserService) {
-        this.appUserService = appUserService;
+    public AppUserController(AppUserService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<AppUser>> getAllUsers() {
-        return ResponseEntity.ok(appUserService.getAll());
+    public List<AppUser> getAllUsers() {
+        return service.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public Optional<AppUser> getUserById(@PathVariable String id) {
-        return appUserService.getAppUserById(id);
+    public AppUser getUserById(@PathVariable String id) {
+        return service.getUserById(id);
     }
 
     @PostMapping
-    public ResponseEntity<AppUser> createUser(@RequestBody AppUser user) {
-        AppUser created = appUserService.addAppUser(user);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public AppUser createUser(@RequestBody AppUser user) {
+        return service.createUser(user);
     }
-    @PutMapping
-    public ResponseEntity<AppUser> updateAppUser(@RequestBody AppUser user) {
-        if (user.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-        Optional<AppUser> updated = appUserService.updateAppUser(user);
-        if (updated.isPresent()) {
-            return new ResponseEntity<>(updated.get(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id) {
+        service.deleteUser(id);
+    }
+
+    @PutMapping("/{id}")
+    public AppUser updateUser(@PathVariable String id, @RequestBody AppUser userDetails) {
+        return service.updateUser(id, userDetails);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateAppUserRole(@PathVariable String id, @RequestParam(required = false) UserRole role) {
-        boolean updated = appUserService.changeRole(id, role);
-
-        if (!updated) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User role updated successfully");
-    }
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        appUserService.deleteAppUser(id);
-        return ResponseEntity.noContent().build();
+    public AppUser patchUser(@PathVariable String id, @RequestBody AppUser userDetails) {
+        return service.patchUser(id, userDetails);
     }
 }
