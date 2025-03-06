@@ -26,7 +26,7 @@ public class Manager {
   @Enumerated(EnumType.STRING)
   private ManagerStatus status;
 
-  @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private List<Client> clients;
 
 }

@@ -77,15 +77,7 @@ public class ManagerService {
     @Transactional
     public ManagerDto addManager( ManagerCreateDto dto){
         Manager manager = mapper.createDtoToEntity(dto);
-        Manager savedManager = repository.save(manager);
-        if(dto.getClientsDto() != null) {
-            List<ClientDto> clientsDto = dto.getClientsDto();
-            for (ClientDto c: clientsDto){
-                Client client = clientMapper.dtoToEntity(c);
-                client.setManager(savedManager);
-                clientRepository.save(client);
-            }
-        }
+        Manager savedManager = repository.save(manager); // persist
         return mapper.entityToDto(savedManager);
     }
     /*
@@ -113,25 +105,13 @@ which in JSON is [] !!!
 
     @Transactional
     public ManagerDto updateManager(ManagerDto managerDto) {
-        Long id = managerDto.getId();
-        Optional<Manager> optional = repository.findById(id);
+        Optional<Manager> optional = repository.findById(managerDto.getId());
         if (optional.isPresent()) {
-            Manager existingManager = optional.get();
-            existingManager.setFirstName(managerDto.getFirstName());
-            existingManager.setLastName(managerDto.getLastName());
-            existingManager.setStatus(managerDto.getStatus());
-            Manager savedManager = repository.save(existingManager);
-            if(managerDto.getClientsDto() != null) {
-                List<ClientDto> clientsDto = managerDto.getClientsDto();
-                for (ClientDto c: clientsDto){
-                    Client client = clientMapper.dtoToEntity(c);
-                    client.setManager(savedManager);
-                    clientRepository.save(client);
-                }
-            }
-            return mapper.entityToDto(savedManager);
+            Manager manager = mapper.dtoToEntity(managerDto);
+            Manager saved = repository.save(manager); // merge
+            return mapper.entityToDto(saved);
         }
-        throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
+        throw new BankAppResourceNotFoundException("Manager with id = " + managerDto.getId() + " not found in database");
     }
     /*
     corect query in Postman:

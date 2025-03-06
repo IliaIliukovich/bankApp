@@ -75,27 +75,27 @@ public class ClientService {
 
     @Transactional
     public ClientDto addClient(ClientCreateDto dto) {
-        Client client = mapper.createDtoToEntity(dto);
+        Client client = mapper.createDtoToEntity(dto); // transient
         if (dto.getManagerId() != null) {
 //            Manager manager = managerRepository.findById(dto.getManagerId()).orElse(null);
             Manager manager = managerRepository.getReferenceById(dto.getManagerId()); // lazy loading
             client.setManager(manager);
         }
-        Client saved = repository.save(client);
+        Client saved = repository.save(client); // persistent
         return mapper.entityToDto(saved);
     }
 
     @Transactional
     public ClientDto updateClient(ClientDto dto) {
         String id = dto.getId();
-        Optional<Client> optional = repository.findById(id);
+        Optional<Client> optional = repository.findById(id); // persistent
         if (optional.isPresent()) {
-            Client client = mapper.dtoToEntity(dto);
+            Client client = mapper.dtoToEntity(dto); // transient
             if (dto.getManagerId() != null) {
                 Manager manager = managerRepository.getReferenceById(dto.getManagerId()); // lazy loading
                 client.setManager(manager);
             }
-            Client saved = repository.save(client);
+            Client saved = repository.save(client); // merge client from db with client from dto ----> persistent
             return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
@@ -103,12 +103,12 @@ public class ClientService {
 
     @Transactional
     public ClientDto updateAddress(String id, String address) {
-        Optional<Client> optional = repository.findById(id);
+        Optional<Client> optional = repository.findById(id); // persistent
         if (optional.isPresent()) {
             Client client = optional.get();
             client.setAddress(address);
-            Client saved = repository.save(client);
-            return mapper.entityToDto(saved);
+            Client saved = repository.save(client); // unnecessary
+            return mapper.entityToDto(client);
         }
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }

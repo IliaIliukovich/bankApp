@@ -26,6 +26,6 @@ public class ManagerCreateDto {
     @Pattern(regexp = "^[A-ZÜÄÖ][a-zA-Züäö]{0,44}$",message = "{validation.manager.firstName}")
     private String firstName;
 
-    private List<ClientDto> clientsDto;
+    private List<ClientCreateDto> clientsDto;
 
 }
