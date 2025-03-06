@@ -108,7 +108,7 @@ public class ClientService {
             Client client = optional.get();
             client.setAddress(address);
             Client saved = repository.save(client); // unnecessary
-            return mapper.entityToDto(client);
+            return mapper.entityToDto(saved);
         }
         throw new BankAppResourceNotFoundException("Client with id = " + id + " not found in database");
     }
