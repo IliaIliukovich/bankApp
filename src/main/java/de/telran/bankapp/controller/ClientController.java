@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +40,11 @@ public class ClientController {
         return service.getAll();
     }
 
+    @GetMapping("/allSorted")
+    public List<ClientDto> getAllSorted(@SortDefault(value = "lastName") Sort sort) {
+        return service.getAllSorted(sort);
+    }
+
     @Operation(summary = "Returns a client by id")
     @GetMapping("{uuid}")
     public Optional<ClientDto> getClientById(@PathVariable String uuid) {
@@ -46,8 +53,8 @@ public class ClientController {
 
     @Operation(summary = "Search by the provided name")
     @GetMapping("/search")
-    public List<ClientDto> findByName(@RequestParam String name) {
-        return service.findByName(name);
+    public List<ClientDto> findByName(@RequestParam String name, Sort sort) {
+        return service.findByName(name, sort);
     }
 
     @GetMapping("/searchBySurnameAndAddress")

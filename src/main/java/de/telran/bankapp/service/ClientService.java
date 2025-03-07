@@ -16,6 +16,7 @@ import de.telran.bankapp.repository.ManagerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,14 +58,20 @@ public class ClientService {
         return mapper.entityListToDto(clients);
     }
 
+    public List<ClientDto> getAllSorted(Sort sort) {
+        List<Client> clientList = repository.findAll(sort);
+        return mapper.entityListToDto(clientList);
+
+    }
+
     public Optional<ClientDto> getClientById(String uuid) {
         Optional<Client> client = repository.findById(uuid);
         ClientDto dto = mapper.entityToDto(client.orElse(null));
         return Optional.ofNullable(dto);
     }
 
-    public List<ClientDto> findByName(String name) {
-        List<Client> clients = repository.findByFirstName(name);
+    public List<ClientDto> findByName(String name, Sort sort) {
+        List<Client> clients = repository.findByFirstName(name, sort);
         return mapper.entityListToDto(clients);
     }
 

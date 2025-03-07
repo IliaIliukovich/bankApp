@@ -2,6 +2,7 @@ package de.telran.bankapp.repository;
 
 import de.telran.bankapp.entity.Client;
 import de.telran.bankapp.entity.enums.ClientStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, String> {
 
-    List<Client> findByFirstName(String name);
+    List<Client> findByFirstName(String name, Sort sort);
 
     Optional<Client> findByFirstNameAndLastName(String firstName, String lastName);
 
