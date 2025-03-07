@@ -49,6 +49,7 @@ public class ManagerService {
         return mapper.entityListToDto(managers);
     }
 
+    // TODO: write test
     public List<ManagerDto> findByName(String firstName){
         List<Manager> managers = repository.findByFirstName(firstName);
         return mapper.entityListToDto(managers);
@@ -146,6 +147,7 @@ which in JSON is [] !!!
 }
      */
 
+    // TODO: write test
     public ManagerDto getManagerById(Long id) {
         Optional<Manager> optional = repository.findById(id);
         if (optional.isPresent()) {
@@ -155,6 +157,7 @@ which in JSON is [] !!!
         throw new BankAppResourceNotFoundException("Manager with id = " + id + " not found in database");
     }
 
+    // TODO: write test
     @Transactional
     public void changeManagerStatus(Long id,ManagerStatus status){
         ManagerStatus managerstatus = status == null ? ManagerStatus.ACTIVE : status;
