@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.*;
-import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,31 +46,21 @@ class ManagerServiceTest {
     }
 
     @Test
-    void getMagagerById(){
-        Long magagerId = 20L;
+    void getManagerById(){
+        Long managerId = 20L;
         Optional<Manager> manager = Optional.of(new Manager());
         ManagerDto managerDto = new ManagerDto();
 
-        when(repository.findById(magagerId)).thenReturn(manager);
+        when(repository.findById(managerId)).thenReturn(manager);
         when(mapper.entityToDto(manager.get())).thenReturn(managerDto);
 
-        service.getManagerById(magagerId);
+        service.getManagerById(managerId);
 
         verify(mapper).entityToDto(manager.get());
     }
 
     @Test
-    void getMagagerById_NotFound(){
-        Long magagerId = 20L;
-        Optional<Manager> manager = Optional.of(new Manager());
-        ManagerDto managerDto = new ManagerDto();
-
-        when(repository.findById(magagerId)).thenReturn(manager);
-        when(mapper.entityToDto(manager.get())).thenReturn(managerDto);
-
-        service.getManagerById(magagerId);
-
-        verify(mapper).entityToDto(manager.get());
+    void getManagerByIdNotFound(){ // TODO
     }
 
     @Test
@@ -83,36 +70,28 @@ class ManagerServiceTest {
         int updated = 1;
 
         when(repository.updateStatus(id, status)).thenReturn(updated);
-
         service.changeManagerStatus(id, status);
-
         verify(repository).updateStatus(id, status);
-
     }
 
     @Test
-    void changeManagerStatus_Null(){
+    void changeManagerStatusNull(){
         Long id = 2L;
         ManagerStatus status = null;
         int updated = 1;
 
         when(repository.updateStatus(id, ManagerStatus.ACTIVE)).thenReturn(updated);
-
         service.changeManagerStatus(id, status);
-
         verify(repository).updateStatus(id, ManagerStatus.ACTIVE);
-
     }
 
     @Test
-    void changeManagerStatus_Exception(){
+    void changeManagerStatusException(){
         Long id = 20L;
         int updated = 0;
 
         when(repository.updateStatus(id, ManagerStatus.ACTIVE)).thenReturn(updated);
-
         assertThrows(BankAppResourceNotFoundException.class, ()->service.changeManagerStatus(id, ManagerStatus.ACTIVE));
-
     }
 
 }

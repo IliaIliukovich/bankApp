@@ -59,7 +59,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void findTransactionByStatusNotWithoutAmount() {
+    void findTransactionByStatusNotWithAmount() {
         service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, null, null);
         verify(repository)
                 .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("0.00"), new BigDecimal("50000.00"));
@@ -83,7 +83,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void findTransactionByStatusNotWithAmount() {
+    void findTransactionByStatusWithAmount() {
         service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("500.00"));
         verify(repository)
                 .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("500.00"));
