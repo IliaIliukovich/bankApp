@@ -5,7 +5,6 @@ import de.telran.bankapp.dto.TransactionDto;
 import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
-import de.telran.bankapp.entity.enums.TransactionType;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.TransactionMapper;
 import de.telran.bankapp.repository.AccountRepository;
@@ -53,7 +52,7 @@ class TransactionServiceTest {
         Transaction transaction = new Transaction();
         transaction.setId(uuid);
         when(repository.findById(uuid)).thenReturn(Optional.of(transaction));
-        
+
         TransactionDto dto = new TransactionDto();
         dto.setId(uuid);
         when(mapper.entityToDto(transaction)).thenReturn(dto);
@@ -62,10 +61,34 @@ class TransactionServiceTest {
     }
 
     @Test
-    void findTransactionByStatusNotAndAmountBetween() {
+    void findTransactionByStatusNotWithoutAmount() {
         service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, null, null);
         verify(repository)
                 .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("0.00"), new BigDecimal("50000.00"));
+
+    }
+
+    @Test
+    void findTransactionByStatusNotWithMinAmount() {
+        service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), null);
+        verify(repository)
+                .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("50000.00"));
+
+    }
+
+    @Test
+    void findTransactionByStatusNotWithMaxAmount() {
+        service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, null, new BigDecimal("500.00"));
+        verify(repository)
+                .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("0.00"), new BigDecimal("500.00"));
+
+    }
+
+    @Test
+    void findTransactionByStatusNotWithAmount() {
+        service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("500.00"));
+        verify(repository)
+                .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("500.00"));
 
     }
 
