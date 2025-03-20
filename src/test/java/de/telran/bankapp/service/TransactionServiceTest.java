@@ -108,12 +108,14 @@ class TransactionServiceTest {
         debitAccount.setId(1L);
         when(accountRepository.getReferenceById(dto.getDebitAccountId())).thenReturn(debitAccount);
 
+        when(repository.save(transaction)).thenReturn(transaction);
+
         service.addTransaction(dto);
 
         assertEquals(creditAccount, transaction.getCreditAccount());
         assertEquals(debitAccount, transaction.getDebitAccount());
 
         verify(repository).save(transaction);
-        verify(mapper).entityToDto(any());
+        verify(mapper).entityToDto(transaction);
     }
 }

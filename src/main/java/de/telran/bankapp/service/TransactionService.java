@@ -41,7 +41,6 @@ public class TransactionService {
         return mapper.entityListToDto(transactions);
     }
 
-    // TODO: write test
     public Optional<TransactionDto> getTransactionById(String id) {
         Optional<Transaction> optional = repository.findById(id);
         TransactionDto transactionDto = mapper.entityToDto(optional.orElse(null));
@@ -58,7 +57,6 @@ public class TransactionService {
         return mapper.entityListToDto(transactions);
     }
 
-    // TODO: write test
     public List<TransactionDto> findTransactionByStatusNotAndAmountBetween(TransactionStatus status, BigDecimal minAmount, BigDecimal maxAmount) {
         BigDecimal min = minAmount == null ? new BigDecimal("0.00") : minAmount;
         BigDecimal max = maxAmount == null ? new BigDecimal("50000.00") : maxAmount;
@@ -71,7 +69,6 @@ public class TransactionService {
         return mapper.entityListToDto(transactions);
     }
 
-    // TODO: write test
     @Transactional
     public TransactionDto addTransaction(TransactionCreateDto dto) {
         Transaction transaction = mapper.createDtoToEntity(dto);
