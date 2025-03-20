@@ -1,6 +1,8 @@
 package de.telran.bankapp.service;
 
+import de.telran.bankapp.dto.TransactionCreateDto;
 import de.telran.bankapp.dto.TransactionDto;
+import de.telran.bankapp.entity.Account;
 import de.telran.bankapp.entity.Transaction;
 import de.telran.bankapp.entity.enums.TransactionStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
@@ -59,7 +61,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void findTransactionByStatusNotWithAmount() {
+    void findTransactionByStatusNotWithoutAmount() {
         service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, null, null);
         verify(repository)
                 .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("0.00"), new BigDecimal("50000.00"));
@@ -83,12 +85,35 @@ class TransactionServiceTest {
     }
 
     @Test
-    void findTransactionByStatusWithAmount() {
+    void findTransactionByStatusNotWithAmount() {
         service.findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("500.00"));
         verify(repository)
                 .findTransactionByStatusNotAndAmountBetween(TransactionStatus.NEW, new BigDecimal("100.00"), new BigDecimal("500.00"));
 
     }
+
+    @Test
+    void addTransaction() {
+        TransactionCreateDto dto = new TransactionCreateDto
+                ("PAYMENT", "10.00", "descr", 1L, 2L);
+        Transaction transaction = new Transaction();
+        transaction.setId("123");
+        when(mapper.createDtoToEntity(dto)).thenReturn(transaction);
+
+        Account creditAccount = new Account();
+        creditAccount.setId(2L);
+        when(accountRepository.getReferenceById(dto.getCreditAccountId())).thenReturn(creditAccount);
+
+        Account debitAccount = new Account();
+        debitAccount.setId(1L);
+        when(accountRepository.getReferenceById(dto.getDebitAccountId())).thenReturn(debitAccount);
+
+        service.addTransaction(dto);
+
+        assertEquals(creditAccount, transaction.getCreditAccount());
+        assertEquals(debitAccount, transaction.getDebitAccount());
+
+        verify(repository).save(transaction);
+        verify(mapper).entityToDto(any());
+    }
 }
-
-
