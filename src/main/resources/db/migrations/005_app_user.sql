@@ -3,8 +3,8 @@
 
 insert into app_user (id, email, password, role, client_id)
 values  ( 'fbf170d8-0d7b-4d74-9385-2b0fcca15e4c', 'h.schmidt@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'CLIENT', 'b2c2e8dd-6bce-4401-bd71-ffaed9d6ada0'),
-        ( 'cfa9822d-db69-461c-8b72-196351fd8a0c', 'a.mueller@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'CLIENT','20980395-20d0-4ea8-8e4b-de2252a028eb'),
-        ( '2fcc9441-e0de-46f2-a7bc-2f8a016d9f95', 'p.klein@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'CLIENT', '9cd1b6c5-06d7-4f6c-9959-3856b1b51045'),
+        ( 'cfa9822d-db69-461c-8b72-196351fd8a0c', 'a.mueller@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'MANAGER','20980395-20d0-4ea8-8e4b-de2252a028eb'),
+        ( '2fcc9441-e0de-46f2-a7bc-2f8a016d9f95', 'p.klein@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'ADMIN', '9cd1b6c5-06d7-4f6c-9959-3856b1b51045'),
         ( '83e06394-ab79-4721-bc63-1acff888e01d', 'm.schneider@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'CLIENT', '5e659d3c-3925-457d-ae41-ca69001fb11c'),
         ('c7b46896-4a7c-43bd-b7b0-d211e21b1d79',  'l.fischer@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'CLIENT', 'b03dbcfc-d047-49a7-acbb-f3b1329e1fee'),
         ( 'd22431e8-d809-4a2b-9b84-d0af5b347d21', 's.weber@example.com', '$2a$10$cHN5hrbf0UOmkrIT24VO1ep6fFpc4gxLRdR/YBy3IEVkF7mJELElS', 'CLIENT', 'bb10eec7-e408-4f11-9603-ec3c4a371512'),
