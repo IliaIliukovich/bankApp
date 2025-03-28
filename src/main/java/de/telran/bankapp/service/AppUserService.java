@@ -60,5 +60,8 @@ public class AppUserService {
         throw new BankAppResourceNotFoundException("User with id = " + userDetails.getId() + " not found");
     }
 
+    public Optional<AppUser> getByLogin(String login) {
+        return repository.findAppUserByEmail(login);
+    }
 }
 
