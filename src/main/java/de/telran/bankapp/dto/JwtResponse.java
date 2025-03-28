@@ -1,4 +1,4 @@
-package de.telran.bankapp.security;
+package de.telran.bankapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

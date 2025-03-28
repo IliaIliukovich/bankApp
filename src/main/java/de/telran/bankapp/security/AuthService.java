@@ -1,5 +1,7 @@
 package de.telran.bankapp.security;
 
+import de.telran.bankapp.dto.JwtRequest;
+import de.telran.bankapp.dto.JwtResponse;
 import de.telran.bankapp.entity.AppUser;
 import de.telran.bankapp.service.AppUserService;
 import io.jsonwebtoken.Claims;
