@@ -10,4 +10,5 @@
     <include file="db/migrations/004_client_age_added.sql"/>
     <include file="db/migrations/005_app_user.sql"/>
     <include file="db/migrations/006_app_user-fix.sql"/>
+    <include file="db/migrations/007_app_user_refresh_token_added.sql"/>
 </databaseChangeLog>

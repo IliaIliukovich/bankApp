@@ -19,6 +19,7 @@ public class AppUser {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private String refreshToken;
 
 }
 

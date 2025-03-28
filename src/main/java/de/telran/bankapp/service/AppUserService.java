@@ -68,5 +68,10 @@ public class AppUserService {
     public Optional<AppUser> getByLogin(String login) {
         return repository.findAppUserByEmail(login);
     }
+
+    @Transactional
+    public void save(AppUser user) {
+        repository.save(user);
+    }
 }
 
