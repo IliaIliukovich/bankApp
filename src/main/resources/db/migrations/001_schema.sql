@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS transaction (
 CREATE TABLE IF NOT EXISTS app_user (
     id VARCHAR(45) NOT NULL,
     email VARCHAR(45) NOT NULL,
-    password VARCHAR(45) NOT NULL,
+    password VARCHAR(60) NOT NULL,
     role VARCHAR(45) NOT NULL,
     client_id VARCHAR(45) NOT NULL,
     PRIMARY KEY (id),

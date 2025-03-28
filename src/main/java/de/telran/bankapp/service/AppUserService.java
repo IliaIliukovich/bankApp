@@ -5,6 +5,7 @@ import de.telran.bankapp.entity.AppUser;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.AppUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import de.telran.bankapp.repository.AppUserRepository;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,13 @@ public class AppUserService {
 
     private final AppUserRepository repository;
     private final AppUserMapper mapper;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    public AppUserService(AppUserRepository repository, AppUserMapper mapper) {
+    public AppUserService(AppUserRepository repository, AppUserMapper mapper, PasswordEncoder encoder) {
         this.repository = repository;
         this.mapper = mapper;
+        this.encoder = encoder;
     }
 
     public List<AppUserDto> getAllUsers() {
@@ -37,7 +40,9 @@ public class AppUserService {
 
     @Transactional
     public AppUserDto createUser(AppUserDto userDto) {
-        AppUser user = repository.save(mapper.toEntity(userDto));
+        AppUser entity = mapper.toEntity(userDto);
+        entity.setPassword(encoder.encode(entity.getPassword()));
+        AppUser user = repository.save(entity);
         return mapper.toDto(user);
     }
 

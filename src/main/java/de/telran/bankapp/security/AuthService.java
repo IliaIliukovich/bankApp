@@ -9,6 +9,7 @@ import jakarta.security.auth.message.AuthException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -48,6 +49,8 @@ public class AuthService {
      */
     private final JwtProvider jwtProvider;
 
+    private final PasswordEncoder encoder;
+
     /**
      * Handles user login and returns JWT tokens upon successful authentication.
      *
@@ -58,7 +61,7 @@ public class AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
         final AppUser user = userService.getByLogin(authRequest.getLogin())
                 .orElseThrow(() -> new AuthException("User is not found"));
-        if (user.getPassword().equals(authRequest.getPassword())) {
+        if (encoder.matches(authRequest.getPassword(), user.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getEmail(), refreshToken);
