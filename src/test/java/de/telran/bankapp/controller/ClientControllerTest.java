@@ -5,9 +5,11 @@ import de.telran.bankapp.dto.ClientCreateDto;
 import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
+import de.telran.bankapp.security.JwtProvider;
 import de.telran.bankapp.service.ClientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -21,11 +23,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ClientController.class)
+@WebMvcTest(controllers = ClientController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class ClientControllerTest {
 
     @MockitoBean
     private ClientService service;
+
+    @MockitoBean
+    private JwtProvider jwtProvider;
 
     @Autowired
     private MockMvc mockMvc;
