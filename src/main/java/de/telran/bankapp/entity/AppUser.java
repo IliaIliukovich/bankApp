@@ -20,6 +20,8 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     private String refreshToken;
+    @OneToOne
+    private Client client;
 
 }
 

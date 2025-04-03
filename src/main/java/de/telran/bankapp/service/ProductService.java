@@ -7,6 +7,8 @@ import de.telran.bankapp.entity.enums.ProductStatus;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.ProductMapper;
 import de.telran.bankapp.repository.ProductRepository;
+import de.telran.bankapp.security.AuthService;
+import de.telran.bankapp.security.JwtAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +21,24 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository repository;
     private final ProductMapper mapper;
+    private final AuthService authService;
 
     @Autowired
-    public ProductService(ProductRepository repo, ProductMapper mapper) {
+    public ProductService(ProductRepository repo, ProductMapper mapper, AuthService authService) {
         this.repository = repo;
         this.mapper = mapper;
+        this.authService = authService;
     }
 
     public List<ProductDto> getAll() {
-        List<Product> products = repository.findAll();
+        JwtAuthentication authInfo = authService.getAuthInfo();
+        String authority = authInfo.getRoles().iterator().next().getAuthority();
+        List<Product> products;
+        if (authority.equals("ROLE_MANAGER") || authority.equals("ROLE_ADMIN")) {
+            products = repository.findAll();
+        } else {
+            products = repository.findByStatus(ProductStatus.ACTIVE);
+        }
         return mapper.entityListToDto(products);
     }
 

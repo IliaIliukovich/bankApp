@@ -3,20 +3,21 @@ package de.telran.bankapp.service;
 import de.telran.bankapp.dto.ClientAccountStatisticsDto;
 import de.telran.bankapp.dto.ClientCreateDto;
 import de.telran.bankapp.dto.ClientDto;
-import de.telran.bankapp.entity.Account;
-import de.telran.bankapp.entity.Client;
-import de.telran.bankapp.entity.Manager;
-import de.telran.bankapp.entity.Transaction;
+import de.telran.bankapp.entity.*;
 import de.telran.bankapp.entity.enums.ClientStatus;
 import de.telran.bankapp.entity.enums.CurrencyCode;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.ClientMapper;
 import de.telran.bankapp.repository.ClientRepository;
 import de.telran.bankapp.repository.ManagerRepository;
+import de.telran.bankapp.security.AuthService;
+import de.telran.bankapp.security.JwtAuthentication;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,15 +34,19 @@ public class ClientService {
 
     private static Logger logger = LogManager.getLogger(ClientService.class);
 
-    private ClientRepository repository;
-    private ManagerRepository managerRepository;
-    private ClientMapper mapper;
+    private final ClientRepository repository;
+    private final ManagerRepository managerRepository;
+    private final ClientMapper mapper;
+    private final AuthService authService;
+    private final AppUserService appUserService;
 
     @Autowired
-    public ClientService(ClientRepository repository, ManagerRepository managerRepository, ClientMapper mapper) {
+    public ClientService(ClientRepository repository, ManagerRepository managerRepository, ClientMapper mapper, AuthService authService, AppUserService appUserService) {
         this.repository = repository;
         this.managerRepository = managerRepository;
         this.mapper = mapper;
+        this.authService = authService;
+        this.appUserService = appUserService;
     }
 
 
@@ -132,10 +137,12 @@ public class ClientService {
         repository.deleteById(id);
     }
 
-    public ClientAccountStatisticsDto getSummaryInfo(String uuid) {
+    public ClientAccountStatisticsDto getSummaryInfo() {
+        JwtAuthentication authentication = authService.getAuthInfo();
+        String login = authentication.getLogin();
+        AppUser user = appUserService.getByLogin(login).get();
 
-        Client client = repository.findById(uuid)
-                .orElseThrow(() -> new BankAppResourceNotFoundException("Client with id = " + uuid + " not found in database"));
+        Client client = user.getClient();
 
         Map<CurrencyCode, BigDecimal> balanceByCurrency = getBalanceByCurrency(client);
         Map<CurrencyCode, BigDecimal> incomesByCurrencyCode = getIncomesByCurrencyCode(client);

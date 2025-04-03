@@ -1,9 +1,11 @@
 package de.telran.bankapp.service;
 
 import de.telran.bankapp.dto.AppUserDto;
+import de.telran.bankapp.dto.AppUserRegisterDto;
 import de.telran.bankapp.entity.AppUser;
 import de.telran.bankapp.exception.BankAppResourceNotFoundException;
 import de.telran.bankapp.mapper.AppUserMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,14 @@ public class AppUserService {
     @Transactional
     public AppUserDto createUser(AppUserDto userDto) {
         AppUser entity = mapper.toEntity(userDto);
+        entity.setPassword(encoder.encode(entity.getPassword()));
+        AppUser user = repository.save(entity);
+        return mapper.toDto(user);
+    }
+
+    @Transactional
+    public AppUserDto register(@Valid AppUserRegisterDto dto) {
+        AppUser entity = mapper.registerDtoToEntity(dto);
         entity.setPassword(encoder.encode(entity.getPassword()));
         AppUser user = repository.save(entity);
         return mapper.toDto(user);

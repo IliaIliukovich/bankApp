@@ -40,7 +40,7 @@ class IntegrationTest {
     void contextLoads() {
     }
 
-    @WithMockUser(username = "Test user", roles = {"CLIENT"})
+    @WithMockUser(username = "Test user", roles = {"ADMIN"})
     @Test
     void addAndDeleteClient() throws Exception {
         ClientCreateDto clientCreate = new ClientCreateDto("New", "New", "DE987654321", "a.mueller@example.com", "Munich, Germany", "+49 89 7654321", 1L, null);
