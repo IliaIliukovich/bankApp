@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @Transactional
 class IntegrationTest {
 
@@ -39,6 +40,7 @@ class IntegrationTest {
     void contextLoads() {
     }
 
+    @WithMockUser(username = "Test user", roles = {"CLIENT"})
     @Test
     void addAndDeleteClient() throws Exception {
         ClientCreateDto clientCreate = new ClientCreateDto("New", "New", "DE987654321", "a.mueller@example.com", "Munich, Germany", "+49 89 7654321", 1L, null);

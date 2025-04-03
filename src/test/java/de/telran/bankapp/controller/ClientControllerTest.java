@@ -1,6 +1,7 @@
 package de.telran.bankapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.bankapp.config.SecurityConfig;
 import de.telran.bankapp.dto.ClientCreateDto;
 import de.telran.bankapp.dto.ClientDto;
 import de.telran.bankapp.entity.enums.ClientStatus;
@@ -9,21 +10,22 @@ import de.telran.bankapp.security.JwtProvider;
 import de.telran.bankapp.service.ClientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ClientController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@WebMvcTest(controllers = ClientController.class)
+@Import(SecurityConfig.class)
 class ClientControllerTest {
 
     @MockitoBean
@@ -38,6 +40,7 @@ class ClientControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @WithMockUser(username = "Test user", roles = {"ADMIN"})
     @Test
     void getAll() throws Exception {
         mockMvc.perform(get("/client/all").contentType("application/json"))
@@ -45,6 +48,15 @@ class ClientControllerTest {
         verify(service).getAll();
     }
 
+    @WithMockUser(username = "Test user", roles = {"CLIENT"})
+    @Test
+    void getAllAccessDenied() throws Exception {
+        mockMvc.perform(get("/client/all").contentType("application/json"))
+                .andExpect(status().is4xxClientError());
+        verify(service, never()).getAll();
+    }
+
+    @WithMockUser(username = "Test user", roles = {"ADMIN"})
     @Test
     void findByName() throws Exception {
         mockMvc.perform(get("/client/search")
@@ -61,6 +73,7 @@ class ClientControllerTest {
         verify(service).findByName("Anna", Sort.unsorted());
     }
 
+    @WithMockUser(username = "Test user", roles = {"ADMIN"})
     @Test
     void addClient() throws Exception {
         ClientCreateDto clientCreate = new ClientCreateDto("New", "New", "DE987654321", "a.mueller@example.com", "Munich, Germany", "+49 89 7654321", 1L, null);
@@ -86,6 +99,7 @@ class ClientControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    @WithMockUser(username = "Test user", roles = {"ADMIN"})
     @Test
     void updateClientNotFound() throws Exception {
         ClientDto client = new ClientDto("1", "New", "New", "DE987654321", "a.mueller@example.com", "Munich, Germany", "+49 89 7654321", ClientStatus.ACTIVE, 1L, null);
