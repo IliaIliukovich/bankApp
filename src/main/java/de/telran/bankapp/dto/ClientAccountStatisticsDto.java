@@ -15,6 +15,7 @@ import java.util.Map;
 @Setter
 public class ClientAccountStatisticsDto {
 
+    private BigDecimal totalSum;
     private Map<CurrencyCode, BigDecimal> balanceByCurrency;
     private Map<CurrencyCode, BigDecimal> incomesByCurrency;
     private Map<CurrencyCode, BigDecimal> expensesByCurrency;

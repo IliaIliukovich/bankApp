@@ -28,12 +28,14 @@ public class TransactionService {
     private final TransactionRepository repository;
     private final AccountRepository accountRepository;
     private final TransactionMapper mapper;
+    private final CurrencyService currencyService;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, AccountRepository accountRepository, TransactionMapper mapper) {
+    public TransactionService(TransactionRepository repository, AccountRepository accountRepository, TransactionMapper mapper, CurrencyService currencyService) {
         this.repository = repository;
         this.accountRepository = accountRepository;
         this.mapper = mapper;
+        this.currencyService = currencyService;
     }
 
     public List<TransactionDto> getAllTransactions() {
@@ -123,7 +125,13 @@ public class TransactionService {
         Account toAccount = toAccountOptional.get();
 
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
-        toAccount.setBalance(toAccount.getBalance().add(amount));
+        BigDecimal convertedAmount = currencyService.convertAmountToRequiredCurrency(
+                amount,
+                fromAccount.getCurrencyCode(),
+                toAccount.getCurrencyCode(),
+                currencyService.getRates()
+                );
+        toAccount.setBalance(toAccount.getBalance().add(convertedAmount));
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
@@ -143,11 +151,6 @@ public class TransactionService {
         Account fromAccount = fromAccountOptional.get();
         if (fromAccount.getBalance().compareTo(new BigDecimal(dto.getMoneyAmount())) < 0) {
             throw new BankAppBadRequestException("Insufficient funds for transfer");
-        }
-
-        Account toAccount = toAccountOptional.get();
-        if (fromAccount.getCurrencyCode() != toAccount.getCurrencyCode()) {
-            throw new BankAppBadRequestException("Currency code is not correct");
         }
     }
 

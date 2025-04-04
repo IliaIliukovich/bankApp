@@ -39,14 +39,16 @@ public class ClientService {
     private final ClientMapper mapper;
     private final AuthService authService;
     private final AppUserService appUserService;
+    private final CurrencyService currencyService;
 
     @Autowired
-    public ClientService(ClientRepository repository, ManagerRepository managerRepository, ClientMapper mapper, AuthService authService, AppUserService appUserService) {
+    public ClientService(ClientRepository repository, ManagerRepository managerRepository, ClientMapper mapper, AuthService authService, AppUserService appUserService, CurrencyService currencyService) {
         this.repository = repository;
         this.managerRepository = managerRepository;
         this.mapper = mapper;
         this.authService = authService;
         this.appUserService = appUserService;
+        this.currencyService = currencyService;
     }
 
 
@@ -147,8 +149,19 @@ public class ClientService {
         Map<CurrencyCode, BigDecimal> balanceByCurrency = getBalanceByCurrency(client);
         Map<CurrencyCode, BigDecimal> incomesByCurrencyCode = getIncomesByCurrencyCode(client);
         Map<CurrencyCode, BigDecimal> expensesByCurrencyCode = getExpensesByCurrencyCode(client);
+        BigDecimal totalSum = getTotalSum(client);
 
-        return new ClientAccountStatisticsDto(balanceByCurrency, incomesByCurrencyCode, expensesByCurrencyCode);
+        return new ClientAccountStatisticsDto(totalSum, balanceByCurrency, incomesByCurrencyCode, expensesByCurrencyCode);
+    }
+
+    private BigDecimal getTotalSum(Client client) {
+        Map<String, BigDecimal> rates = currencyService.getRates();
+        return client.getAccounts().stream()
+                .map(a -> currencyService.convertAmountToRequiredCurrency(
+                        a.getBalance(),
+                        a.getCurrencyCode(),
+                        CurrencyCode.USD,
+                        rates)).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static Map<CurrencyCode, BigDecimal> getExpensesByCurrencyCode(Client client) {
