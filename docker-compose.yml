@@ -1,0 +1,29 @@
+services:
+  bankapp-db-prod:
+    container_name: bankapp-db-prod
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bankapp_prod
+    ports:
+      - "3308:3306"
+    volumes:
+      - db-storage:/var/lib/mysql
+
+  bankapp:
+    container_name: bankapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://bankapp-db-prod:3306/bankapp_prod?autoReconnect=true
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - bankapp-db-prod
+    entrypoint: ["sh", "-c", "/wait-for-it.sh bankapp-db-prod:3306 -- java -jar /bankApp.jar"]
+
+volumes:
+  db-storage:

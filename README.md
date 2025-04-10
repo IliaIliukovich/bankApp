@@ -7,14 +7,20 @@
 - Java 17
 - Maven
 - MySql, Liquibase
-- Spring Boot 3: Web, Data
+- Spring Boot 3: Web, Data, Security
 - Junit 5, Mockito
 - Tomcat 10
 - Log4j2
 - Lombok
 - Mapstruct
+- Auth 2.0 with JWT
+- Swagger
+- Docker
 
 ### How to run the app: 
 1. Setup MySQL DB. Create database and set configs in application.properties file
 2. mvn clean install spring-boot:start
-3. Access URL: http://localhost:8080/swagger-ui/index.html
+### Running with Docker:
+docker-compose up -d
+### Access URL:
+http://localhost:8080/swagger-ui/index.html
